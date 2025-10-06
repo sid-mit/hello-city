@@ -170,7 +170,7 @@ export const MapView = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-4"
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-4 w-full max-w-md px-4"
         >
           {/* Instructional Text */}
           <p className="text-sm text-foreground/80 text-center font-karla max-w-md px-4">
