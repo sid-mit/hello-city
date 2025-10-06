@@ -16,7 +16,7 @@ export const UnifiedHeader = () => {
         <div className="flex items-center gap-2">
           <span className="text-2xl">🌍</span>
           <div>
-            <h1 className="text-lg font-bold text-foreground">HelloCity</h1>
+            <h1 className="text-lg font-bold text-foreground font-architects">HelloCity</h1>
             <p className="text-xs text-muted-foreground hidden sm:block">Learn languages through travel</p>
           </div>
         </div>

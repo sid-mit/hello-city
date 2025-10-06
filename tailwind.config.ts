@@ -15,6 +15,7 @@ export default {
     extend: {
       fontFamily: {
         karla: ['Karla', 'sans-serif'],
+        architects: ['Architects Daughter', 'cursive'],
       },
       colors: {
         border: "hsl(var(--border))",
