@@ -181,19 +181,19 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
         
         @media (max-width: 768px) {
           .fixed.bottom-0 {
-            max-height: 60vh !important;
+            max-height: 70vh !important;
           }
         }
         
         @media (min-width: 769px) and (max-width: 1024px) {
           .fixed.bottom-0 {
-            max-height: 50vh !important;
+            max-height: 65vh !important;
           }
         }
         
         @media (min-width: 1025px) {
           .fixed.bottom-0 {
-            max-height: 40vh !important;
+            max-height: 60vh !important;
           }
         }
       `}</style>

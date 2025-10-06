@@ -73,11 +73,12 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
   return (
     <>
       <div 
-        className="bg-card rounded-2xl p-5 shadow-md flex flex-col border-l-4 hover:shadow-lg transition-all duration-300" 
+        className="bg-card rounded-2xl p-4 shadow-md flex flex-col border-l-4 hover:shadow-lg transition-all duration-300 overflow-y-auto" 
         style={{ 
           width: '320px', 
           minWidth: '320px', 
-          height: '360px', 
+          minHeight: '360px',
+          maxHeight: '480px',
           borderLeftColor: borderColor,
           boxShadow: `0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)`,
         }}
@@ -91,7 +92,7 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
         }}
       >
         {/* Header */}
-        <div className="flex items-start justify-between mb-3">
+        <div className="flex items-start justify-between mb-2">
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <span className="text-2xl shrink-0">{situation.emoji}</span>
             <h3 className="text-base font-semibold text-foreground line-clamp-1">{situation.title}</h3>
@@ -116,19 +117,19 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
         </div>
 
         {/* Description */}
-        <p className="text-sm text-foreground mb-3 leading-5 line-clamp-2">
+        <p className="text-sm text-foreground mb-2 leading-5 line-clamp-2">
           {situation.description}
         </p>
 
         {/* Context Badge */}
-        <div className="mb-3">
+        <div className="mb-2">
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-muted text-xs text-muted-foreground">
             📍 {situation.context}
           </span>
         </div>
 
         {/* Phrase Preview */}
-        <div className="mb-3 flex-1">
+        <div className="mb-2 flex-1">
           <p className="text-xs font-semibold text-foreground mb-2">🗣️ You'll learn:</p>
           <ul className="space-y-1">
             {phrasesToShow.map((phrase, index) => (
@@ -147,7 +148,7 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
 
         {/* Cultural Tip */}
         {situation.culturalTip && (
-          <div className="mb-3 p-2 rounded-lg bg-primary/5 border border-primary/10">
+          <div className="mb-2 p-2 rounded-lg bg-primary/5 border border-primary/10">
             <p className="text-xs font-semibold text-primary mb-1 flex items-center gap-1">
               💡 Cultural Tip
             </p>
@@ -159,7 +160,7 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
 
         {/* Progress Indicator */}
         {hasPracticed && (
-          <div className="flex items-center gap-2 mb-3 text-xs">
+          <div className="flex items-center gap-2 mb-2 text-xs">
             {needsReview ? (
               <span className="flex items-center gap-1 text-yellow-600">
                 ⚠️ Review needed
