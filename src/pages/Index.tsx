@@ -1,6 +1,6 @@
 import { MapView } from '@/components/Map/MapView';
 import { LearnTab } from '@/components/Learn/LearnTab';
-import { BottomTabNavigation } from '@/components/Navigation/BottomTabNavigation';
+import { TopToggleNavigation } from '@/components/Navigation/TopToggleNavigation';
 import { useAppStore } from '@/stores/appStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -9,8 +9,11 @@ const Index = () => {
 
   return (
     <div className="w-full h-screen overflow-hidden relative">
-      {/* Content Area (with padding for bottom nav) */}
-      <div className="w-full h-full pb-16">
+      {/* Top Toggle Navigation */}
+      <TopToggleNavigation />
+      
+      {/* Content Area */}
+      <div className="w-full h-full">
         <AnimatePresence mode="wait">
           {activeTab === 'explore' && (
             <motion.div
@@ -39,9 +42,6 @@ const Index = () => {
           )}
         </AnimatePresence>
       </div>
-      
-      {/* Bottom Tab Navigation */}
-      <BottomTabNavigation />
     </div>
   );
 };

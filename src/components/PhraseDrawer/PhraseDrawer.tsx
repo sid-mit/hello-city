@@ -1,15 +1,16 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
-import { Location } from '@/stores/appStore';
 import { Button } from '../ui/button';
-import { PhraseCard } from './PhraseCard';
+import { SituationCard, SituationData } from '@/components/Cards/SituationCard';
 
 interface PhraseDrawerProps {
-  location: Location;
+  categoryTitle: string;
+  categoryEmoji: string;
+  situations: SituationData[];
   onClose: () => void;
 }
 
-export const PhraseDrawer = ({ location, onClose }: PhraseDrawerProps) => {
+export const PhraseDrawer = ({ categoryTitle, categoryEmoji, situations, onClose }: PhraseDrawerProps) => {
   return (
     <AnimatePresence>
       {/* Backdrop */}
@@ -35,7 +36,8 @@ export const PhraseDrawer = ({ location, onClose }: PhraseDrawerProps) => {
             onClose();
           }
         }}
-        className="fixed bottom-0 left-0 right-0 z-50 bg-card rounded-t-3xl shadow-large max-h-[70vh] md:max-h-[50vh] overflow-hidden"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-card rounded-t-3xl shadow-large overflow-hidden"
+        style={{ height: '400px', maxHeight: '40vh' }}
       >
         {/* Drag Handle */}
         <div className="flex justify-center pt-3 pb-2">
@@ -43,13 +45,10 @@ export const PhraseDrawer = ({ location, onClose }: PhraseDrawerProps) => {
         </div>
 
         {/* Header */}
-        <div className="flex items-start justify-between px-6 py-4 border-b border-border">
+        <div className="flex items-start justify-between px-6 py-3 border-b border-border">
           <div className="flex items-center gap-3">
-            <span className="text-4xl">{location.emoji}</span>
-            <div>
-              <h2 className="text-2xl font-bold">{location.name}</h2>
-              <p className="text-muted-foreground">{location.category}</p>
-            </div>
+            <span className="text-3xl">{categoryEmoji}</span>
+            <h2 className="text-xl font-bold">{categoryTitle}</h2>
           </div>
           <Button
             variant="ghost"
@@ -61,20 +60,37 @@ export const PhraseDrawer = ({ location, onClose }: PhraseDrawerProps) => {
           </Button>
         </div>
 
-        {/* Phrases List */}
-        <div className="overflow-y-auto px-6 py-4 space-y-3" style={{ maxHeight: 'calc(70vh - 140px)' }}>
-          {location.phrases.map((phrase, index) => (
+        {/* Horizontal Scrollable Situation Cards */}
+        <div 
+          className="flex overflow-x-auto gap-4 px-5 py-5 snap-x snap-mandatory scrollbar-hide"
+          style={{ 
+            scrollSnapType: 'x mandatory',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
+          {situations.map((situation, index) => (
             <motion.div
-              key={phrase.id}
-              initial={{ opacity: 0, x: -20 }}
+              key={situation.id}
+              initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
+              className="snap-start"
             >
-              <PhraseCard phrase={phrase} />
+              <SituationCard situation={situation} />
             </motion.div>
           ))}
         </div>
       </motion.div>
+
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </AnimatePresence>
   );
 };

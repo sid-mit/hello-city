@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import mapboxgl from 'mapbox-gl';
 import { useAppStore } from '@/stores/appStore';
-import { cities, getCityLocations } from '@/data/cities';
-import { LocationMarker } from './LocationMarker';
+import { cities } from '@/data/cities';
+import { getCityData } from '@/data/cityData';
 import { CityMarker } from './CityMarker';
 import { PhraseDrawer } from '../PhraseDrawer/PhraseDrawer';
 import { CitySelector } from '../CitySelector/CitySelector';
@@ -17,13 +17,13 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoiYW5pbnlhZyIsImEiOiJjbWdmNHF6MHUwNG9oMmtuMGhubWR
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
 export const MapView = () => {
-  const { selectedCity, selectedLocation, selectCity, selectLocation } = useAppStore();
+  const { selectedCity, selectedCategory, selectCity, selectCategory, selectLocation } = useAppStore();
   const [showCitySelector, setShowCitySelector] = useState(false);
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
 
-  const locations = selectedCity ? getCityLocations(selectedCity.id) : [];
+  const cityData = selectedCity ? getCityData(selectedCity.id) : null;
 
   const handleCityClick = useCallback((city: any) => {
     selectCity(city);
@@ -53,13 +53,13 @@ export const MapView = () => {
     }
   }, [selectCity, selectLocation]);
 
-  const handleLocationClick = useCallback((location: any) => {
-    selectLocation(location);
-  }, [selectLocation]);
+  const handleCategoryClick = useCallback((categoryId: string) => {
+    selectCategory(categoryId);
+  }, [selectCategory]);
 
   const handleCloseDrawer = useCallback(() => {
-    selectLocation(null);
-  }, [selectLocation]);
+    selectCategory(null);
+  }, [selectCategory]);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -107,28 +107,26 @@ export const MapView = () => {
 
         markersRef.current.push(marker);
       });
-    } else {
-      // Show location markers
-      locations.forEach((location) => {
+    } else if (cityData) {
+      // Show category markers
+      cityData.categories.forEach((category) => {
         const el = document.createElement('div');
-        const root = createRoot(el);
-        
-        root.render(
-          <LocationMarker
-            location={location}
-            onClick={() => handleLocationClick(location)}
-            isSelected={selectedLocation?.id === location.id}
-          />
-        );
+        el.className = 'cursor-pointer transform transition-all hover:scale-110';
+        el.innerHTML = `
+          <div class="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-lg border-2 border-primary">
+            <span class="text-2xl">${category.emoji}</span>
+          </div>
+        `;
+        el.onclick = () => handleCategoryClick(category.id);
 
         const marker = new mapboxgl.Marker(el)
-          .setLngLat([location.coordinates.lng, location.coordinates.lat])
+          .setLngLat([category.mapPosition[1], category.mapPosition[0]])
           .addTo(map.current!);
 
         markersRef.current.push(marker);
       });
     }
-  }, [selectedCity, locations, handleCityClick, handleLocationClick, selectedLocation]);
+  }, [selectedCity, cityData, handleCityClick, handleCategoryClick]);
 
   return (
     <motion.div
@@ -226,9 +224,11 @@ export const MapView = () => {
       />
 
       {/* Phrase Drawer */}
-      {selectedLocation && (
+      {selectedCategory && cityData && (
         <PhraseDrawer
-          location={selectedLocation}
+          categoryTitle={cityData.categories.find(c => c.id === selectedCategory)?.title || ''}
+          categoryEmoji={cityData.categories.find(c => c.id === selectedCategory)?.emoji || ''}
+          situations={cityData.categories.find(c => c.id === selectedCategory)?.situations || []}
           onClose={handleCloseDrawer}
         />
       )}
