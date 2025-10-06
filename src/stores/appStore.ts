@@ -41,12 +41,21 @@ export interface Badge {
   unlocked: boolean;
 }
 
+export interface SyllableHistory {
+  syllable: string;
+  attempts: number;
+  successRate: number;
+  lastScore: number;
+  improvementTrend: 'improving' | 'stable' | 'declining';
+}
+
 export interface PracticeHistory {
   [situationId: string]: {
     attempts: number;
     bestScore: number;
     lastPracticed: string;
     phraseScores: { [phraseId: string]: number };
+    syllableHistory: { [syllableKey: string]: SyllableHistory };
   };
 }
 
@@ -80,7 +89,13 @@ interface AppState {
   toggleFavorite: (situation: SituationData) => void;
   isSituationFavorited: (situationId: string) => boolean;
   setHasShownFavoriteModal: (shown: boolean) => void;
-  updatePracticeHistory: (situationId: string, score: number, phraseId: string) => void;
+  updatePracticeHistory: (
+    situationId: string,
+    score: number,
+    phraseId: string,
+    syllableData?: Array<{ syllable: string; score: number }>
+  ) => void;
+  getProblemSyllables: () => Array<{ syllable: string; data: SyllableHistory }>;
   unlockBadge: (badgeId: string) => void;
   updateStreak: () => void;
 }
@@ -148,14 +163,48 @@ export const useAppStore = create<AppState>()(
         return get().favoritedSituations.some((s) => s.id === situationId);
       },
       setHasShownFavoriteModal: (shown) => set({ hasShownFavoriteModal: shown }),
-      updatePracticeHistory: (situationId, score, phraseId) =>
+      updatePracticeHistory: (situationId, score, phraseId, syllableData) =>
         set((state) => {
           const existing = state.practiceHistory[situationId] || {
             attempts: 0,
             bestScore: 0,
             lastPracticed: new Date().toISOString(),
             phraseScores: {},
+            syllableHistory: {},
           };
+          
+          // Update syllable history if provided
+          const updatedSyllableHistory = { ...existing.syllableHistory };
+          if (syllableData) {
+            syllableData.forEach(({ syllable, score: syllableScore }) => {
+              const existingSyllable = updatedSyllableHistory[syllable] || {
+                syllable,
+                attempts: 0,
+                successRate: 0,
+                lastScore: 0,
+                improvementTrend: 'stable' as const,
+              };
+              
+              const newAttempts = existingSyllable.attempts + 1;
+              const newSuccessCount = existingSyllable.successRate * existingSyllable.attempts + (syllableScore >= 80 ? 1 : 0);
+              const newSuccessRate = newSuccessCount / newAttempts;
+              
+              // Determine trend
+              let trend: 'improving' | 'stable' | 'declining' = 'stable';
+              if (existingSyllable.attempts >= 2) {
+                if (syllableScore > existingSyllable.lastScore + 10) trend = 'improving';
+                else if (syllableScore < existingSyllable.lastScore - 10) trend = 'declining';
+              }
+              
+              updatedSyllableHistory[syllable] = {
+                syllable,
+                attempts: newAttempts,
+                successRate: newSuccessRate,
+                lastScore: syllableScore,
+                improvementTrend: trend,
+              };
+            });
+          }
           
           return {
             practiceHistory: {
@@ -168,10 +217,44 @@ export const useAppStore = create<AppState>()(
                   ...existing.phraseScores,
                   [phraseId]: score,
                 },
+                syllableHistory: updatedSyllableHistory,
               },
             },
           };
         }),
+      getProblemSyllables: () => {
+        const state = get();
+        const allSyllables: { [key: string]: SyllableHistory } = {};
+        
+        // Aggregate syllable data across all situations
+        Object.values(state.practiceHistory).forEach((history) => {
+          Object.entries(history.syllableHistory || {}).forEach(([syllable, data]) => {
+            if (!allSyllables[syllable]) {
+              allSyllables[syllable] = data;
+            } else {
+              // Merge data
+              const existing = allSyllables[syllable];
+              const totalAttempts = existing.attempts + data.attempts;
+              const combinedSuccessRate = 
+                (existing.successRate * existing.attempts + data.successRate * data.attempts) / totalAttempts;
+              
+              allSyllables[syllable] = {
+                syllable,
+                attempts: totalAttempts,
+                successRate: combinedSuccessRate,
+                lastScore: data.lastScore, // Use most recent
+                improvementTrend: data.improvementTrend,
+              };
+            }
+          });
+        });
+        
+        // Filter to problem syllables (success rate < 70%)
+        return Object.entries(allSyllables)
+          .filter(([_, data]) => data.successRate < 0.7 && data.attempts >= 2)
+          .map(([syllable, data]) => ({ syllable, data }))
+          .sort((a, b) => a.data.successRate - b.data.successRate);
+      },
       unlockBadge: (badgeId) =>
         set((state) => ({
           badges: state.badges.map((badge) =>

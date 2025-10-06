@@ -4,6 +4,7 @@ import { useAppStore } from '@/stores/appStore';
 import { SituationCard } from '@/components/Cards/SituationCard';
 import { StreakCounter } from '@/components/Gamification/StreakCounter';
 import { BadgeSystem } from '@/components/Gamification/BadgeSystem';
+import { ProblemSyllablesDashboard } from '@/components/Learn/ProblemSyllablesDashboard';
 import { motion } from 'framer-motion';
 import { Trophy, SortAsc } from 'lucide-react';
 import {
@@ -122,6 +123,9 @@ export const LearnTab = () => {
             <BadgeSystem />
           </motion.div>
         )}
+
+        {/* Problem Syllables Dashboard */}
+        <ProblemSyllablesDashboard />
 
         {/* Tabs */}
         <Tabs defaultValue="all" className="mb-6">

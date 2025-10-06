@@ -7,6 +7,8 @@ import { SituationData } from '@/components/Cards/SituationCard';
 import { useAppStore } from '@/stores/appStore';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
+import { analyzeSyllables, calculateOverallScore, SyllableAnalysis } from '@/utils/syllableAnalysis';
+import { SyllableBreakdown } from '@/components/Practice/SyllableBreakdown';
 
 interface PracticeModalProps {
   situation: SituationData;
@@ -21,6 +23,7 @@ interface PracticeResult {
   spokenText: string;
   score: number;
   feedback: FeedbackLevel;
+  syllableAnalyses?: SyllableAnalysis[];
 }
 
 export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
@@ -64,23 +67,42 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
         
         // Calculate score and give feedback
         setTimeout(() => {
-          const score = calculatePronunciationScore(transcript, currentPhrase.native, confidence);
-          const feedback = getFeedbackLevel(score);
+          // Analyze syllables
+          const syllableAnalyses = analyzeSyllables(
+            transcript,
+            currentPhrase.native,
+            currentPhrase.romanization
+          );
+          
+          // Calculate overall score from syllable analyses
+          const syllableScore = calculateOverallScore(syllableAnalyses);
+          
+          // Also use traditional scoring as a fallback/validation
+          const traditionalScore = calculatePronunciationScore(transcript, currentPhrase.native, confidence);
+          
+          // Use weighted average (favor syllable analysis)
+          const finalScore = Math.round(syllableScore * 0.7 + traditionalScore * 0.3);
+          const feedback = getFeedbackLevel(finalScore);
           
           const newResult = {
             phraseIndex: currentPhraseIndex,
             spokenText: transcript,
-            score,
+            score: finalScore,
             feedback,
+            syllableAnalyses,
           };
           setResults([...results, newResult]);
           
-          // Update practice history
-          updatePracticeHistory(situation.id, score, currentPhrase.native);
+          // Update practice history with syllable data
+          const syllableData = syllableAnalyses.map(a => ({
+            syllable: a.syllable,
+            score: a.score,
+          }));
+          updatePracticeHistory(situation.id, finalScore, currentPhrase.native, syllableData);
           updateStreak();
           
           // Check for badges
-          if (score === 100 && !badges.find(b => b.id === 'perfect-score')?.unlocked) {
+          if (finalScore === 100 && !badges.find(b => b.id === 'perfect-score')?.unlocked) {
             unlockBadge('perfect-score');
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
           }
@@ -185,9 +207,9 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
     }
   };
 
-  const handleListen = (slow = false) => {
+  const handleListen = (slow = false, textOverride?: string) => {
     if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(currentPhrase.native);
+      const utterance = new SpeechSynthesisUtterance(textOverride || currentPhrase.native);
       
       // Set voice based on language
       const voices = speechSynthesis.getVoices();
@@ -204,9 +226,13 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
         utterance.voice = voice;
       }
       
-      utterance.rate = slow ? 0.6 : 0.8;
+      utterance.rate = slow ? 0.5 : 0.8;
       speechSynthesis.speak(utterance);
     }
+  };
+
+  const handlePlaySyllable = (syllable: string) => {
+    handleListen(true, syllable);
   };
 
   const handleRecord = () => {
@@ -367,11 +393,14 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
                   <p className="font-medium">{currentPhrase.native}</p>
                 </div>
 
-                {currentResult.score < 80 && (
-                  <div className="bg-blue-50 dark:bg-blue-950 rounded-xl p-4 mb-6">
-                    <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                      💡 Tip: Listen carefully and try to match the pronunciation
-                    </p>
+                {/* Syllable Breakdown */}
+                {currentResult.syllableAnalyses && currentResult.syllableAnalyses.length > 0 && (
+                  <div className="mb-6">
+                    <SyllableBreakdown
+                      syllableAnalyses={currentResult.syllableAnalyses}
+                      language={recognition?.lang || 'en-US'}
+                      onPlaySyllable={handlePlaySyllable}
+                    />
                   </div>
                 )}
 
