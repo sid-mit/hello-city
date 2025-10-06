@@ -22,11 +22,12 @@ export const GlobeView = ({ onCityClick }: GlobeViewProps) => {
     // Initialize Globe with the element
     const myGlobe = new Globe(globeDiv)
       .backgroundColor('rgba(248, 249, 250, 0)')
-      .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+      .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
       .atmosphereColor('#667eea')
-      .atmosphereAltitude(0.15)
+      .atmosphereAltitude(0.2)
       .width(containerRef.current.clientWidth)
-      .height(containerRef.current.clientHeight);
+      .height(containerRef.current.clientHeight)
+      .showGraticules(true);
 
     globeInstance.current = myGlobe;
 
@@ -43,21 +44,46 @@ export const GlobeView = ({ onCityClick }: GlobeViewProps) => {
     myGlobe
       .pointsData(cityPoints)
       .pointColor('color')
-      .pointAltitude(0.05)
-      .pointRadius('size')
+      .pointAltitude(0.15)
+      .pointRadius(1.8)
       .pointLabel('label')
+      .pointsMerge(false)
+      .pointResolution(12)
       .onPointClick((point: any) => {
         if (point.city) {
           onCityClick(point.city);
         }
+      })
+      .onPointHover((point: any) => {
+        if (point) {
+          globeDiv.style.cursor = 'pointer';
+        } else {
+          globeDiv.style.cursor = 'grab';
+        }
       });
+
+    // Add pulsing rings around cities
+    const rings = cities.map(city => ({
+      lat: city.coordinates.lat,
+      lng: city.coordinates.lng,
+      maxR: 3,
+      propagationSpeed: 2,
+      repeatPeriod: 2000
+    }));
+
+    myGlobe
+      .ringsData(rings)
+      .ringColor(() => '#667eea')
+      .ringMaxRadius('maxR')
+      .ringPropagationSpeed('propagationSpeed')
+      .ringRepeatPeriod('repeatPeriod');
 
     // Auto-rotate
     myGlobe.controls().autoRotate = true;
     myGlobe.controls().autoRotateSpeed = 0.5;
 
     // Point camera at a nice angle
-    myGlobe.pointOfView({ lat: 30, lng: 0, altitude: 2.5 }, 0);
+    myGlobe.pointOfView({ lat: 30, lng: 0, altitude: 3.0 }, 0);
 
     // Handle resize
     const handleResize = () => {
