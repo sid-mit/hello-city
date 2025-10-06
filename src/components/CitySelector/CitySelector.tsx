@@ -38,13 +38,13 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
             >
               <div className="glass rounded-2xl p-8 shadow-large border border-border/50">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="relative flex items-center justify-center mb-8">
                   <h2 className="text-2xl font-bold font-architects">Where do you plan to travel?</h2>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={onClose}
-                    className="shrink-0"
+                    className="absolute right-0 top-0"
                   >
                     <X className="w-5 h-5" />
                   </Button>
@@ -56,7 +56,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
                     <motion.button
                       key={city.id}
                       onClick={() => onCitySelect(city)}
-                      className="px-6 py-3 rounded-full border border-border bg-background hover:bg-accent hover:border-primary/50 transition-all font-medium font-karla"
+                      className="h-[43px] px-6 rounded-lg border border-border bg-background hover:bg-accent hover:border-primary/50 transition-all font-medium font-karla"
                       whileTap={{ scale: 0.95 }}
                     >
                       {city.name}
