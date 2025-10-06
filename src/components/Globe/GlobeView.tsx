@@ -22,7 +22,7 @@ export const GlobeView = ({ onCityClick }: GlobeViewProps) => {
     // Initialize Globe with the element
     const myGlobe = new Globe(globeDiv)
       .backgroundColor('rgba(248, 249, 250, 0)')
-      .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+      .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
       .atmosphereColor('#667eea')
       .atmosphereAltitude(0.2)
       .width(containerRef.current.clientWidth)
