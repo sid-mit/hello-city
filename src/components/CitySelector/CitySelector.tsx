@@ -44,7 +44,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
                   onClick={onClose}
                   className="absolute right-6 top-6 h-6 w-6"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </Button>
 
                 {/* Header */}
