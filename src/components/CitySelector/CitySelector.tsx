@@ -32,15 +32,10 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
             transition={{ duration: 0.3 }}
             className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-2xl mx-4"
           >
-            <div className="glass rounded-2xl p-6 shadow-large border border-border/50">
+            <div className="glass rounded-2xl p-8 shadow-large border border-border/50">
               {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-2xl font-bold">Choose Your Destination</h2>
-                  <p className="text-muted-foreground mt-1">
-                    Select a city to learn essential phrases
-                  </p>
-                </div>
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-bold">Where do you plan to travel?</h2>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -51,30 +46,24 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
                 </Button>
               </div>
 
-              {/* City Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* City Pills */}
+              <div className="flex flex-wrap justify-center gap-3 mb-6">
                 {cities.map((city) => (
                   <motion.button
                     key={city.id}
                     onClick={() => onCitySelect(city)}
-                    className="glass rounded-xl p-4 border border-border/50 hover:border-primary/50 transition-all group text-left"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="px-6 py-3 rounded-full border border-border bg-background hover:bg-accent hover:border-primary/50 transition-all font-medium"
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <div className="flex items-center gap-4">
-                      <div className="text-4xl">{city.emoji}</div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
-                          {city.name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          {city.country} • {city.language}
-                        </p>
-                      </div>
-                    </div>
+                    {city.name}
                   </motion.button>
                 ))}
               </div>
+
+              {/* More Options Text */}
+              <p className="text-center text-sm text-muted-foreground">
+                More options adding...
+              </p>
             </div>
           </motion.div>
         </>
