@@ -17,7 +17,7 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoiYW5pbnlhZyIsImEiOiJjbWdmNHF6MHUwNG9oMmtuMGhubWR
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
 export const MapView = () => {
-  const { selectedCity, selectedCategory, selectCity, selectCategory, selectLocation } = useAppStore();
+  const { selectedCity, selectedCategory, selectCity, selectCategory } = useAppStore();
   const [showCitySelector, setShowCitySelector] = useState(false);
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -41,7 +41,7 @@ export const MapView = () => {
 
   const handleBackToWorld = useCallback(() => {
     selectCity(null);
-    selectLocation(null);
+    selectCategory(null);
     
     // Fly back to world view
     if (map.current) {
@@ -51,7 +51,7 @@ export const MapView = () => {
         duration: 2000,
       });
     }
-  }, [selectCity, selectLocation]);
+  }, [selectCity, selectCategory]);
 
   const handleCategoryClick = useCallback((categoryId: string) => {
     selectCategory(categoryId);
