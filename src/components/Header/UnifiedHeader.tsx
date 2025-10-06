@@ -58,6 +58,36 @@ export const UnifiedHeader = () => {
             );
           })}
         </div>
+
+        {/* Right Navigation Links */}
+        <nav className="hidden md:flex items-center gap-8 font-karla">
+          <button
+            onClick={() => setActiveTab('explore')}
+            className={`text-sm font-medium transition-colors hover:text-primary ${
+              activeTab === 'explore' ? 'text-primary' : 'text-muted-foreground'
+            }`}
+          >
+            Map
+          </button>
+          <button
+            onClick={() => setActiveTab('learn')}
+            className={`text-sm font-medium transition-colors hover:text-primary ${
+              activeTab === 'learn' ? 'text-primary' : 'text-muted-foreground'
+            }`}
+          >
+            Discover
+          </button>
+          <button
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          >
+            About Us
+          </button>
+          <button
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          >
+            Login
+          </button>
+        </nav>
       </div>
     </header>
   );
