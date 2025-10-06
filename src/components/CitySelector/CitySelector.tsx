@@ -36,18 +36,20 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
               transition={{ duration: 0.3 }}
               className="w-full max-w-2xl"
             >
-              <div className="glass rounded-2xl pt-[80px] px-8 pb-8 shadow-large border border-border/50">
+              <div className="glass rounded-2xl pt-[80px] px-8 pb-8 shadow-large border border-border/50 relative">
+                {/* Close Button */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onClose}
+                  className="absolute right-6 top-6 h-6 w-6"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+
                 {/* Header */}
-                <div className="relative flex items-center justify-center mb-[40px]">
+                <div className="flex items-center justify-center mb-[40px]">
                   <h2 className="text-2xl font-bold font-architects">Where do you plan to travel?</h2>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={onClose}
-                    className="absolute right-0 top-0"
-                  >
-                    <X className="w-5 h-5" />
-                  </Button>
                 </div>
 
                 {/* City Pills */}
