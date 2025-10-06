@@ -170,21 +170,23 @@ export const MapView = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-4 w-full max-w-md px-4"
+          className="absolute inset-x-0 bottom-12 z-30 pointer-events-none"
         >
-          {/* Instructional Text */}
-          <p className="text-sm text-foreground/80 text-center font-karla max-w-md px-4">
-            Click on any city marker to start learning essential phrases
-          </p>
-          
-          {/* Choose City Button */}
-          <Button
-            onClick={() => setShowCitySelector(true)}
-            className="px-8 py-6 text-base font-karla"
-            size="lg"
-          >
-            Choose City
-          </Button>
+          <div className="mx-auto w-full max-w-md px-4 flex flex-col items-center gap-4 text-center pointer-events-auto">
+            {/* Instructional Text */}
+            <p className="text-sm text-foreground/80 font-karla">
+              Click on any city marker to start learning essential phrases
+            </p>
+            
+            {/* Choose City Button */}
+            <Button
+              onClick={() => setShowCitySelector(true)}
+              className="px-8 py-6 text-base font-karla"
+              size="lg"
+            >
+              Choose City
+            </Button>
+          </div>
         </motion.div>
       )}
 
