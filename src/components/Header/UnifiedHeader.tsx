@@ -11,7 +11,7 @@ export const UnifiedHeader = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
-      <div className="container mx-auto px-4 h-16 flex items-center">
+      <div className="container mx-auto pl-4 pr-10 h-16 flex items-center">
         {/* Branding */}
         <div className="flex items-center gap-2">
           <span className="text-2xl">🌍</span>
