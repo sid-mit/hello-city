@@ -254,85 +254,75 @@ export const ConversationPracticeModal = ({ situation, onClose }: ConversationPr
               const isLocked = isFuture && !result;
 
               if (step.speaker === 'you' && phrase) {
-                // User bubble (left side)
-                return (
-                  <motion.div
-                    key={index}
-                    data-step={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className={`flex items-start gap-2 ${isCurrent ? 'scale-105' : ''}`}
-                  >
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-1">
-                      <span className="text-sm">👤</span>
-                    </div>
-                    <div className="flex-1">
-                      <div 
-                        className={`rounded-2xl rounded-tl-sm p-3 ${
-                          isCurrent ? 'bg-primary/20 border-2 border-primary' : 'bg-muted'
-                        } ${isLocked ? 'opacity-50' : ''}`}
-                      >
-                        <div className="text-sm font-medium mb-1">{phrase.native}</div>
-                        <div className="text-xs text-muted-foreground italic mb-1">{phrase.romanization}</div>
-                        <div className="text-xs text-muted-foreground">{phrase.english}</div>
-                        
-                        {result && (
-                          <div className="mt-2 flex items-center gap-2">
-                            <div className={`text-xs font-semibold ${
-                              result.score >= 80 ? 'text-green-600' : 
-                              result.score >= 60 ? 'text-yellow-600' : 'text-orange-600'
-                            }`}>
-                              <Check className="w-3 h-3 inline mr-1" />
-                              {result.score}%
-                            </div>
-                          </div>
-                        )}
-                        
-                        {isLocked && (
-                          <div className="mt-2">
-                            <Lock className="w-3 h-3 text-muted-foreground" />
-                          </div>
-                        )}
-                      </div>
-                      
-                      {(isCurrent || isPast) && !isLocked && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleListen(phrase)}
-                          className="mt-1 h-6 text-xs"
-                        >
-                          <Volume2 className="w-3 h-3 mr-1" />
-                          Listen
-                        </Button>
-                      )}
-                    </div>
-                  </motion.div>
-                );
-              } else {
-                // Other person bubble or action (right side)
+                // User bubble (right side)
                 return (
                   <motion.div
                     key={index}
                     data-step={index}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="flex items-start gap-2 justify-end"
+                    className={`flex items-start gap-2 justify-end ${isCurrent ? 'scale-105' : ''}`}
                   >
                     <div className="flex-1 flex justify-end">
-                      <div 
-                        className="rounded-2xl rounded-tr-sm p-3 max-w-[80%]"
-                        style={{ 
-                          backgroundColor: situation.categoryColor ? `${situation.categoryColor}20` : undefined,
-                          borderColor: situation.categoryColor ? `${situation.categoryColor}40` : undefined,
-                          borderWidth: '1px'
-                        }}
-                      >
-                        <div className="text-sm text-foreground italic">
-                          {step.action || 'Other person responds'}
+                      <div>
+                        <div 
+                          className={`rounded-2xl rounded-tr-sm p-3 max-w-[85%] ml-auto ${
+                            isCurrent ? 'bg-primary/20 border-2 border-primary' : 'bg-muted'
+                          } ${isLocked ? 'opacity-50' : ''}`}
+                        >
+                          <div className="text-sm font-medium mb-1">{phrase.native}</div>
+                          <div className="text-xs text-muted-foreground italic mb-1">{phrase.romanization}</div>
+                          <div className="text-xs text-muted-foreground">{phrase.english}</div>
+                          
+                          {result && (
+                            <div className="mt-2 flex items-center gap-2">
+                              <div className={`text-xs font-semibold ${
+                                result.score >= 80 ? 'text-green-600' : 
+                                result.score >= 60 ? 'text-yellow-600' : 'text-orange-600'
+                              }`}>
+                                <Check className="w-3 h-3 inline mr-1" />
+                                {result.score}%
+                              </div>
+                            </div>
+                          )}
+                          
+                          {isLocked && (
+                            <div className="mt-2">
+                              <Lock className="w-3 h-3 text-muted-foreground" />
+                            </div>
+                          )}
                         </div>
+                        
+                        {(isCurrent || isPast) && !isLocked && (
+                          <div className="flex justify-end">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleListen(phrase)}
+                              className="mt-1 h-6 text-xs"
+                            >
+                              <Volume2 className="w-3 h-3 mr-1" />
+                              Listen
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-1">
+                      <span className="text-sm">👤</span>
+                    </div>
+                  </motion.div>
+                );
+              } else {
+                // Other person bubble or action (left side)
+                return (
+                  <motion.div
+                    key={index}
+                    data-step={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="flex items-start gap-2"
+                  >
                     <div 
                       className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1"
                       style={{ 
@@ -340,6 +330,15 @@ export const ConversationPracticeModal = ({ situation, onClose }: ConversationPr
                       }}
                     >
                       <span className="text-sm">👥</span>
+                    </div>
+                    <div className="flex-1">
+                      <div 
+                        className="rounded-2xl rounded-tl-sm p-3 max-w-[80%] bg-muted/50"
+                      >
+                        <div className="text-sm text-muted-foreground italic">
+                          {step.action || 'Other person responds'}
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 );
