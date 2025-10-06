@@ -51,12 +51,12 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
                 </div>
 
                 {/* City Pills */}
-                <div className="flex flex-wrap justify-center gap-3 mb-6">
+                <div className="flex flex-wrap justify-center gap-[10px] mb-6">
                   {cities.map((city) => (
                     <motion.button
                       key={city.id}
                       onClick={() => onCitySelect(city)}
-                      className="h-[43px] px-6 rounded-lg border border-border bg-background hover:bg-accent hover:border-primary/50 transition-all font-medium font-karla"
+                      className="h-[43px] px-[30px] rounded-lg border border-border bg-background hover:bg-accent hover:border-primary/50 transition-all font-medium font-karla"
                       whileTap={{ scale: 0.95 }}
                     >
                       {city.name}
