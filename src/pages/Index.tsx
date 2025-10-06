@@ -1,12 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { Onboarding } from '@/components/Onboarding';
+import { MapView } from '@/components/Map/MapView';
+import { useAppStore } from '@/stores/appStore';
 
 const Index = () => {
+  const [showMap, setShowMap] = useState(false);
+  const { setShowMap: setStoreShowMap, selectCity } = useAppStore();
+
+  const handleOnboardingComplete = () => {
+    setShowMap(true);
+    setStoreShowMap(true);
+  };
+
+  const handleBackToGlobe = () => {
+    setShowMap(false);
+    setStoreShowMap(false);
+    selectCity(null);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="w-full h-screen overflow-hidden">
+      <AnimatePresence mode="wait">
+        {!showMap ? (
+          <Onboarding key="onboarding" onComplete={handleOnboardingComplete} />
+        ) : (
+          <MapView key="map" onBack={handleBackToGlobe} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
