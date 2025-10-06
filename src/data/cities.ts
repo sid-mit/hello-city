@@ -217,10 +217,378 @@ export const parisLocations: Location[] = [
   },
 ];
 
+export const seoulLocations: Location[] = [
+  {
+    id: 'seoul-restaurant',
+    name: 'Myeongdong',
+    category: 'Restaurants & Cafés',
+    emoji: '🍽️',
+    coordinates: { lat: 37.5636, lng: 126.9856 },
+    phrases: [
+      {
+        id: 's1',
+        text: '두 명이요',
+        translation: 'Table for two',
+        phonetic: 'du myeong-i-yo',
+      },
+      {
+        id: 's2',
+        text: '메뉴판 주세요',
+        translation: 'Menu please',
+        phonetic: 'me-nyu-pan ju-se-yo',
+      },
+      {
+        id: 's3',
+        text: '계산서 주세요',
+        translation: 'Bill please',
+        phonetic: 'gye-san-seo ju-se-yo',
+      },
+      {
+        id: 's4',
+        text: '맛있어요',
+        translation: 'This is delicious',
+        phonetic: 'ma-si-sseo-yo',
+      },
+    ],
+  },
+  {
+    id: 'seoul-metro',
+    name: 'Seoul Station',
+    category: 'Metro & Transit',
+    emoji: '🚇',
+    coordinates: { lat: 37.5547, lng: 126.9707 },
+    phrases: [
+      {
+        id: 's5',
+        text: '어디로 가요?',
+        translation: 'Where does this go?',
+        phonetic: 'eo-di-ro ga-yo',
+      },
+      {
+        id: 's6',
+        text: '얼마예요?',
+        translation: 'How much?',
+        phonetic: 'eol-ma-ye-yo',
+      },
+      {
+        id: 's7',
+        text: '환승해야 해요?',
+        translation: 'Do I need to transfer?',
+        phonetic: 'hwan-seung-hae-ya hae-yo',
+      },
+    ],
+  },
+  {
+    id: 'seoul-shopping',
+    name: 'Gangnam',
+    category: 'Shopping',
+    emoji: '🛍️',
+    coordinates: { lat: 37.4979, lng: 127.0276 },
+    phrases: [
+      {
+        id: 's8',
+        text: '얼마예요?',
+        translation: 'How much is this?',
+        phonetic: 'eol-ma-ye-yo',
+      },
+      {
+        id: 's9',
+        text: '다른 사이즈 있어요?',
+        translation: 'Do you have another size?',
+        phonetic: 'da-reun sa-i-jeu i-sseo-yo',
+      },
+      {
+        id: 's10',
+        text: '카드 받으세요?',
+        translation: 'Do you accept cards?',
+        phonetic: 'ka-deu ba-deu-se-yo',
+      },
+    ],
+  },
+];
+
+export const beijingLocations: Location[] = [
+  {
+    id: 'beijing-restaurant',
+    name: 'Wangfujing',
+    category: 'Restaurants & Cafés',
+    emoji: '🍽️',
+    coordinates: { lat: 39.9085, lng: 116.4100 },
+    phrases: [
+      {
+        id: 'b1',
+        text: '两个人',
+        translation: 'Table for two',
+        phonetic: 'liǎng gè rén',
+      },
+      {
+        id: 'b2',
+        text: '菜单，请',
+        translation: 'Menu please',
+        phonetic: 'cài dān, qǐng',
+      },
+      {
+        id: 'b3',
+        text: '买单',
+        translation: 'Bill please',
+        phonetic: 'mǎi dān',
+      },
+      {
+        id: 'b4',
+        text: '很好吃',
+        translation: 'Very delicious',
+        phonetic: 'hěn hǎo chī',
+      },
+    ],
+  },
+  {
+    id: 'beijing-metro',
+    name: 'Tiananmen Square',
+    category: 'Metro & Transit',
+    emoji: '🚇',
+    coordinates: { lat: 39.9042, lng: 116.3976 },
+    phrases: [
+      {
+        id: 'b5',
+        text: '这个去哪里?',
+        translation: 'Where does this go?',
+        phonetic: 'zhè gè qù nǎ lǐ',
+      },
+      {
+        id: 'b6',
+        text: '多少钱?',
+        translation: 'How much?',
+        phonetic: 'duō shǎo qián',
+      },
+      {
+        id: 'b7',
+        text: '需要换乘吗?',
+        translation: 'Do I need to transfer?',
+        phonetic: 'xū yào huàn chéng ma',
+      },
+    ],
+  },
+  {
+    id: 'beijing-shopping',
+    name: 'Sanlitun',
+    category: 'Shopping',
+    emoji: '🛍️',
+    coordinates: { lat: 39.9343, lng: 116.4478 },
+    phrases: [
+      {
+        id: 'b8',
+        text: '多少钱?',
+        translation: 'How much is this?',
+        phonetic: 'duō shǎo qián',
+      },
+      {
+        id: 'b9',
+        text: '有别的尺码吗?',
+        translation: 'Do you have another size?',
+        phonetic: 'yǒu bié de chǐ mǎ ma',
+      },
+      {
+        id: 'b10',
+        text: '可以刷卡吗?',
+        translation: 'Can I pay by card?',
+        phonetic: 'kě yǐ shuā kǎ ma',
+      },
+    ],
+  },
+];
+
+export const newDelhiLocations: Location[] = [
+  {
+    id: 'delhi-restaurant',
+    name: 'Connaught Place',
+    category: 'Restaurants & Cafés',
+    emoji: '🍽️',
+    coordinates: { lat: 28.6315, lng: 77.2167 },
+    phrases: [
+      {
+        id: 'd1',
+        text: 'दो लोगों के लिए',
+        translation: 'Table for two',
+        phonetic: 'do logon ke liye',
+      },
+      {
+        id: 'd2',
+        text: 'मेनू दिखाइए',
+        translation: 'Show me the menu',
+        phonetic: 'menu dikhaiye',
+      },
+      {
+        id: 'd3',
+        text: 'बिल लाइए',
+        translation: 'Bring the bill',
+        phonetic: 'bill laiye',
+      },
+      {
+        id: 'd4',
+        text: 'बहुत स्वादिष्ट है',
+        translation: 'Very delicious',
+        phonetic: 'bahut swadisht hai',
+      },
+    ],
+  },
+  {
+    id: 'delhi-metro',
+    name: 'Rajiv Chowk',
+    category: 'Metro & Transit',
+    emoji: '🚇',
+    coordinates: { lat: 28.6328, lng: 77.2197 },
+    phrases: [
+      {
+        id: 'd5',
+        text: 'यह कहाँ जाती है?',
+        translation: 'Where does this go?',
+        phonetic: 'yah kahan jati hai',
+      },
+      {
+        id: 'd6',
+        text: 'कितने पैसे?',
+        translation: 'How much money?',
+        phonetic: 'kitne paise',
+      },
+      {
+        id: 'd7',
+        text: 'क्या मुझे बदलना होगा?',
+        translation: 'Do I need to change?',
+        phonetic: 'kya mujhe badalna hoga',
+      },
+    ],
+  },
+  {
+    id: 'delhi-shopping',
+    name: 'Chandni Chowk',
+    category: 'Shopping',
+    emoji: '🛍️',
+    coordinates: { lat: 28.6506, lng: 77.2303 },
+    phrases: [
+      {
+        id: 'd8',
+        text: 'यह कितने का है?',
+        translation: 'How much is this?',
+        phonetic: 'yah kitne ka hai',
+      },
+      {
+        id: 'd9',
+        text: 'दूसरा साइज़ है?',
+        translation: 'Do you have another size?',
+        phonetic: 'doosra size hai',
+      },
+      {
+        id: 'd10',
+        text: 'कार्ड चलेगा?',
+        translation: 'Will card work?',
+        phonetic: 'card chalega',
+      },
+    ],
+  },
+];
+
+export const mexicoCityLocations: Location[] = [
+  {
+    id: 'mexico-restaurant',
+    name: 'Zona Rosa',
+    category: 'Restaurants & Cafés',
+    emoji: '🍽️',
+    coordinates: { lat: 19.4270, lng: -99.1596 },
+    phrases: [
+      {
+        id: 'mx1',
+        text: 'Una mesa para dos, por favor',
+        translation: 'A table for two, please',
+        phonetic: 'oo-nah meh-sah pah-rah dohs, por fah-vor',
+      },
+      {
+        id: 'mx2',
+        text: '¿Puedo ver el menú?',
+        translation: 'Can I see the menu?',
+        phonetic: 'pweh-doh vehr el meh-noo',
+      },
+      {
+        id: 'mx3',
+        text: 'La cuenta, por favor',
+        translation: 'The bill, please',
+        phonetic: 'lah kwen-tah, por fah-vor',
+      },
+      {
+        id: 'mx4',
+        text: 'Está delicioso',
+        translation: 'This is delicious',
+        phonetic: 'es-tah deh-lee-syoh-soh',
+      },
+    ],
+  },
+  {
+    id: 'mexico-metro',
+    name: 'Zócalo',
+    category: 'Metro & Transit',
+    emoji: '🚇',
+    coordinates: { lat: 19.4326, lng: -99.1332 },
+    phrases: [
+      {
+        id: 'mx5',
+        text: '¿A dónde va esto?',
+        translation: 'Where does this go?',
+        phonetic: 'ah dohn-deh vah es-toh',
+      },
+      {
+        id: 'mx6',
+        text: '¿Cuánto cuesta?',
+        translation: 'How much does it cost?',
+        phonetic: 'kwan-toh kwes-tah',
+      },
+      {
+        id: 'mx7',
+        text: '¿Necesito hacer transbordo?',
+        translation: 'Do I need to transfer?',
+        phonetic: 'neh-seh-see-toh ah-ser trans-bor-doh',
+      },
+    ],
+  },
+  {
+    id: 'mexico-shopping',
+    name: 'Polanco',
+    category: 'Shopping',
+    emoji: '🛍️',
+    coordinates: { lat: 19.4340, lng: -99.1913 },
+    phrases: [
+      {
+        id: 'mx8',
+        text: '¿Cuánto cuesta esto?',
+        translation: 'How much is this?',
+        phonetic: 'kwan-toh kwes-tah es-toh',
+      },
+      {
+        id: 'mx9',
+        text: '¿Tiene otra talla?',
+        translation: 'Do you have another size?',
+        phonetic: 'tyeh-neh oh-trah tah-yah',
+      },
+      {
+        id: 'mx10',
+        text: '¿Aceptan tarjetas?',
+        translation: 'Do you accept cards?',
+        phonetic: 'ah-sep-tahn tar-heh-tas',
+      },
+    ],
+  },
+];
+
 export const getCityLocations = (cityId: string): Location[] => {
   switch (cityId) {
+    case 'seoul':
+      return seoulLocations;
+    case 'beijing':
+      return beijingLocations;
+    case 'new-delhi':
+      return newDelhiLocations;
     case 'paris':
       return parisLocations;
+    case 'mexico-city':
+      return mexicoCityLocations;
     default:
       return [];
   }
