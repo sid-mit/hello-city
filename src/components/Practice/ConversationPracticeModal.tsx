@@ -1,13 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mic, Volume2, Check, Lock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { SituationData } from '@/components/Cards/SituationCard';
-import { useAppStore } from '@/stores/appStore';
-import { toast } from 'sonner';
-import confetti from 'canvas-confetti';
-import { analyzeSyllables, calculateOverallScore } from '@/utils/syllableAnalysis';
-import { getHighQualityVoice, getLanguageCode } from '@/utils/voiceManager';
+import { useState, useEffect } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import confetti from "canvas-confetti";
+import { useAppStore } from "@/stores/appStore";
+import { analyzeSyllables, calculateOverallScore } from "@/utils/syllableAnalysis";
+import { getHighQualityVoice, getLanguageCode } from "@/utils/voiceManager";
+import { ProgressDots } from "./ProgressDots";
+import { CollapsiblePastSteps } from "./CollapsiblePastSteps";
+import { CurrentStepCard } from "./CurrentStepCard";
+import { RecordingButton } from "./RecordingButton";
+import { ScoreDisplay } from "./ScoreDisplay";
+import { NextStepPreview } from "./NextStepPreview";
+import { SituationData } from "@/components/Cards/SituationCard";
+import { toast } from "sonner";
 
 interface ConversationPracticeModalProps {
   situation: SituationData;
@@ -15,12 +22,14 @@ interface ConversationPracticeModalProps {
 }
 
 interface StepResult {
-  stepIndex: number;
   score: number;
   spokenText: string;
 }
 
-export const ConversationPracticeModal = ({ situation, onClose }: ConversationPracticeModalProps) => {
+export const ConversationPracticeModal = ({
+  situation,
+  onClose,
+}: ConversationPracticeModalProps) => {
   const { updatePracticeHistory, updateStreak, unlockBadge } = useAppStore();
   
   // Auto-generate conversation flow if none exists
@@ -29,84 +38,90 @@ export const ConversationPracticeModal = ({ situation, onClose }: ConversationPr
     { step: index * 2 + 2, speaker: 'other' as const, action: 'Responds appropriately' }
   ])).flat();
   
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [stepResults, setStepResults] = useState<Map<number, StepResult>>(new Map());
+  const [currentStep, setCurrentStep] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
-  const [isComplete, setIsComplete] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const currentStep = conversationFlow[currentStepIndex];
-  const isUserTurn = currentStep?.speaker === 'you';
-  const currentPhrase = isUserTurn && currentStep.phraseIndex !== undefined 
-    ? situation.phrases[currentStep.phraseIndex] 
-    : null;
+  const [stepResults, setStepResults] = useState<StepResult[]>([]);
 
   // Initialize speech recognition
   useEffect(() => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+    if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+      const SpeechRecognition =
+        (window as any).webkitSpeechRecognition ||
+        (window as any).SpeechRecognition;
       const recognitionInstance = new SpeechRecognition();
-      
+
       const languageMap: Record<string, string> = {
-        'paris': 'fr-FR',
-        'seoul': 'ko-KR',
-        'beijing': 'zh-CN',
-        'new-delhi': 'hi-IN',
-        'mexico-city': 'es-MX',
+        paris: "fr-FR",
+        seoul: "ko-KR",
+        beijing: "zh-CN",
+        "new-delhi": "hi-IN",
+        "mexico-city": "es-MX",
       };
-      recognitionInstance.lang = languageMap[situation.cityId] || 'en-US';
+      recognitionInstance.lang = languageMap[situation.cityId] || "en-US";
       recognitionInstance.continuous = false;
       recognitionInstance.interimResults = false;
 
       recognitionInstance.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
-        const confidence = event.results[0][0].confidence;
+        const currentFlow = conversationFlow[currentStep];
         
-        if (currentPhrase) {
-          const syllableAnalyses = analyzeSyllables(
-            transcript,
-            currentPhrase.native,
-            currentPhrase.romanization
-          );
-          const score = calculateOverallScore(syllableAnalyses);
+        if (currentFlow.phraseIndex !== undefined) {
+          const currentPhrase = situation.phrases[currentFlow.phraseIndex];
           
-          const newResult: StepResult = {
-            stepIndex: currentStepIndex,
-            score: Math.round(score),
-            spokenText: transcript,
-          };
-          
-          setStepResults(new Map(stepResults.set(currentStepIndex, newResult)));
-          updatePracticeHistory(situation.id, Math.round(score), currentPhrase.native, 
-            syllableAnalyses.map(a => ({ syllable: a.syllable, score: a.score }))
-          );
-          updateStreak();
-          
-          if (score >= 90) {
-            confetti({ particleCount: 50, spread: 40, origin: { y: 0.7 } });
-          }
-          
-          // Auto-advance after a short delay
+          setIsAnalyzing(true);
+
           setTimeout(() => {
-            if (currentStepIndex < conversationFlow.length - 1) {
-              setCurrentStepIndex(currentStepIndex + 1);
-            } else {
-              setIsComplete(true);
-              unlockBadge('first-steps');
+            const syllableAnalyses = analyzeSyllables(
+              transcript,
+              currentPhrase.native,
+              currentPhrase.romanization
+            );
+            const score = Math.round(calculateOverallScore(syllableAnalyses));
+
+            setStepResults((prev) => [...prev, { score, spokenText: transcript }]);
+
+            updatePracticeHistory(
+              situation.id,
+              score,
+              currentPhrase.native,
+              syllableAnalyses.map((a) => ({ syllable: a.syllable, score: a.score }))
+            );
+
+            updateStreak();
+
+            if (score >= 90) {
+              confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+              });
             }
-          }, 1500);
+
+            setIsAnalyzing(false);
+
+            setTimeout(() => {
+              setIsRecording(false);
+              if (currentStep < conversationFlow.length - 1) {
+                setCurrentStep((prev) => prev + 1);
+              } else {
+                unlockBadge('first-steps');
+              }
+            }, 2000);
+          }, 500);
         }
       };
 
       recognitionInstance.onerror = (event: any) => {
-        console.error('Speech recognition error:', event.error);
+        console.error("Speech recognition error:", event.error);
         setIsRecording(false);
-        
-        if (event.error === 'no-speech') {
-          toast.error('No speech detected. Please try again.');
-        } else if (event.error === 'not-allowed') {
-          toast.error('Microphone access denied.');
+        setIsAnalyzing(false);
+
+        if (event.error === "no-speech") {
+          toast.error("No speech detected. Please try again.");
+        } else if (event.error === "not-allowed") {
+          toast.error("Microphone access denied.");
         }
       };
 
@@ -122,24 +137,15 @@ export const ConversationPracticeModal = ({ situation, onClose }: ConversationPr
         recognition.stop();
       }
     };
-  }, []);
+  }, [currentStep]);
 
-  // Auto-scroll to current step
-  useEffect(() => {
-    if (scrollRef.current) {
-      const activeElement = scrollRef.current.querySelector(`[data-step="${currentStepIndex}"]`);
-      if (activeElement) {
-        activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
-  }, [currentStepIndex]);
+  const handleListen = async (phraseIndex: number) => {
+    const phrase = situation.phrases[phraseIndex];
+    if (!phrase || !("speechSynthesis" in window)) return;
 
-  const handleListen = async (phrase: typeof currentPhrase) => {
-    if (!phrase || !('speechSynthesis' in window)) return;
-    
     const languageCode = getLanguageCode(situation.cityId);
     const voice = await getHighQualityVoice(languageCode);
-    
+
     const utterance = new SpeechSynthesisUtterance(phrase.native);
     if (voice) {
       utterance.voice = voice;
@@ -147,251 +153,177 @@ export const ConversationPracticeModal = ({ situation, onClose }: ConversationPr
     utterance.rate = 0.8;
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
-    
+
     speechSynthesis.speak(utterance);
   };
 
   const handleRecord = () => {
-    if (!recognition || !isUserTurn || !currentPhrase) return;
+    if (!recognition || isRecording || isAnalyzing) return;
 
-    if (isRecording) {
-      recognition.stop();
-    } else {
-      setIsRecording(true);
-      recognition.start();
-      
-      setTimeout(() => {
-        if (isRecording) {
-          recognition.stop();
-        }
-      }, 4000);
-    }
+    setIsRecording(true);
+    recognition.start();
+
+    setTimeout(() => {
+      if (isRecording && recognition) {
+        recognition.stop();
+      }
+    }, 4000);
   };
 
-  const handleSkipToNext = () => {
-    if (currentStepIndex < conversationFlow.length - 1) {
-      setCurrentStepIndex(currentStepIndex + 1);
-    }
-  };
+  const currentFlow = conversationFlow[currentStep];
+  const isComplete = currentStep >= conversationFlow.length;
+  const userSteps = conversationFlow
+    .map((flow, index) => (flow.speaker === "you" ? index : -1))
+    .filter((index) => index !== -1);
+  const currentUserStepIndex = userSteps.indexOf(currentStep);
 
-  const averageScore = stepResults.size > 0
-    ? Math.round(Array.from(stepResults.values()).reduce((sum, r) => sum + r.score, 0) / stepResults.size)
-    : 0;
-
-  if (isComplete) {
-    return (
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          onClick={onClose}
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            onClick={(e) => e.stopPropagation()}
-            className="bg-card rounded-3xl shadow-2xl w-full max-w-md p-8 text-center"
-          >
-            <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-3xl font-bold mb-2">Conversation Complete!</h2>
-            <p className="text-muted-foreground mb-6">
-              You practiced the full conversation flow
-            </p>
-
-            <div className="mb-8">
-              <p className="text-sm text-muted-foreground mb-2">Average Score</p>
-              <div className="text-4xl font-bold text-primary">{averageScore}%</div>
-            </div>
-
-            <Button onClick={onClose} className="w-full">
-              Back to Learn
-            </Button>
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
-    );
-  }
+  const totalSteps = userSteps.length;
+  const completedSteps = stepResults.length;
+  const nextStepIndex = currentStep + 1;
+  const nextFlow =
+    nextStepIndex < conversationFlow.length
+      ? conversationFlow[nextStepIndex]
+      : null;
+  const nextPhrase =
+    nextFlow && nextFlow.speaker === "you" && nextFlow.phraseIndex !== undefined
+      ? situation.phrases[nextFlow.phraseIndex].native
+      : null;
+  const remainingSteps = totalSteps - completedSteps;
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        onClick={onClose}
-      >
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          onClick={(e) => e.stopPropagation()}
-          className="bg-card rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col"
-          style={{ maxHeight: '85vh' }}
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-border">
-            <div className="flex items-center gap-2">
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+        <div className="sticky top-0 z-10 bg-background border-b px-6 py-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
               <span className="text-2xl">{situation.emoji}</span>
-              <h2 className="text-lg font-semibold">{situation.title}</h2>
+              <h2 className="text-xl font-bold">{situation.title}</h2>
             </div>
             <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="w-5 h-5" />
+              <X className="h-5 w-5" />
             </Button>
           </div>
-
-          {/* Conversation Flow */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
-            {conversationFlow.map((step, index) => {
-              const phrase = step.phraseIndex !== undefined ? situation.phrases[step.phraseIndex] : null;
-              const result = stepResults.get(index);
-              const isPast = index < currentStepIndex;
-              const isCurrent = index === currentStepIndex;
-              const isFuture = index > currentStepIndex;
-              const isLocked = isFuture && !result;
-
-              if (step.speaker === 'you' && phrase) {
-                // User bubble (right side)
-                return (
-                  <motion.div
-                    key={index}
-                    data-step={index}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className={`flex items-start gap-2 justify-end ${isCurrent ? 'scale-105' : ''}`}
-                  >
-                    <div className="flex-1 flex justify-end">
-                      <div>
-                        <div 
-                          className={`rounded-2xl rounded-tr-sm p-3 max-w-[85%] ml-auto ${
-                            isCurrent ? 'bg-primary/20 border-2 border-primary' : 'bg-muted'
-                          } ${isLocked ? 'opacity-50' : ''}`}
-                        >
-                          <div className="text-sm font-medium mb-1">{phrase.native}</div>
-                          <div className="text-xs text-muted-foreground italic mb-1">{phrase.romanization}</div>
-                          <div className="text-xs text-muted-foreground">{phrase.english}</div>
-                          
-                          {result && (
-                            <div className="mt-2 flex items-center gap-2">
-                              <div className={`text-xs font-semibold ${
-                                result.score >= 80 ? 'text-green-600' : 
-                                result.score >= 60 ? 'text-yellow-600' : 'text-orange-600'
-                              }`}>
-                                <Check className="w-3 h-3 inline mr-1" />
-                                {result.score}%
-                              </div>
-                            </div>
-                          )}
-                          
-                          {isLocked && (
-                            <div className="mt-2">
-                              <Lock className="w-3 h-3 text-muted-foreground" />
-                            </div>
-                          )}
-                        </div>
-                        
-                        {(isCurrent || isPast) && !isLocked && (
-                          <div className="flex justify-end">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleListen(phrase)}
-                              className="mt-1 h-6 text-xs"
-                            >
-                              <Volume2 className="w-3 h-3 mr-1" />
-                              Listen
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-1">
-                      <span className="text-sm">👤</span>
-                    </div>
-                  </motion.div>
-                );
-              } else {
-                // Other person bubble or action (left side)
-                return (
-                  <motion.div
-                    key={index}
-                    data-step={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex items-start gap-2"
-                  >
-                    <div 
-                      className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1"
-                      style={{ 
-                        backgroundColor: situation.categoryColor ? `${situation.categoryColor}30` : undefined 
-                      }}
-                    >
-                      <span className="text-sm">👥</span>
-                    </div>
-                    <div className="flex-1">
-                      <div 
-                        className="rounded-2xl rounded-tl-sm p-3 max-w-[80%] bg-muted/50"
-                      >
-                        <div className="text-sm text-muted-foreground italic">
-                          {step.action || 'Other person responds'}
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              }
-            })}
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-muted-foreground">
+              Step {completedSteps + 1}/{totalSteps}
+            </span>
+            <ProgressDots total={totalSteps} current={completedSteps + 1} />
           </div>
+        </div>
 
-          {/* Recording Controls */}
-          {isUserTurn && currentPhrase && (
-            <div className="p-4 border-t border-border bg-muted/30">
-              <div className="flex items-center gap-3">
-                <Button
-                  onClick={handleRecord}
-                  disabled={!recognition}
-                  className={`flex-1 h-12 ${isRecording ? 'bg-red-500 hover:bg-red-600' : ''}`}
-                >
-                  <Mic className="w-5 h-5 mr-2" />
-                  {isRecording ? 'Recording...' : 'Hold to Record'}
-                </Button>
-                
-                {currentStepIndex < conversationFlow.length - 1 && (
-                  <Button
-                    variant="outline"
-                    onClick={handleSkipToNext}
-                    className="h-12"
-                  >
-                    Skip
-                  </Button>
-                )}
-              </div>
-              
-              {isRecording && (
+        <div className="p-6 space-y-6">
+          {!isComplete ? (
+            <>
+              {/* Collapsible Past Steps */}
+              <CollapsiblePastSteps
+                results={stepResults}
+                phrases={situation.phrases}
+                userSteps={userSteps}
+              />
+
+              {/* AI/Other Person Response */}
+              {currentFlow.speaker === "other" && (
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="mt-2 text-center text-xs text-muted-foreground"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="p-4 rounded-lg bg-muted border"
                 >
-                  Listening...
+                  <div className="flex items-center gap-2 mb-2 text-sm font-medium text-muted-foreground">
+                    <span>👥</span>
+                    <span>OTHER PERSON RESPONDS</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground italic">
+                    🎭 {currentFlow.action || "Responds appropriately"}
+                  </p>
+                  <Button
+                    onClick={() => setCurrentStep((prev) => prev + 1)}
+                    size="lg"
+                    className="w-full mt-4"
+                  >
+                    Continue
+                  </Button>
                 </motion.div>
               )}
-            </div>
+
+              {/* Current User Turn */}
+              {currentFlow.speaker === "you" && currentFlow.phraseIndex !== undefined && (
+                <>
+                  <CurrentStepCard
+                    phrase={situation.phrases[currentFlow.phraseIndex]}
+                    onListen={() => handleListen(currentFlow.phraseIndex!)}
+                  />
+
+                  {/* Show score after recording */}
+                  {stepResults[currentUserStepIndex] && !isRecording && !isAnalyzing && (
+                    <ScoreDisplay score={stepResults[currentUserStepIndex].score} />
+                  )}
+
+                  {/* Recording Button */}
+                  <RecordingButton
+                    isRecording={isRecording}
+                    isAnalyzing={isAnalyzing}
+                    onRecord={handleRecord}
+                    disabled={isRecording || isAnalyzing}
+                  />
+                </>
+              )}
+
+              {/* Next Step Preview */}
+              <NextStepPreview
+                nextPhrase={nextPhrase}
+                remainingSteps={remainingSteps}
+              />
+            </>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-8 space-y-6"
+            >
+              <h3 className="text-3xl font-bold">🎉 Well Done!</h3>
+
+              <ScoreDisplay
+                score={Math.round(
+                  stepResults.reduce((sum, r) => sum + r.score, 0) /
+                    stepResults.length
+                )}
+              />
+
+              <div className="text-left bg-muted/50 rounded-lg p-4 space-y-2">
+                <p className="text-sm font-medium text-muted-foreground">
+                  📊 Your Progress:
+                </p>
+                <p className="text-sm">
+                  • Perfect phrases:{" "}
+                  {stepResults.filter((r) => r.score >= 90).length}/
+                  {stepResults.length}
+                </p>
+                <p className="text-sm">
+                  • Good phrases:{" "}
+                  {
+                    stepResults.filter((r) => r.score >= 80 && r.score < 90)
+                      .length
+                  }
+                  /{stepResults.length}
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => window.location.reload()}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Practice Again
+                </Button>
+                <Button onClick={onClose} className="flex-1">
+                  Back to Learn
+                </Button>
+              </div>
+            </motion.div>
           )}
-          
-          {/* Auto-advance for other person's turn */}
-          {!isUserTurn && currentStepIndex < conversationFlow.length - 1 && (
-            <div className="p-4 border-t border-border">
-              <Button onClick={handleSkipToNext} className="w-full">
-                Continue
-              </Button>
-            </div>
-          )}
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
