@@ -22,7 +22,7 @@ export const UnifiedHeader = () => {
         </div>
 
         {/* Navigation Toggle */}
-        <div className="relative bg-muted rounded-full p-1 flex gap-1" style={{ width: '200px', height: '48px' }}>
+        <div className="relative bg-muted rounded-full p-1 flex gap-1" style={{ width: '200px', height: '34px' }}>
           <motion.div
             layoutId="activeHeaderToggle"
             className="absolute top-1 bottom-1 bg-card rounded-full shadow-md"
@@ -53,7 +53,7 @@ export const UnifiedHeader = () => {
         </div>
 
         {/* Right Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 font-karla">
+        <nav className="hidden md:flex items-center font-karla" style={{ gap: '50px' }}>
           <button
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
