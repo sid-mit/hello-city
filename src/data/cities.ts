@@ -2,6 +2,30 @@ import { City, Location } from '@/stores/appStore';
 
 export const cities: City[] = [
   {
+    id: 'seoul',
+    name: 'Seoul',
+    country: 'South Korea',
+    language: 'Korean',
+    coordinates: { lat: 37.5665, lng: 126.9780 },
+    emoji: '🇰🇷',
+  },
+  {
+    id: 'beijing',
+    name: 'Beijing',
+    country: 'China',
+    language: 'Mandarin',
+    coordinates: { lat: 39.9042, lng: 116.4074 },
+    emoji: '🇨🇳',
+  },
+  {
+    id: 'new-delhi',
+    name: 'New Delhi',
+    country: 'India',
+    language: 'Hindi',
+    coordinates: { lat: 28.6139, lng: 77.2090 },
+    emoji: '🇮🇳',
+  },
+  {
     id: 'paris',
     name: 'Paris',
     country: 'France',
@@ -10,36 +34,12 @@ export const cities: City[] = [
     emoji: '🇫🇷',
   },
   {
-    id: 'tokyo',
-    name: 'Tokyo',
-    country: 'Japan',
-    language: 'Japanese',
-    coordinates: { lat: 35.6762, lng: 139.6503 },
-    emoji: '🇯🇵',
-  },
-  {
     id: 'mexico-city',
     name: 'Mexico City',
     country: 'Mexico',
     language: 'Spanish',
     coordinates: { lat: 19.4326, lng: -99.1332 },
     emoji: '🇲🇽',
-  },
-  {
-    id: 'istanbul',
-    name: 'Istanbul',
-    country: 'Turkey',
-    language: 'Turkish',
-    coordinates: { lat: 41.0082, lng: 28.9784 },
-    emoji: '🇹🇷',
-  },
-  {
-    id: 'bangkok',
-    name: 'Bangkok',
-    country: 'Thailand',
-    language: 'Thai',
-    coordinates: { lat: 13.7563, lng: 100.5018 },
-    emoji: '🇹🇭',
   },
 ];
 
