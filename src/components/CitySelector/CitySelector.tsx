@@ -49,7 +49,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
 
                 {/* Header */}
                 <div className="flex items-center justify-center mb-[40px]">
-                  <h2 className="text-2xl font-bold font-architects">Where do you plan to travel?</h2>
+                  <h2 className="text-[48px] font-bold font-architects">Where do you plan to travel?</h2>
                 </div>
 
                 {/* City Pills */}
