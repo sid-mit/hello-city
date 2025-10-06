@@ -10,7 +10,7 @@ import { ArrowLeft } from 'lucide-react';
 import { createRoot } from 'react-dom/client';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-const MAPBOX_TOKEN = 'pk.eyJ1IjoibG92YWJsZWRldiIsImEiOiJjbTRtNjBoa3UwYjM5MmtvZjBldmpzMGJmIn0.VRrsLYF9TlZivK8qVvO9_g';
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiYW5pbnlhZyIsImEiOiJjbWdmNHF6MHUwNG9oMmtuMGhubWRlaWJ3In0.7cdKmRPJHIj-j-HzFojggA';
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
