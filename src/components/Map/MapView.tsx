@@ -215,14 +215,27 @@ export const MapView = () => {
       />
 
       {/* Phrase Drawer */}
-      {selectedCategory && cityData && (
-        <PhraseDrawer
-          categoryTitle={cityData.categories.find(c => c.id === selectedCategory)?.title || ''}
-          categoryEmoji={cityData.categories.find(c => c.id === selectedCategory)?.emoji || ''}
-          situations={cityData.categories.find(c => c.id === selectedCategory)?.situations || []}
-          onClose={handleCloseDrawer}
-        />
-      )}
+      {selectedCategory && cityData && (() => {
+        const category = cityData.categories.find(c => c.id === selectedCategory);
+        if (!category) return null;
+        
+        // Enrich situations with category color
+        const enrichedSituations = category.situations.map(situation => ({
+          ...situation,
+          categoryColor: category.color,
+        }));
+        
+        return (
+          <PhraseDrawer
+            categoryTitle={category.title}
+            categoryEmoji={category.emoji}
+            categoryColor={category.color}
+            categoryDescription={category.description}
+            situations={enrichedSituations}
+            onClose={handleCloseDrawer}
+          />
+        );
+      })()}
     </motion.div>
   );
 };

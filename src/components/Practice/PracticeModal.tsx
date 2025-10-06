@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Volume2, Mic, Play, ArrowRight, RotateCcw, Turtle } from 'lucide-react';
+import { X, Volume2, Mic, Play, ArrowRight, RotateCcw, Turtle, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { SituationData } from '@/components/Cards/SituationCard';
@@ -10,6 +10,7 @@ import confetti from 'canvas-confetti';
 import { analyzeSyllables, calculateOverallScore, SyllableAnalysis } from '@/utils/syllableAnalysis';
 import { SyllableBreakdown } from '@/components/Practice/SyllableBreakdown';
 import { getHighQualityVoice, getLanguageCode, getVoiceQualityTier } from '@/utils/voiceManager';
+import { ConversationFlow } from '@/components/Practice/ConversationFlow';
 
 interface PracticeModalProps {
   situation: SituationData;
@@ -38,6 +39,8 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const [currentVoice, setCurrentVoice] = useState<SpeechSynthesisVoice | null>(null);
+  const [showConversationFlow, setShowConversationFlow] = useState(true);
+  const [hasStartedPractice, setHasStartedPractice] = useState(false);
 
   const currentPhrase = situation.phrases[currentPhraseIndex];
   const progress = ((currentPhraseIndex + (results.length > currentPhraseIndex ? 1 : 0)) / situation.phrases.length) * 100;
@@ -241,6 +244,11 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
   };
 
   const handleRecord = () => {
+    if (!hasStartedPractice) {
+      setHasStartedPractice(true);
+      setShowConversationFlow(false);
+    }
+
     if (!recognition) {
       toast.error('Speech recognition not available');
       return;
@@ -273,6 +281,7 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
       setCurrentPhraseIndex(currentPhraseIndex + 1);
       setPracticeState('ready');
       setSpokenText('');
+      setShowConversationFlow(false);
     } else {
       setIsComplete(true);
     }
@@ -360,19 +369,37 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
           className="bg-card rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-border">
+          <div 
+            className="flex items-center justify-between p-6 border-b border-border"
+            style={situation.categoryColor ? {
+              borderBottomColor: `${situation.categoryColor}30`,
+            } : undefined}
+          >
             <div className="flex-1">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-sm text-muted-foreground">
                   Phrase {currentPhraseIndex + 1} of {situation.phrases.length}
                 </p>
-                {currentVoice && (
-                  <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
-                    {getVoiceQualityTier(currentVoice) === 'premium' ? '🎤 Premium Voice' : 
-                     getVoiceQualityTier(currentVoice) === 'standard' ? '🔊 Device Voice' : 
-                     '🔈 Basic Voice'}
-                  </span>
-                )}
+                <div className="flex items-center gap-2">
+                  {situation.conversationFlow && situation.conversationFlow.length > 0 && hasStartedPractice && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setShowConversationFlow(!showConversationFlow)}
+                      className="text-xs"
+                    >
+                      <BookOpen className="w-3 h-3 mr-1" />
+                      {showConversationFlow ? 'Hide' : 'View'} Flow
+                    </Button>
+                  )}
+                  {currentVoice && (
+                    <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
+                      {getVoiceQualityTier(currentVoice) === 'premium' ? '🎤 Premium Voice' : 
+                       getVoiceQualityTier(currentVoice) === 'standard' ? '🔊 Device Voice' : 
+                       '🔈 Basic Voice'}
+                    </span>
+                  )}
+                </div>
               </div>
               <Progress value={progress} className="h-1" />
             </div>
@@ -442,11 +469,35 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
                 animate={{ opacity: 1 }}
                 className="text-center"
               >
-                <div className="mb-8">
-                  <p className="text-3xl font-bold mb-3">{currentPhrase.native}</p>
-                  <p className="text-lg text-muted-foreground mb-2">{currentPhrase.romanization}</p>
-                  <p className="text-base text-muted-foreground">{currentPhrase.english}</p>
-                </div>
+                {/* Conversation Flow */}
+                {situation.conversationFlow && situation.conversationFlow.length > 0 && showConversationFlow && (
+                  <div className="mb-6 text-left">
+                    <ConversationFlow
+                      flow={situation.conversationFlow}
+                      phrases={situation.phrases}
+                      currentStep={hasStartedPractice ? situation.conversationFlow.find(s => s.phraseIndex === currentPhraseIndex)?.step : undefined}
+                      onPlayPhrase={(index) => {
+                        const phrase = situation.phrases[index];
+                        if (phrase) handleListen(false, phrase.native);
+                      }}
+                    />
+                    {!hasStartedPractice && (
+                      <div className="mt-4 text-center">
+                        <p className="text-xs text-muted-foreground mb-3">
+                          Ready to start? Click "Record" below to begin practicing
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {(!showConversationFlow || !situation.conversationFlow) && (
+                  <div className="mb-8">
+                    <p className="text-3xl font-bold mb-3">{currentPhrase.native}</p>
+                    <p className="text-lg text-muted-foreground mb-2">{currentPhrase.romanization}</p>
+                    <p className="text-base text-muted-foreground">{currentPhrase.english}</p>
+                  </div>
+                )}
 
                 <div className="flex justify-center gap-3 mb-6">
                   <Button

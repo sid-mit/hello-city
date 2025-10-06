@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -6,11 +7,37 @@ import { SituationCard, SituationData } from '@/components/Cards/SituationCard';
 interface PhraseDrawerProps {
   categoryTitle: string;
   categoryEmoji: string;
+  categoryColor?: string;
+  categoryDescription?: string;
   situations: SituationData[];
   onClose: () => void;
 }
 
-export const PhraseDrawer = ({ categoryTitle, categoryEmoji, situations, onClose }: PhraseDrawerProps) => {
+export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, categoryDescription, situations, onClose }: PhraseDrawerProps) => {
+  const [currentCardIndex, setCurrentCardIndex] = React.useState(0);
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const [showScrollHint, setShowScrollHint] = React.useState(true);
+
+  React.useEffect(() => {
+    const hasSeenHint = localStorage.getItem('hasSeenScrollHint');
+    if (hasSeenHint) {
+      setShowScrollHint(false);
+    }
+  }, []);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (showScrollHint) {
+      setShowScrollHint(false);
+      localStorage.setItem('hasSeenScrollHint', 'true');
+    }
+
+    const container = e.currentTarget;
+    const cardWidth = 320 + 16; // card width + gap
+    const scrollPosition = container.scrollLeft;
+    const newIndex = Math.round(scrollPosition / cardWidth);
+    setCurrentCardIndex(newIndex);
+  };
+
   return (
     <AnimatePresence>
       {/* Backdrop */}
@@ -37,48 +64,109 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, situations, onClose
           }
         }}
         className="fixed bottom-0 left-0 right-0 z-50 bg-card rounded-t-3xl shadow-large overflow-hidden"
-        style={{ height: '400px', maxHeight: '40vh' }}
+        style={{ 
+          height: 'auto',
+          maxHeight: 'min(60vh, 600px)',
+        }}
       >
         {/* Drag Handle */}
         <div className="flex justify-center pt-3 pb-2">
           <div className="w-12 h-1.5 bg-muted rounded-full" />
         </div>
 
-        {/* Header */}
-        <div className="flex items-start justify-between px-6 py-3 border-b border-border">
-          <div className="flex items-center gap-3">
+        {/* Category Header */}
+        <div 
+          className="px-6 py-4 border-b border-border"
+          style={{
+            background: categoryColor 
+              ? `linear-gradient(to right, ${categoryColor}10, transparent)`
+              : undefined
+          }}
+        >
+          <div className="flex items-center gap-3 mb-2">
             <span className="text-3xl">{categoryEmoji}</span>
             <h2 className="text-xl font-bold">{categoryTitle}</h2>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="shrink-0"
-          >
-            <X className="w-5 h-5" />
-          </Button>
+          {categoryDescription && (
+            <p className="text-sm text-muted-foreground ml-11">
+              {categoryDescription}
+            </p>
+          )}
+          {/* Dot Indicators */}
+          {situations.length > 1 && (
+            <div className="flex items-center justify-center gap-1.5 mt-3">
+              {situations.map((_, index) => (
+                <div
+                  key={index}
+                  className="rounded-full transition-all duration-300"
+                  style={{
+                    width: currentCardIndex === index ? '20px' : '6px',
+                    height: '6px',
+                    backgroundColor: currentCardIndex === index 
+                      ? categoryColor || 'hsl(var(--primary))' 
+                      : 'hsl(var(--muted-foreground) / 0.3)',
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Horizontal Scrollable Situation Cards */}
-        <div 
-          className="flex overflow-x-auto gap-4 px-5 py-5 snap-x snap-mandatory scrollbar-hide"
-          style={{ 
-            scrollSnapType: 'x mandatory',
-            WebkitOverflowScrolling: 'touch',
-          }}
+        {/* Close Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10"
         >
-          {situations.map((situation, index) => (
+          <X className="w-5 h-5" />
+        </Button>
+
+        {/* Horizontal Scrollable Situation Cards */}
+        <div className="relative">
+          <div 
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className="flex overflow-x-auto gap-4 px-5 py-5 snap-x snap-mandatory scrollbar-hide"
+            style={{ 
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+            }}
+          >
+            {situations.map((situation, index) => (
+              <motion.div
+                key={situation.id}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="snap-start"
+              >
+                <SituationCard situation={situation} />
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Fade Gradient on Right */}
+          {currentCardIndex < situations.length - 1 && (
+            <div 
+              className="absolute right-0 top-0 bottom-0 w-20 pointer-events-none"
+              style={{
+                background: 'linear-gradient(to left, hsl(var(--card)), transparent)',
+              }}
+            />
+          )}
+
+          {/* Scroll Hint */}
+          {showScrollHint && situations.length > 1 && (
             <motion.div
-              key={situation.id}
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="snap-start"
+              exit={{ opacity: 0 }}
+              className="absolute right-8 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium pointer-events-none"
             >
-              <SituationCard situation={situation} />
+              Swipe for more →
             </motion.div>
-          ))}
+          )}
         </div>
       </motion.div>
 
@@ -89,6 +177,24 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, situations, onClose
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        
+        @media (max-width: 768px) {
+          .fixed.bottom-0 {
+            max-height: 60vh !important;
+          }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .fixed.bottom-0 {
+            max-height: 50vh !important;
+          }
+        }
+        
+        @media (min-width: 1025px) {
+          .fixed.bottom-0 {
+            max-height: 40vh !important;
+          }
         }
       `}</style>
     </AnimatePresence>

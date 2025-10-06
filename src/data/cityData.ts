@@ -4,6 +4,8 @@ export interface Category {
   id: string;
   emoji: string;
   title: string;
+  color: string;
+  description: string;
   mapPosition: [number, number];
   situations: SituationData[];
 }
@@ -25,6 +27,8 @@ export const parisData: CityDataStructure = {
       id: 'restaurants',
       emoji: '🍽️',
       title: 'Restaurants & Cafés',
+      color: '#F97316',
+      description: 'Master dining out with essential phrases for restaurants and cafés',
       mapPosition: [48.8534, 2.3488],
       situations: [
         {
@@ -36,6 +40,15 @@ export const parisData: CityDataStructure = {
           title: 'Ordering Food',
           description: 'Learn essential phrases for ordering at restaurants',
           context: 'Use these when sitting at a restaurant table',
+          categoryColor: '#F97316',
+          culturalTip: 'In France, always greet staff with "Bonjour" before making any request. It\'s considered rude to skip this greeting.',
+          conversationFlow: [
+            { step: 1, speaker: 'you', phraseIndex: 0 },
+            { step: 2, speaker: 'other', action: 'Waiter shows you to your table and brings menus' },
+            { step: 3, speaker: 'you', phraseIndex: 1 },
+            { step: 4, speaker: 'other', action: 'Waiter brings your food' },
+            { step: 5, speaker: 'you', phraseIndex: 2 },
+          ],
           phrases: [
             {
               native: "Une table pour deux, s'il vous plaît",
@@ -63,6 +76,8 @@ export const parisData: CityDataStructure = {
           title: 'Dietary Restrictions',
           description: 'Communicate your dietary needs clearly',
           context: 'Important when ordering food',
+          categoryColor: '#F97316',
+          culturalTip: 'French cuisine is very diverse. Don\'t hesitate to ask about ingredients - restaurants are used to accommodating dietary needs.',
           phrases: [
             {
               native: 'J\'ai une allergie alimentaire',
@@ -90,6 +105,8 @@ export const parisData: CityDataStructure = {
           title: 'Asking for the Bill',
           description: 'Request the check and pay',
           context: 'Use at the end of your meal',
+          categoryColor: '#F97316',
+          culturalTip: 'In France, the waiter won\'t bring the bill until you ask. Tipping is optional but appreciated (5-10%).',
           phrases: [
             {
               native: 'L\'addition, s\'il vous plaît',
@@ -109,6 +126,8 @@ export const parisData: CityDataStructure = {
       id: 'transit',
       emoji: '🚇',
       title: 'Metro & Transit',
+      color: '#3B82F6',
+      description: 'Navigate the Paris metro system with confidence',
       mapPosition: [48.8809, 2.3553],
       situations: [
         {
@@ -166,6 +185,8 @@ export const parisData: CityDataStructure = {
       id: 'shopping',
       emoji: '🛍️',
       title: 'Shopping',
+      color: '#A855F7',
+      description: 'Shop like a local with essential retail phrases',
       mapPosition: [48.8698, 2.3080],
       situations: [
         {
@@ -201,6 +222,8 @@ export const parisData: CityDataStructure = {
       id: 'hotels',
       emoji: '🏨',
       title: 'Hotels',
+      color: '#14B8A6',
+      description: 'Check-in, check-out, and hotel amenities',
       mapPosition: [48.8566, 2.3615],
       situations: [
         {
@@ -236,6 +259,8 @@ export const parisData: CityDataStructure = {
       id: 'emergency',
       emoji: '🏥',
       title: 'Emergency',
+      color: '#EF4444',
+      description: 'Essential phrases for urgent situations',
       mapPosition: [48.8606, 2.3376],
       situations: [
         {
@@ -271,6 +296,8 @@ export const parisData: CityDataStructure = {
       id: 'culture',
       emoji: '🎭',
       title: 'Culture & Etiquette',
+      color: '#F59E0B',
+      description: 'Learn cultural norms and polite expressions',
       mapPosition: [48.8606, 2.3522],
       situations: [
         {
@@ -315,6 +342,8 @@ export const seoulData: CityDataStructure = {
       id: 'restaurants',
       emoji: '🍽️',
       title: 'Restaurants & Cafés',
+      color: '#F97316',
+      description: 'Master Korean dining etiquette and restaurant phrases',
       mapPosition: [37.5636, 126.9856],
       situations: [
         {
@@ -377,6 +406,8 @@ export const seoulData: CityDataStructure = {
       id: 'transit',
       emoji: '🚇',
       title: 'Metro & Transit',
+      color: '#3B82F6',
+      description: 'Navigate Seoul\'s efficient subway system',
       mapPosition: [37.5547, 126.9707],
       situations: [
         {
@@ -412,6 +443,8 @@ export const seoulData: CityDataStructure = {
       id: 'shopping',
       emoji: '🛍️',
       title: 'Shopping',
+      color: '#A855F7',
+      description: 'Shop in Korean markets and stores',
       mapPosition: [37.4979, 127.0276],
       situations: [
         {
@@ -456,6 +489,8 @@ export const beijingData: CityDataStructure = {
       id: 'restaurants',
       emoji: '🍽️',
       title: 'Restaurants & Cafés',
+      color: '#F97316',
+      description: 'Navigate Chinese restaurants with confidence',
       mapPosition: [39.9085, 116.4100],
       situations: [
         {
@@ -496,6 +531,8 @@ export const beijingData: CityDataStructure = {
       id: 'transit',
       emoji: '🚇',
       title: 'Metro & Transit',
+      color: '#3B82F6',
+      description: 'Master Beijing\'s metro system',
       mapPosition: [39.9042, 116.3976],
       situations: [
         {
@@ -531,6 +568,8 @@ export const beijingData: CityDataStructure = {
       id: 'shopping',
       emoji: '🛍️',
       title: 'Shopping',
+      color: '#A855F7',
+      description: 'Shop in Beijing markets and stores',
       mapPosition: [39.9343, 116.4478],
       situations: [
         {
@@ -575,6 +614,8 @@ export const newDelhiData: CityDataStructure = {
       id: 'restaurants',
       emoji: '🍽️',
       title: 'Restaurants & Cafés',
+      color: '#F97316',
+      description: 'Master Hindi dining phrases',
       mapPosition: [28.6315, 77.2167],
       situations: [
         {
@@ -615,6 +656,8 @@ export const newDelhiData: CityDataStructure = {
       id: 'transit',
       emoji: '🚇',
       title: 'Metro & Transit',
+      color: '#3B82F6',
+      description: 'Navigate Delhi metro with ease',
       mapPosition: [28.6328, 77.2197],
       situations: [
         {
@@ -650,6 +693,8 @@ export const newDelhiData: CityDataStructure = {
       id: 'shopping',
       emoji: '🛍️',
       title: 'Shopping',
+      color: '#A855F7',
+      description: 'Shop in Indian markets and bazaars',
       mapPosition: [28.6506, 77.2303],
       situations: [
         {
@@ -694,6 +739,8 @@ export const mexicoCityData: CityDataStructure = {
       id: 'restaurants',
       emoji: '🍽️',
       title: 'Restaurants & Cafés',
+      color: '#F97316',
+      description: 'Enjoy authentic Mexican cuisine with confidence',
       mapPosition: [19.4270, -99.1596],
       situations: [
         {
@@ -734,6 +781,8 @@ export const mexicoCityData: CityDataStructure = {
       id: 'transit',
       emoji: '🚇',
       title: 'Metro & Transit',
+      color: '#3B82F6',
+      description: 'Navigate Mexico City\'s metro system',
       mapPosition: [19.4326, -99.1332],
       situations: [
         {
@@ -769,6 +818,8 @@ export const mexicoCityData: CityDataStructure = {
       id: 'shopping',
       emoji: '🛍️',
       title: 'Shopping',
+      color: '#A855F7',
+      description: 'Shop in Mexican markets and stores',
       mapPosition: [19.4284, -99.1277],
       situations: [
         {
