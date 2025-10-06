@@ -36,7 +36,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
               transition={{ duration: 0.3 }}
               className="w-full max-w-2xl"
             >
-              <div className="glass rounded-2xl pt-[80px] px-8 pb-8 shadow-large border border-border/50 relative">
+              <div className="glass rounded-2xl pt-[80px] px-8 pb-[80px] shadow-large border border-border/50 relative">
                 {/* Close Button */}
                 <Button
                   variant="ghost"
