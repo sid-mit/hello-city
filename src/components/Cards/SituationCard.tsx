@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/stores/appStore';
 import { toast } from 'sonner';
-import { PracticeModal } from '@/components/Practice/PracticeModal';
 import { ConversationPracticeModal } from '@/components/Practice/ConversationPracticeModal';
 
 export interface SituationData {
@@ -201,17 +200,10 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
 
       {/* Practice Modal */}
       {showPracticeModal && (
-        situation.conversationFlow && situation.conversationFlow.length > 0 ? (
-          <ConversationPracticeModal
-            situation={situation}
-            onClose={() => setShowPracticeModal(false)}
-          />
-        ) : (
-          <PracticeModal
-            situation={situation}
-            onClose={() => setShowPracticeModal(false)}
-          />
-        )
+        <ConversationPracticeModal
+          situation={situation}
+          onClose={() => setShowPracticeModal(false)}
+        />
       )}
     </>
   );

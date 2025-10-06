@@ -22,6 +22,13 @@ interface StepResult {
 
 export const ConversationPracticeModal = ({ situation, onClose }: ConversationPracticeModalProps) => {
   const { updatePracticeHistory, updateStreak, unlockBadge } = useAppStore();
+  
+  // Auto-generate conversation flow if none exists
+  const conversationFlow = situation.conversationFlow || situation.phrases.map((phrase, index) => ([
+    { step: index * 2 + 1, speaker: 'you' as const, phraseIndex: index },
+    { step: index * 2 + 2, speaker: 'other' as const, action: 'Responds appropriately' }
+  ])).flat();
+  
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [stepResults, setStepResults] = useState<Map<number, StepResult>>(new Map());
   const [isRecording, setIsRecording] = useState(false);
@@ -29,7 +36,6 @@ export const ConversationPracticeModal = ({ situation, onClose }: ConversationPr
   const [isComplete, setIsComplete] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const conversationFlow = situation.conversationFlow || [];
   const currentStep = conversationFlow[currentStepIndex];
   const isUserTurn = currentStep?.speaker === 'you';
   const currentPhrase = isUserTurn && currentStep.phraseIndex !== undefined 
