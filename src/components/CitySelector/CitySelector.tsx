@@ -39,7 +39,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
               <div className="glass rounded-2xl p-8 shadow-large border border-border/50">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-bold">Where do you plan to travel?</h2>
+                  <h2 className="text-2xl font-bold font-architects-daughter">Where do you plan to travel?</h2>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -56,7 +56,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
                     <motion.button
                       key={city.id}
                       onClick={() => onCitySelect(city)}
-                      className="px-6 py-3 rounded-full border border-border bg-background hover:bg-accent hover:border-primary/50 transition-all font-medium"
+                      className="px-6 py-3 rounded-full border border-border bg-background hover:bg-accent hover:border-primary/50 transition-all font-medium font-karla"
                       whileTap={{ scale: 0.95 }}
                     >
                       {city.name}
@@ -65,7 +65,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
                 </div>
 
                 {/* More Options Text */}
-                <p className="text-center text-sm text-muted-foreground">
+                <p className="text-center text-sm text-muted-foreground font-karla">
                   More options adding...
                 </p>
               </div>
