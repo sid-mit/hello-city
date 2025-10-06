@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -14,11 +14,11 @@ interface PhraseDrawerProps {
 }
 
 export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, categoryDescription, situations, onClose }: PhraseDrawerProps) => {
-  const [currentCardIndex, setCurrentCardIndex] = React.useState(0);
-  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-  const [showScrollHint, setShowScrollHint] = React.useState(true);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showScrollHint, setShowScrollHint] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const hasSeenHint = localStorage.getItem('hasSeenScrollHint');
     if (hasSeenHint) {
       setShowScrollHint(false);
