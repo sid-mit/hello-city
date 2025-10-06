@@ -31,15 +31,19 @@ export interface Phrase {
   phonetic: string;
 }
 
+export type TabType = 'explore' | 'learn';
+
 interface AppState {
   userName: string;
   selectedCity: City | null;
   selectedLocation: Location | null;
   learnedPhrases: Set<string>;
+  activeTab: TabType;
   setUserName: (name: string) => void;
   selectCity: (city: City | null) => void;
   selectLocation: (location: Location | null) => void;
   markPhraseAsLearned: (phraseId: string) => void;
+  setActiveTab: (tab: TabType) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -47,6 +51,7 @@ export const useAppStore = create<AppState>((set) => ({
   selectedCity: null,
   selectedLocation: null,
   learnedPhrases: new Set(),
+  activeTab: 'explore',
   setUserName: (name) => set({ userName: name }),
   selectCity: (city) => set({ selectedCity: city }),
   selectLocation: (location) => set({ selectedLocation: location }),
@@ -54,4 +59,5 @@ export const useAppStore = create<AppState>((set) => ({
     set((state) => ({
       learnedPhrases: new Set(state.learnedPhrases).add(phraseId),
     })),
+  setActiveTab: (tab) => set({ activeTab: tab }),
 }));
