@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import { analyzeSyllables, calculateOverallScore, SyllableAnalysis } from '@/utils/syllableAnalysis';
 import { SyllableBreakdown } from '@/components/Practice/SyllableBreakdown';
+import { getHighQualityVoice, getLanguageCode, getVoiceQualityTier } from '@/utils/voiceManager';
 
 interface PracticeModalProps {
   situation: SituationData;
@@ -36,6 +37,7 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
   const [isComplete, setIsComplete] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
+  const [currentVoice, setCurrentVoice] = useState<SpeechSynthesisVoice | null>(null);
 
   const currentPhrase = situation.phrases[currentPhraseIndex];
   const progress = ((currentPhraseIndex + (results.length > currentPhraseIndex ? 1 : 0)) / situation.phrases.length) * 100;
@@ -207,27 +209,30 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
     }
   };
 
-  const handleListen = (slow = false, textOverride?: string) => {
+  const handleListen = async (slow = false, textOverride?: string) => {
     if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(textOverride || currentPhrase.native);
+      const text = textOverride || currentPhrase.native;
+      const languageCode = getLanguageCode(situation.cityId);
       
-      // Set voice based on language
-      const voices = speechSynthesis.getVoices();
-      const languageCode = {
-        'paris': 'fr',
-        'seoul': 'ko',
-        'beijing': 'zh',
-        'new-delhi': 'hi',
-        'mexico-city': 'es',
-      }[situation.cityId] || 'en';
+      // Get best available voice
+      const voice = await getHighQualityVoice(languageCode);
       
-      const voice = voices.find(v => v.lang.startsWith(languageCode));
+      if (voice && !currentVoice) {
+        setCurrentVoice(voice);
+      }
+      
+      const utterance = new SpeechSynthesisUtterance(text);
       if (voice) {
         utterance.voice = voice;
       }
       
       utterance.rate = slow ? 0.5 : 0.8;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+      
       speechSynthesis.speak(utterance);
+    } else {
+      toast.error('Speech synthesis not available in this browser');
     }
   };
 
@@ -357,12 +362,21 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-border">
             <div className="flex-1">
-              <p className="text-sm text-muted-foreground">
-                Phrase {currentPhraseIndex + 1} of {situation.phrases.length}
-              </p>
-              <Progress value={progress} className="h-1 mt-2" />
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-muted-foreground">
+                  Phrase {currentPhraseIndex + 1} of {situation.phrases.length}
+                </p>
+                {currentVoice && (
+                  <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
+                    {getVoiceQualityTier(currentVoice) === 'premium' ? '🎤 Premium Voice' : 
+                     getVoiceQualityTier(currentVoice) === 'standard' ? '🔊 Device Voice' : 
+                     '🔈 Basic Voice'}
+                  </span>
+                )}
+              </div>
+              <Progress value={progress} className="h-1" />
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <Button variant="ghost" size="icon" onClick={onClose} className="ml-4">
               <X className="w-5 h-5" />
             </Button>
           </div>
