@@ -8,7 +8,7 @@ import { CityMarker } from './CityMarker';
 import { PhraseDrawer } from '../PhraseDrawer/PhraseDrawer';
 import { CitySelector } from '../CitySelector/CitySelector';
 import { Button } from '../ui/button';
-import { ArrowLeft, MapPin } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { createRoot } from 'react-dom/client';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -164,45 +164,27 @@ export const MapView = () => {
       {/* Map */}
       <div ref={mapContainer} className="w-full h-full" />
 
-      {/* Info Overlay */}
-      {!selectedCity ? (
+      {/* Bottom Center: Text + Button (only when no city selected) */}
+      {!selectedCity && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="absolute bottom-8 left-4 right-4 md:left-auto md:right-8 md:w-80 z-10"
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-4"
         >
-          <div className="glass rounded-2xl p-4 shadow-large">
-            <h3 className="font-semibold mb-2 flex items-center gap-2">
-              <span>🌍</span>
-              Welcome to HelloCity
-            </h3>
-            <p className="text-sm text-muted-foreground mb-3">
-              Click on any city marker to start learning essential phrases
-            </p>
-            <Button
-              onClick={() => setShowCitySelector(true)}
-              className="w-full flex items-center justify-center gap-2"
-              size="sm"
-            >
-              <MapPin className="w-4 h-4" />
-              Choose City
-            </Button>
-          </div>
-        </motion.div>
-      ) : (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="absolute bottom-8 left-4 right-4 md:left-auto md:right-8 md:w-80 z-10"
-        >
-          <div className="glass rounded-2xl p-4 shadow-large">
-            <h3 className="font-semibold mb-2">Explore Locations</h3>
-            <p className="text-sm text-muted-foreground">
-              Tap any category marker to discover phrases
-            </p>
-          </div>
+          {/* Instructional Text */}
+          <p className="text-sm text-foreground/80 text-center font-karla max-w-md px-4">
+            Click on any city marker to start learning essential phrases
+          </p>
+          
+          {/* Choose City Button */}
+          <Button
+            onClick={() => setShowCitySelector(true)}
+            className="px-8 py-6 text-base font-karla"
+            size="lg"
+          >
+            Choose City
+          </Button>
         </motion.div>
       )}
 

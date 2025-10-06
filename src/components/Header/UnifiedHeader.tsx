@@ -1,10 +1,9 @@
-import { Map, BookOpen } from 'lucide-react';
 import { useAppStore, TabType } from '@/stores/appStore';
 import { motion } from 'framer-motion';
 
 const tabs = [
-  { id: 'explore' as TabType, icon: Map, label: 'Explore' },
-  { id: 'learn' as TabType, icon: BookOpen, label: 'Learn' },
+  { id: 'explore' as TabType, label: 'Map' },
+  { id: 'learn' as TabType, label: 'Discover' },
 ];
 
 export const UnifiedHeader = () => {
@@ -36,20 +35,14 @@ export const UnifiedHeader = () => {
           
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
-            const Icon = tab.icon;
             
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className="relative flex-1 flex items-center justify-center gap-1.5 transition-colors duration-200 z-10"
+                className="relative flex-1 flex items-center justify-center transition-colors duration-200 z-10"
               >
-                <Icon
-                  className={`w-4 h-4 transition-colors duration-200 ${
-                    isActive ? 'text-primary' : 'text-muted-foreground'
-                  }`}
-                />
-                <span className={`text-sm font-medium transition-colors duration-200 ${
+                <span className={`text-sm font-medium transition-colors duration-200 font-karla ${
                   isActive ? 'text-primary' : 'text-muted-foreground'
                 }`}>
                   {tab.label}
@@ -61,22 +54,6 @@ export const UnifiedHeader = () => {
 
         {/* Right Navigation Links */}
         <nav className="hidden md:flex items-center gap-8 font-karla">
-          <button
-            onClick={() => setActiveTab('explore')}
-            className={`text-sm font-medium transition-colors hover:text-primary ${
-              activeTab === 'explore' ? 'text-primary' : 'text-muted-foreground'
-            }`}
-          >
-            Map
-          </button>
-          <button
-            onClick={() => setActiveTab('learn')}
-            className={`text-sm font-medium transition-colors hover:text-primary ${
-              activeTab === 'learn' ? 'text-primary' : 'text-muted-foreground'
-            }`}
-          >
-            Discover
-          </button>
           <button
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
