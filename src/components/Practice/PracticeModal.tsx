@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Volume2, Mic, Play, ArrowRight, RotateCcw } from 'lucide-react';
+import { X, Volume2, Mic, Play, ArrowRight, RotateCcw, Turtle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { SituationData } from '@/components/Cards/SituationCard';
+import { useAppStore } from '@/stores/appStore';
 import { toast } from 'sonner';
+import confetti from 'canvas-confetti';
 
 interface PracticeModalProps {
   situation: SituationData;
@@ -22,12 +24,15 @@ interface PracticeResult {
 }
 
 export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
+  const { updatePracticeHistory, unlockBadge, updateStreak, practiceHistory, badges } = useAppStore();
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [practiceState, setPracticeState] = useState<PracticeState>('ready');
   const [results, setResults] = useState<PracticeResult[]>([]);
   const [spokenText, setSpokenText] = useState('');
   const [recognition, setRecognition] = useState<any>(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioLevel, setAudioLevel] = useState(0);
 
   const currentPhrase = situation.phrases[currentPhraseIndex];
   const progress = ((currentPhraseIndex + (results.length > currentPhraseIndex ? 1 : 0)) / situation.phrases.length) * 100;
@@ -62,12 +67,27 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
           const score = calculatePronunciationScore(transcript, currentPhrase.native, confidence);
           const feedback = getFeedbackLevel(score);
           
-          setResults([...results, {
+          const newResult = {
             phraseIndex: currentPhraseIndex,
             spokenText: transcript,
             score,
             feedback,
-          }]);
+          };
+          setResults([...results, newResult]);
+          
+          // Update practice history
+          updatePracticeHistory(situation.id, score, currentPhrase.native);
+          updateStreak();
+          
+          // Check for badges
+          if (score === 100 && !badges.find(b => b.id === 'perfect-score')?.unlocked) {
+            unlockBadge('perfect-score');
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+          }
+          
+          if (Object.keys(practiceHistory).length === 0 && !badges.find(b => b.id === 'first-steps')?.unlocked) {
+            unlockBadge('first-steps');
+          }
           
           setPracticeState('feedback');
         }, 500);
@@ -165,7 +185,7 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
     }
   };
 
-  const handleListen = () => {
+  const handleListen = (slow = false) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(currentPhrase.native);
       
@@ -184,7 +204,7 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
         utterance.voice = voice;
       }
       
-      utterance.rate = 0.8; // Slower for learning
+      utterance.rate = slow ? 0.6 : 0.8;
       speechSynthesis.speak(utterance);
     }
   };
@@ -201,7 +221,19 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
     } else {
       setSpokenText('');
       setPracticeState('recording');
+      setIsRecording(true);
       recognition.start();
+      
+      // Simulate audio level animation
+      const interval = setInterval(() => {
+        setAudioLevel(Math.random() * 100);
+      }, 100);
+      
+      setTimeout(() => {
+        clearInterval(interval);
+        setIsRecording(false);
+        setAudioLevel(0);
+      }, 3000);
     }
   };
 
@@ -373,18 +405,46 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
                   <p className="text-base text-muted-foreground">{currentPhrase.english}</p>
                 </div>
 
-                <div className="flex justify-center gap-4 mb-6">
+                <div className="flex justify-center gap-3 mb-6">
                   <Button
-                    onClick={handleListen}
+                    onClick={() => handleListen(false)}
                     variant="outline"
                     size="lg"
-                    className="w-32"
                     disabled={practiceState === 'recording'}
                   >
                     <Volume2 className="w-5 h-5 mr-2" />
                     Listen
                   </Button>
+                  <Button
+                    onClick={() => handleListen(true)}
+                    variant="outline"
+                    size="lg"
+                    disabled={practiceState === 'recording'}
+                  >
+                    <Turtle className="w-5 h-5 mr-2" />
+                    Slow
+                  </Button>
                 </div>
+
+                {/* Waveform Visualization */}
+                {isRecording && (
+                  <div className="flex justify-center gap-1 mb-4 h-12 items-end">
+                    {[...Array(12)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="w-2 bg-primary rounded-full"
+                        animate={{
+                          height: [8, Math.random() * 40 + 10, 8],
+                        }}
+                        transition={{
+                          duration: 0.5,
+                          repeat: Infinity,
+                          delay: i * 0.05,
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
 
                 <div className="flex flex-col items-center">
                   <motion.button

@@ -8,7 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* TravelSpeak Design System - Light Theme */
+    /* HelloCity Design System - Light Theme */
     --background: 0 0% 98%;
     --foreground: 220 26% 14%;
 
@@ -42,7 +42,7 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    /* Custom TravelSpeak tokens */
+    /* Custom HelloCity tokens */
     --gradient-primary: linear-gradient(135deg, hsl(245, 58%, 66%), hsl(280, 65%, 60%));
     --gradient-surface: linear-gradient(180deg, hsl(0, 0%, 98%), hsl(0, 0%, 100%));
     --shadow-soft: 0 1px 3px 0 rgb(0 0 0 / 0.1);

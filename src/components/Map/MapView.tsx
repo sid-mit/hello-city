@@ -135,51 +135,31 @@ export const MapView = () => {
       transition={{ duration: 0.6 }}
       className="relative w-full h-screen"
     >
-      {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-10 glass border-b border-border/50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            {selectedCity && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleBackToWorld}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back
-              </Button>
-            )}
-            {selectedCity ? (
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">{selectedCity.emoji}</span>
-                <div>
-                  <h1 className="text-xl font-bold">{selectedCity.name}</h1>
-                  <p className="text-sm text-muted-foreground">
-                    Learn {selectedCity.language}
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <h1 className="text-xl font-bold">TravelSpeak</h1>
-                <p className="text-sm text-muted-foreground">
-                  Learn phrases for your destination
-                </p>
-              </div>
-            )}
-          </div>
-          {!selectedCity && (
+      {/* Back/City Info Bar (below header) */}
+      {selectedCity && (
+        <div className="absolute top-20 left-0 right-0 z-10 glass border-b border-border/50">
+          <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <Button
-              onClick={() => setShowCitySelector(true)}
+              variant="ghost"
+              size="sm"
+              onClick={handleBackToWorld}
               className="flex items-center gap-2"
             >
-              <MapPin className="w-4 h-4" />
-              Choose City
+              <ArrowLeft className="w-4 h-4" />
+              Back to World
             </Button>
-          )}
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">{selectedCity.emoji}</span>
+              <div>
+                <h2 className="text-lg font-bold">{selectedCity.name}</h2>
+                <p className="text-xs text-muted-foreground">
+                  Learn {selectedCity.language}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Map */}
       <div ref={mapContainer} className="w-full h-full" />
@@ -193,10 +173,21 @@ export const MapView = () => {
           className="absolute bottom-8 left-4 right-4 md:left-auto md:right-8 md:w-80 z-10"
         >
           <div className="glass rounded-2xl p-4 shadow-large">
-            <h3 className="font-semibold mb-2">Welcome to TravelSpeak</h3>
-            <p className="text-sm text-muted-foreground">
-              Click on any city marker or use the "Choose City" button to start learning essential phrases for your destination
+            <h3 className="font-semibold mb-2 flex items-center gap-2">
+              <span>🌍</span>
+              Welcome to HelloCity
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Click on any city marker to start learning essential phrases
             </p>
+            <Button
+              onClick={() => setShowCitySelector(true)}
+              className="w-full flex items-center justify-center gap-2"
+              size="sm"
+            >
+              <MapPin className="w-4 h-4" />
+              Choose City
+            </Button>
           </div>
         </motion.div>
       ) : (
@@ -204,12 +195,12 @@ export const MapView = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="absolute bottom-24 left-4 right-4 md:left-auto md:right-8 md:w-80 z-10"
+          className="absolute bottom-8 left-4 right-4 md:left-auto md:right-8 md:w-80 z-10"
         >
           <div className="glass rounded-2xl p-4 shadow-large">
             <h3 className="font-semibold mb-2">Explore Locations</h3>
             <p className="text-sm text-muted-foreground">
-              Tap any marker to learn essential phrases for that location
+              Tap any category marker to discover phrases
             </p>
           </div>
         </motion.div>
