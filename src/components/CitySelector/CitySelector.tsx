@@ -39,7 +39,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
               <div className="glass rounded-2xl p-8 shadow-large border border-border/50">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-bold font-architects-daughter">Where do you plan to travel?</h2>
+                  <h2 className="text-2xl font-bold font-architects">Where do you plan to travel?</h2>
                   <Button
                     variant="ghost"
                     size="icon"
