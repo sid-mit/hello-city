@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/stores/appStore';
 import { toast } from 'sonner';
 import { PracticeModal } from '@/components/Practice/PracticeModal';
+import { ConversationPracticeModal } from '@/components/Practice/ConversationPracticeModal';
 
 export interface SituationData {
   id: string;
@@ -131,11 +132,11 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
         {/* Phrase Preview */}
         <div className="mb-2 flex-1">
           <p className="text-xs font-semibold text-foreground mb-2">🗣️ You'll learn:</p>
-          <ul className="space-y-1">
+          <ul className="space-y-1.5">
             {phrasesToShow.map((phrase, index) => (
-              <li key={index} className="text-xs text-muted-foreground flex items-start gap-1">
-                <span className="text-[10px] mt-0.5">•</span>
-                <span className="line-clamp-1">{phrase.english}</span>
+              <li key={index} className="text-xs flex flex-col gap-0.5">
+                <span className="text-foreground font-medium line-clamp-1">{phrase.english}</span>
+                <span className="text-muted-foreground text-[10px] line-clamp-1">{phrase.native}</span>
               </li>
             ))}
             {hasMorePhrases && (
@@ -200,10 +201,17 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
 
       {/* Practice Modal */}
       {showPracticeModal && (
-        <PracticeModal
-          situation={situation}
-          onClose={() => setShowPracticeModal(false)}
-        />
+        situation.conversationFlow && situation.conversationFlow.length > 0 ? (
+          <ConversationPracticeModal
+            situation={situation}
+            onClose={() => setShowPracticeModal(false)}
+          />
+        ) : (
+          <PracticeModal
+            situation={situation}
+            onClose={() => setShowPracticeModal(false)}
+          />
+        )
       )}
     </>
   );
