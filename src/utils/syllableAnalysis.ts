@@ -8,41 +8,56 @@ export interface SyllableAnalysis {
 
 /**
  * Analyzes pronunciation by comparing spoken text with expected text at syllable level
+ * Now compares native script to native script for accurate scoring
  */
 export function analyzeSyllables(
   spokenText: string,
   expectedText: string,
   romanization: string
 ): SyllableAnalysis[] {
-  // Split romanization into syllables (using spaces and hyphens as delimiters)
-  const expectedSyllables = romanization
-    .split(/[\s-]+/)
+  console.log('🎤 Analyzing pronunciation:');
+  console.log('  Spoken:', spokenText);
+  console.log('  Expected:', expectedText);
+  console.log('  Romanization:', romanization);
+  
+  // Split both native texts into words for comparison
+  const expectedWords = expectedText
+    .trim()
+    .split(/[\s]+/)
     .filter(s => s.length > 0);
   
-  // Normalize and split spoken text
   const spokenWords = spokenText
-    .toLowerCase()
     .trim()
+    .split(/[\s]+/)
+    .filter(s => s.length > 0);
+  
+  // Split romanization for display purposes
+  const romanizationSyllables = romanization
     .split(/[\s-]+/)
     .filter(s => s.length > 0);
   
   const results: SyllableAnalysis[] = [];
   
   // Align syllables using dynamic programming
-  const alignment = alignSyllables(spokenWords, expectedSyllables);
+  const alignment = alignSyllables(spokenWords, expectedWords);
   
-  expectedSyllables.forEach((expectedSyllable, index) => {
-    const spokenSyllable = alignment[index] || '';
-    const score = calculateSyllableScore(spokenSyllable, expectedSyllable);
+  expectedWords.forEach((expectedWord, index) => {
+    const spokenWord = alignment[index] || '';
+    const score = calculateSyllableScore(spokenWord, expectedWord);
+    
+    console.log(`  Syllable ${index + 1}: "${spokenWord}" vs "${expectedWord}" = ${score}%`);
     
     results.push({
-      syllable: expectedSyllable,
-      spokenSyllable,
+      syllable: romanizationSyllables[index] || expectedWord, // Use romanization for display
+      spokenSyllable: spokenWord,
       score,
       feedback: getSyllableFeedback(score),
       position: index,
     });
   });
+  
+  const overallScore = calculateOverallScore(results);
+  console.log(`  Overall Score: ${overallScore}%`);
   
   return results;
 }

@@ -66,6 +66,7 @@ function playBase64Audio(base64: string): void {
  */
 function fallbackToWebSpeech(text: string, cityId: string): void {
   try {
+    console.log('⚠️ Using fallback browser speech (ElevenLabs unavailable)');
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = getLanguageCode(cityId);
     utterance.rate = 0.9;
