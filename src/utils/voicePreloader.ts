@@ -32,9 +32,9 @@ export async function initializeVoices(): Promise<void> {
     }
   }
 
-  // Pre-warm speech synthesis with silent playback
-  warmUpSpeech();
-
+  // Don't pre-warm - causes autoplay policy issues
+  // User gesture will unlock audio via ensureAudioUnlocked()
+  
   voicesInitialized = true;
   console.log('✓ Voice system ready');
 }

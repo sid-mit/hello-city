@@ -20,27 +20,43 @@ const TTS_DEBUG = (() => {
 let isSpeaking = false;
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-// Wait for voices to be ready (poll + event)
-async function waitForVoicesReady(timeout = 2500): Promise<SpeechSynthesisVoice[]> {
+/**
+ * Wait for voices to be ready with robust retry - ensures non-empty array
+ */
+async function waitForVoicesReady(timeout = 3000): Promise<SpeechSynthesisVoice[]> {
   return new Promise((resolve) => {
-    const synth = window.speechSynthesis;
-    const existing = synth.getVoices();
-    if (existing.length > 0) return resolve(existing);
-
-    let finished = false;
-    const done = () => {
-      if (finished) return;
-      finished = true;
-      resolve(synth.getVoices());
+    const startTime = Date.now();
+    
+    const checkVoices = () => {
+      const voices = speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        if (TTS_DEBUG) console.log('✓ Voices ready:', voices.length);
+        resolve(voices);
+        return true;
+      }
+      return false;
     };
 
-    const onChange = () => {
-      synth.removeEventListener('voiceschanged', onChange as any);
-      done();
-    };
+    // Check immediately
+    if (checkVoices()) return;
 
-    synth.addEventListener('voiceschanged', onChange as any, { once: true } as any);
-    setTimeout(done, timeout);
+    // Poll every 100ms
+    const pollInterval = setInterval(() => {
+      if (checkVoices()) {
+        clearInterval(pollInterval);
+      } else if (Date.now() - startTime > timeout) {
+        clearInterval(pollInterval);
+        if (TTS_DEBUG) console.warn('⚠ Voices timeout, returning empty array');
+        resolve([]);
+      }
+    }, 100);
+
+    // Also listen for voiceschanged event
+    speechSynthesis.addEventListener('voiceschanged', () => {
+      if (checkVoices()) {
+        clearInterval(pollInterval);
+      }
+    }, { once: true });
   });
 }
 
@@ -104,13 +120,29 @@ export async function generateNaturalSpeech(
         }
       }
 
-      // Get user preferences and process text
+      // Get user preferences and process text with sanitization
       const preferences = getSpeechPreferences();
       const enhancedText = processTextWithEnhancements(text, preferences, languageCode);
+      
+      // Abort if text is empty after sanitization
       if (!enhancedText || enhancedText.trim().length === 0) {
-        if (TTS_DEBUG) console.error('[TTS] Empty text provided to speech synthesis');
+        if (TTS_DEBUG) console.error('[TTS] Empty text after sanitization');
+        toast({
+          title: 'Unable to speak',
+          description: 'Text is empty or invalid',
+          variant: 'destructive',
+        });
         reject(new Error('Empty text'));
         return;
+      }
+
+      if (TTS_DEBUG) {
+        console.log('🎤 TTS Request:', {
+          originalText: text,
+          enhancedText,
+          cityId,
+          languageCode
+        });
       }
 
       // Retry watchdog logic
@@ -119,13 +151,27 @@ export async function generateNaturalSpeech(
       const speakOnce = (dropVoice: boolean) => {
         const utterance = new SpeechSynthesisUtterance(enhancedText);
         utterance.lang = languageCode;
-        // Safari is unreliable when setting explicit voice; rely on lang only
+        
+        // Safari: ONLY set lang, NEVER set voice (causes silence/errors)
         if (!dropVoice && !isSafari && voice) {
           utterance.voice = voice;
         }
 
         // Configure with enhanced settings
         configureUtterance(utterance, preferences, languageCode);
+
+        // Log right before speak
+        if (TTS_DEBUG) {
+          console.log('📢 About to speak:', {
+            text: utterance.text,
+            lang: utterance.lang,
+            voice: utterance.voice?.name || '(default)',
+            rate: utterance.rate,
+            pitch: utterance.pitch,
+            isSafari,
+            dropVoice
+          });
+        }
 
         let started = false;
         isSpeaking = true;
@@ -166,13 +212,17 @@ export async function generateNaturalSpeech(
           clearTimeout(startTimer);
           isSpeaking = false;
           const anyEvent: any = event;
-          // Ignore interruption errors caused by quick user actions
+          
+          // Don't show toast for "interrupted" (user clicked again quickly)
           if (anyEvent?.error === 'interrupted') {
-            if (TTS_DEBUG) console.debug('[TTS] interrupted');
+            if (TTS_DEBUG) console.debug('[TTS] interrupted (user action)');
             resolve();
             return;
           }
+          
           console.error('Speech synthesis error:', event);
+          if (TTS_DEBUG) console.log('Error details:', event);
+          
           toast({
             title: 'Playback failed',
             description: 'Unable to play audio. Please try again.',

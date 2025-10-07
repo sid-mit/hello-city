@@ -11,6 +11,52 @@ export interface EnhancedSpeechOptions {
 }
 
 /**
+ * Sanitize text for speech synthesis - removes HTML entities, control chars, etc.
+ */
+export function sanitizeSpeechText(text: string): string {
+  if (!text) return '';
+  
+  // Decode common HTML entities
+  const entityMap: Record<string, string> = {
+    '&mdash;': '—',
+    '&ndash;': '–',
+    '&hellip;': '...',
+    '&quot;': '"',
+    '&apos;': "'",
+    '&lt;': '<',
+    '&gt;': '>',
+    '&amp;': '&',
+    '&#39;': "'",
+    '&#34;': '"',
+  };
+  
+  let cleaned = text;
+  
+  // Replace HTML entities
+  Object.entries(entityMap).forEach(([entity, char]) => {
+    cleaned = cleaned.replace(new RegExp(entity, 'g'), char);
+  });
+  
+  // Remove HTML tags
+  cleaned = cleaned.replace(/<[^>]*>/g, '');
+  
+  // Remove zero-width and control characters (except newlines)
+  cleaned = cleaned.replace(/[\u200B-\u200D\uFEFF\u2060-\u206F]/g, '');
+  cleaned = cleaned.replace(/[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]/g, '');
+  
+  // Normalize dashes - replace em/en dashes with space for natural pause
+  cleaned = cleaned.replace(/[—–]/g, ' ');
+  
+  // Collapse repeated punctuation
+  cleaned = cleaned.replace(/[.,!?;:]{2,}/g, (match) => match[0]);
+  
+  // Collapse whitespace
+  cleaned = cleaned.replace(/\s+/g, ' ');
+  
+  return cleaned.trim();
+}
+
+/**
  * Process text with SSML-like enhancements for better pronunciation
  */
 export function processTextWithEnhancements(
@@ -18,13 +64,18 @@ export function processTextWithEnhancements(
   options: EnhancedSpeechOptions = {},
   languageCode?: string
 ): string {
-  let processedText = text;
+  // Sanitize text first
+  let processedText = sanitizeSpeechText(text);
+  
+  if (!processedText) return '';
 
+  // Don't add pauses by default - causes punctuation narration
   if (options.addPauses) {
     // Add natural pauses between words for clarity
     processedText = processedText.replace(/\s+/g, ', ');
   }
 
+  // Keep emphasizeSyllables disabled by default
   if (options.emphasizeSyllables) {
     // Add language-specific syllable emphasis
     processedText = addLanguageSpecificBreaks(processedText, languageCode);
