@@ -10,10 +10,11 @@ interface PhraseDrawerProps {
   categoryColor?: string;
   categoryDescription?: string;
   situations: SituationData[];
+  isLoading?: boolean;
   onClose: () => void;
 }
 
-export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, categoryDescription, situations, onClose }: PhraseDrawerProps) => {
+export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, categoryDescription, situations, isLoading, onClose }: PhraseDrawerProps) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(true);
@@ -117,28 +118,41 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
 
         {/* Horizontal Scrollable Situation Cards */}
         <div className="relative">
-          <div 
-            ref={scrollContainerRef}
-            onScroll={handleScroll}
-            className="flex overflow-x-auto px-5 py-5 snap-x snap-mandatory scrollbar-hide"
-            style={{ 
-              scrollSnapType: 'x mandatory',
-              WebkitOverflowScrolling: 'touch',
-              gap: '16px',
-            }}
-          >
-            {situations.map((situation, index) => (
-              <motion.div
-                key={situation.id}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="snap-start"
-              >
-                <SituationCard situation={situation} />
-              </motion.div>
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex items-center justify-center px-5 py-12">
+              <div className="text-center">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2" />
+                <p className="text-sm text-muted-foreground">Loading phrases...</p>
+              </div>
+            </div>
+          ) : situations.length === 0 ? (
+            <div className="flex items-center justify-center px-5 py-12">
+              <p className="text-sm text-muted-foreground">No phrases available yet</p>
+            </div>
+          ) : (
+            <div 
+              ref={scrollContainerRef}
+              onScroll={handleScroll}
+              className="flex overflow-x-auto px-5 py-5 snap-x snap-mandatory scrollbar-hide"
+              style={{ 
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch',
+                gap: '16px',
+              }}
+            >
+              {situations.map((situation, index) => (
+                <motion.div
+                  key={situation.id}
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="snap-start"
+                >
+                  <SituationCard situation={situation} />
+                </motion.div>
+              ))}
+            </div>
+          )}
 
           {/* Fade Gradient on Right */}
           {currentCardIndex < situations.length - 1 && (

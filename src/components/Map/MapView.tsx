@@ -10,6 +10,7 @@ import { CitySelector } from '../CitySelector/CitySelector';
 import { Button } from '../ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { createRoot } from 'react-dom/client';
+import { useSituations } from '@/hooks/useSituations';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYW5pbnlhZyIsImEiOiJjbWdmNHF6MHUwNG9oMmtuMGhubWRlaWJ3In0.7cdKmRPJHIj-j-HzFojggA';
@@ -17,13 +18,20 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoiYW5pbnlhZyIsImEiOiJjbWdmNHF6MHUwNG9oMmtuMGhubWR
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
 export const MapView = () => {
-  const { selectedCity, selectedCategory, selectCity, selectCategory } = useAppStore();
+  const { selectedCity, selectedCategory, selectCity, selectCategory, genderPreference } = useAppStore();
   const [showCitySelector, setShowCitySelector] = useState(false);
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
 
   const cityData = selectedCity ? getCityData(selectedCity.id) : null;
+  
+  // Fetch situations from database when category is selected
+  const { data: situations, isLoading } = useSituations({
+    city: selectedCity?.id || '',
+    spotType: selectedCategory || '',
+    genderPreference,
+  });
 
   const handleCityClick = useCallback((city: any) => {
     selectCity(city);
@@ -203,8 +211,8 @@ export const MapView = () => {
         const category = cityData.categories.find(c => c.id === selectedCategory);
         if (!category) return null;
         
-        // Enrich situations with category color
-        const enrichedSituations = category.situations.map(situation => ({
+        // Enrich database situations with category color
+        const enrichedSituations = (situations || []).map(situation => ({
           ...situation,
           categoryColor: category.color,
         }));
@@ -216,6 +224,7 @@ export const MapView = () => {
             categoryColor={category.color}
             categoryDescription={category.description}
             situations={enrichedSituations}
+            isLoading={isLoading}
             onClose={handleCloseDrawer}
           />
         );
