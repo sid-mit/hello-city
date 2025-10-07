@@ -2,3 +2,6 @@ project_id = "omexhqvirftngwlqhigi"
 
 [functions.text-to-speech]
 verify_jwt = false
+
+[functions.import-phrases]
+verify_jwt = false
