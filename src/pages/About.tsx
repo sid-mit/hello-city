@@ -51,7 +51,7 @@ const About = () => {
       bio: "I've navigated countless cities where I didn't speak the language, and I learned that you don't need fluency—you need the *right* phrases. HelloCity distills years of travel mishaps and victories into bite-sized, practical lessons."
     },
     {
-      name: 'Ananya',
+      name: 'Aninya',
       flag: '🇮🇳',
       greeting: 'नमस्ते',
       role: 'Co-founder & Tech Lead',
