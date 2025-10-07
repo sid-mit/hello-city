@@ -69,9 +69,9 @@ export const ChatBubble = ({
         )}
         
         <div className={cn("space-y-1 pr-8", isFuture && "blur-[1px]")}>
-          <p className="text-base md:text-lg font-semibold">{phrase.native}</p>
-          <p className="text-sm text-muted-foreground italic">{phrase.romanization}</p>
-          <p className="text-xs text-muted-foreground">{phrase.english}</p>
+          <p className="text-lg md:text-xl font-bold">{phrase.romanization}</p>
+          <p className="text-sm text-muted-foreground">"{phrase.english}"</p>
+          <p className="text-xs text-muted-foreground">{phrase.native}</p>
         </div>
 
         {/* Audio Button - All bubbles */}

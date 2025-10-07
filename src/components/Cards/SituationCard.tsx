@@ -79,12 +79,11 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
   return (
     <>
       <div 
-        className="bg-card rounded-2xl p-4 shadow-md flex flex-col border-l-4 hover:shadow-lg transition-all duration-300 overflow-y-auto" 
+        className="bg-card rounded-2xl p-4 shadow-md flex flex-col border-l-4 hover:shadow-lg transition-all duration-300" 
         style={{ 
           width: '320px', 
           minWidth: '320px', 
-          minHeight: '360px',
-          maxHeight: '480px',
+          height: '240px',
           borderLeftColor: borderColor,
           boxShadow: `0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)`,
         }}
@@ -123,46 +122,38 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
         </div>
 
         {/* Description */}
-        <p className="text-sm text-foreground mb-2 leading-5 line-clamp-2">
+        <p className="text-sm text-muted-foreground mb-3 leading-5 line-clamp-1">
           {situation.description}
         </p>
 
         {/* Context Badge */}
-        <div className="mb-2">
+        <div className="mb-3">
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-muted text-xs text-muted-foreground">
             📍 {situation.context}
           </span>
         </div>
 
-        {/* Phrase Preview */}
-        <div className="mb-2 flex-1">
-          <p className="text-xs font-semibold text-foreground mb-2">🗣️ You'll learn:</p>
-          <ul className="space-y-1.5">
-            {phrasesToShow.map((phrase, index) => (
-              <li key={index} className="text-xs flex flex-col gap-0.5">
-                <span className="text-foreground font-medium line-clamp-1">{phrase.english}</span>
-                <span className="text-muted-foreground text-[10px] line-clamp-1">{phrase.native}</span>
-              </li>
-            ))}
-            {hasMorePhrases && (
-              <li className="text-xs text-primary font-medium">
-                + {situation.phrases.length - 3} more
-              </li>
-            )}
-          </ul>
+        {/* Phrase Preview - Romanization First */}
+        <div className="mb-4 flex-1">
+          <p className="text-base font-medium mb-2">
+            {phrasesToShow[0]?.romanization}
+          </p>
+          <p className="text-sm text-muted-foreground mb-1">
+            "{phrasesToShow[0]?.english}"
+          </p>
+          {phrasesToShow[0] && (
+            <p className="text-xs text-muted-foreground">
+              {phrasesToShow[0].native}
+            </p>
+          )}
         </div>
 
-        {/* Cultural Tip */}
-        {situation.culturalTip && (
-          <div className="mb-2 p-2 rounded-lg bg-primary/5 border border-primary/10">
-            <p className="text-xs font-semibold text-primary mb-1 flex items-center gap-1">
-              💡 Cultural Tip
-            </p>
-            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-              {situation.culturalTip}
-            </p>
-          </div>
-        )}
+        {/* Phrase Count */}
+        <div className="mb-3">
+          <span className="text-xs font-medium text-muted-foreground">
+            💬 {situation.phrases.length} phrases to learn
+          </span>
+        </div>
 
         {/* Progress Indicator */}
         {hasPracticed && (

@@ -14,6 +14,8 @@ import { RecordingButton } from "./RecordingButton";
 import { ScoreDisplay } from "./ScoreDisplay";
 import { NextStepPreview } from "./NextStepPreview";
 import { ConversationReview } from "./ConversationReview";
+import { PracticeStyleSelector } from "./PracticeStyleSelector";
+import { SinglePhrasePractice } from "./SinglePhrasePractice";
 import { SituationData } from "@/components/Cards/SituationCard";
 import { toast } from "sonner";
 
@@ -39,6 +41,8 @@ export const ConversationPracticeModal = ({
     { step: index * 2 + 2, speaker: 'other' as const, action: 'Responds appropriately' }
   ])).flat();
   
+  const [practiceMode, setPracticeMode] = useState<'selection' | 'conversation' | 'single-phrase'>('selection');
+  const [selectedPhraseIndex, setSelectedPhraseIndex] = useState<number | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -222,7 +226,33 @@ export const ConversationPracticeModal = ({
         </div>
 
         <div className="p-6 space-y-6">
-          {showConversationReview ? (
+          {practiceMode === 'selection' ? (
+            <PracticeStyleSelector
+              phrases={situation.phrases}
+              onSelectConversation={() => setPracticeMode('conversation')}
+              onSelectIndividualPhrase={(index) => {
+                setSelectedPhraseIndex(index);
+                setPracticeMode('single-phrase');
+              }}
+            />
+          ) : practiceMode === 'single-phrase' && selectedPhraseIndex !== null ? (
+            <SinglePhrasePractice
+              phrase={situation.phrases[selectedPhraseIndex]}
+              phraseIndex={selectedPhraseIndex}
+              totalPhrases={situation.phrases.length}
+              cityId={situation.cityId}
+              recognition={recognition}
+              onBack={() => {
+                setSelectedPhraseIndex(null);
+                setPracticeMode('selection');
+              }}
+              onNext={
+                selectedPhraseIndex < situation.phrases.length - 1
+                  ? () => setSelectedPhraseIndex(selectedPhraseIndex + 1)
+                  : undefined
+              }
+            />
+          ) : showConversationReview ? (
             <ConversationReview
               phrases={situation.phrases}
               serverResponses={situation.serverResponses}

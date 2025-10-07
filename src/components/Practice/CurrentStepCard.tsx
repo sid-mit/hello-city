@@ -25,16 +25,16 @@ export const CurrentStepCard = ({ phrase, onListen }: CurrentStepCardProps) => {
       </div>
       
       <div className="space-y-3">
-        <p className="text-2xl md:text-3xl font-semibold text-foreground leading-relaxed">
-          {phrase.native}
-        </p>
-        
-        <p className="text-base md:text-lg text-muted-foreground italic">
+        <p className="text-2xl md:text-3xl font-bold text-foreground leading-relaxed">
           {phrase.romanization}
         </p>
         
-        <p className="text-sm text-muted-foreground">
+        <p className="text-base md:text-lg text-muted-foreground">
           "{phrase.english}"
+        </p>
+        
+        <p className="text-sm text-muted-foreground">
+          {phrase.native}
         </p>
       </div>
       
