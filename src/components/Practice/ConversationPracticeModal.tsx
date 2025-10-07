@@ -280,14 +280,6 @@ export const ConversationPracticeModal = ({
         <div className="p-6 space-y-6">
           {practiceMode === 'selection' ? (
             <div className="space-y-6">
-              {/* Helpful Tip */}
-              <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 flex items-start gap-2">
-                <span className="text-lg">💡</span>
-                <p className="text-sm text-foreground">
-                  <strong>Tip:</strong> Listen to each phrase first by clicking the speaker icon 🔊
-                </p>
-              </div>
-
               {/* Individual Phrases Section */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2">

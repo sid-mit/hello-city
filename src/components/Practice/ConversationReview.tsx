@@ -215,6 +215,21 @@ export const ConversationReview = ({
         </div>
       </div>
 
+      {phraseScores.length === 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="px-2 pb-2"
+        >
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 flex items-start gap-2">
+            <span className="text-lg">💡</span>
+            <p className="text-sm text-foreground">
+              <strong>Tip:</strong> Listen to each phrase first by clicking the speaker icon 🔊
+            </p>
+          </div>
+        </motion.div>
+      )}
+
       <div className="space-y-4 px-2">
         {conversationMessages.map((message, index) => {
           if (message.type === 'user' && message.phrase && message.phraseIndex !== undefined) {
@@ -272,18 +287,6 @@ export const ConversationReview = ({
           return null;
         })}
       </div>
-
-      {currentPhraseIndex === 0 && phraseScores.length === 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center py-4"
-        >
-          <p className="text-sm text-muted-foreground">
-            💡 <span className="font-medium">Tip:</span> Listen to each phrase first by clicking the speaker icon 🔊
-          </p>
-        </motion.div>
-      )}
     </div>
   );
 };
