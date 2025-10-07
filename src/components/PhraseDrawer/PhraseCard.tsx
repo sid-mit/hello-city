@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Volume2, Check } from 'lucide-react';
-import { Phrase } from '@/stores/appStore';
+import { PhraseData } from '@/hooks/usePhrases';
 import { Button } from '../ui/button';
 import { useAppStore } from '@/stores/appStore';
 import { generateNaturalSpeech } from '@/utils/voiceManager';
 
 interface PhraseCardProps {
-  phrase: Phrase;
+  phrase: PhraseData;
+  cityId: string;
 }
 
-export const PhraseCard = ({ phrase }: PhraseCardProps) => {
+export const PhraseCard = ({ phrase, cityId }: PhraseCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const { learnedPhrases, markPhraseAsLearned } = useAppStore();
   const isLearned = learnedPhrases.has(phrase.id);
@@ -18,7 +19,7 @@ export const PhraseCard = ({ phrase }: PhraseCardProps) => {
   const handleSpeak = async () => {
     try {
       setIsPlaying(true);
-      await generateNaturalSpeech(phrase.text, 'paris'); // Default to French
+      await generateNaturalSpeech(phrase.native, cityId);
       setIsPlaying(false);
       if (!isLearned) {
         markPhraseAsLearned(phrase.id);
@@ -56,17 +57,17 @@ export const PhraseCard = ({ phrase }: PhraseCardProps) => {
         <div className="flex-1 min-w-0">
           {/* Native Phrase */}
           <p className="text-lg font-semibold text-foreground mb-1">
-            {phrase.text}
+            {phrase.native}
           </p>
           
           {/* Translation */}
           <p className="text-sm text-muted-foreground mb-1">
-            {phrase.translation}
+            {phrase.english}
           </p>
           
-          {/* Phonetic */}
+          {/* Romanization */}
           <p className="text-xs text-muted-foreground italic">
-            {phrase.phonetic}
+            {phrase.romanization}
           </p>
         </div>
 
