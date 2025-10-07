@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '@/stores/appStore';
+import { CloudBackground } from '@/components/Onboarding/CloudBackground';
 
 const slides = [
   {
@@ -47,6 +48,9 @@ export default function Onboarding() {
 
   return (
     <div className="w-full h-screen overflow-hidden relative bg-gradient-to-b from-white to-[#F5F8FF] flex items-center justify-center px-4">
+      {/* Cloud background graphics */}
+      <CloudBackground />
+      
       {/* Floating greetings in background */}
       <motion.div
         className="absolute left-[35px] top-[505px] pointer-events-none"
