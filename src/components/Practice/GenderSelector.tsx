@@ -14,8 +14,8 @@ interface GenderSelectorProps {
   className?: string;
 }
 
+// Only female/male for gendered languages (neutral is same as female)
 const genderOptions = [
-  { value: 'neutral' as GenderVariant, label: 'Neutral', icon: Users, emoji: '👤' },
   { value: 'female' as GenderVariant, label: 'Female', icon: User, emoji: '👩' },
   { value: 'male' as GenderVariant, label: 'Male', icon: User, emoji: '👨' },
 ];
@@ -41,7 +41,7 @@ export function GenderSelector({
       )}
     >
       <span className="text-xs text-muted-foreground px-2 hidden sm:block">
-        Voice style:
+        Gender:
       </span>
       
       {genderOptions.map((option) => {
@@ -83,29 +83,47 @@ export function GenderSelector({
 // Demo component to showcase the gender selector
 export function GenderSelectorDemo() {
   const [hindiGender, setHindiGender] = React.useState<GenderVariant>('female');
+  const [frenchGender, setFrenchGender] = React.useState<GenderVariant>('male');
   const [koreanGender, setKoreanGender] = React.useState<GenderVariant>('neutral');
 
   return (
     <div className="space-y-8 p-8 bg-card rounded-xl border border-border shadow-soft">
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Hindi (Gendered Language)</h3>
-        <p className="text-sm text-muted-foreground mb-4">
-          Toggle appears for languages with gender-specific phrases
-        </p>
-        <GenderSelector
-          langCode="hi-IN"
-          currentGender={hindiGender}
-          onGenderChange={setHindiGender}
-        />
-        <p className="mt-3 text-sm text-muted-foreground">
-          Current: <span className="font-semibold text-foreground">{hindiGender}</span>
-        </p>
+      <div className="grid md:grid-cols-2 gap-6">
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Hindi</h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            Female/Male toggle for gendered phrases
+          </p>
+          <GenderSelector
+            langCode="hi-IN"
+            currentGender={hindiGender}
+            onGenderChange={setHindiGender}
+          />
+          <p className="mt-3 text-sm text-muted-foreground">
+            Current: <span className="font-semibold text-foreground">{hindiGender}</span>
+          </p>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-2">French</h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            Female/Male toggle for gendered phrases
+          </p>
+          <GenderSelector
+            langCode="fr-FR"
+            currentGender={frenchGender}
+            onGenderChange={setFrenchGender}
+          />
+          <p className="mt-3 text-sm text-muted-foreground">
+            Current: <span className="font-semibold text-foreground">{frenchGender}</span>
+          </p>
+        </div>
       </div>
 
       <div className="border-t border-border pt-6">
-        <h3 className="text-lg font-semibold mb-2">Korean (Non-Gendered Language)</h3>
+        <h3 className="text-lg font-semibold mb-2">Korean (Non-Gendered)</h3>
         <p className="text-sm text-muted-foreground mb-4">
-          Toggle is hidden for languages without gender variants
+          Toggle auto-hidden for non-gendered languages
         </p>
         <GenderSelector
           langCode="ko-KR"
@@ -113,7 +131,7 @@ export function GenderSelectorDemo() {
           onGenderChange={setKoreanGender}
         />
         <p className="text-sm text-muted-foreground italic">
-          ↑ No toggle shown (Korean doesn't have gendered phrases)
+          ↑ No toggle shown (Korean doesn't use gendered phrases)
         </p>
       </div>
 
