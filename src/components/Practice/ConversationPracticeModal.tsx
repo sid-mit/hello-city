@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { useAppStore } from "@/stores/appStore";
 import { analyzeSyllables, calculateOverallScore } from "@/utils/syllableAnalysis";
-import { getHighQualityVoice, getLanguageCode } from "@/utils/voiceManager";
+import { generateNaturalSpeech } from "@/utils/voiceManager";
 import { ProgressDots } from "./ProgressDots";
 import { CollapsiblePastSteps } from "./CollapsiblePastSteps";
 import { CurrentStepCard } from "./CurrentStepCard";
@@ -147,21 +147,13 @@ export const ConversationPracticeModal = ({
   }, [currentStep]);
 
   const handleListen = async (phraseIndex: number) => {
-    const phrase = situation.phrases[phraseIndex];
-    if (!phrase || !("speechSynthesis" in window)) return;
-
-    const languageCode = getLanguageCode(situation.cityId);
-    const voice = await getHighQualityVoice(languageCode);
-
-    const utterance = new SpeechSynthesisUtterance(phrase.native);
-    if (voice) {
-      utterance.voice = voice;
+    try {
+      const phrase = situation.phrases[phraseIndex];
+      if (!phrase) return;
+      await generateNaturalSpeech(phrase.native, situation.cityId);
+    } catch (error) {
+      console.error('Error playing audio:', error);
     }
-    utterance.rate = 0.8;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-
-    speechSynthesis.speak(utterance);
   };
 
   const handleRecord = () => {

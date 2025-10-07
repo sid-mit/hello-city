@@ -4,7 +4,7 @@ import { Volume2, Mic, Loader2, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScoreBadge } from "./ScoreBadge";
 import { analyzeSyllables, calculateOverallScore } from "@/utils/syllableAnalysis";
-import { getHighQualityVoice, getLanguageCode } from "@/utils/voiceManager";
+import { generateNaturalSpeech } from "@/utils/voiceManager";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
 
@@ -39,22 +39,17 @@ export const SinglePhrasePractice = ({
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [score, setScore] = useState<number | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const handleListen = async () => {
-    if (!("speechSynthesis" in window)) return;
-
-    const languageCode = getLanguageCode(cityId);
-    const voice = await getHighQualityVoice(languageCode);
-
-    const utterance = new SpeechSynthesisUtterance(phrase.native);
-    if (voice) {
-      utterance.voice = voice;
+    try {
+      setIsPlaying(true);
+      await generateNaturalSpeech(phrase.native, cityId);
+      setIsPlaying(false);
+    } catch (error) {
+      console.error('Error speaking phrase:', error);
+      setIsPlaying(false);
     }
-    utterance.rate = 0.8;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-
-    speechSynthesis.speak(utterance);
   };
 
   const handleRecord = () => {

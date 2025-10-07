@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import { analyzeSyllables, calculateOverallScore, SyllableAnalysis } from '@/utils/syllableAnalysis';
 import { SyllableBreakdown } from '@/components/Practice/SyllableBreakdown';
-import { getHighQualityVoice, getLanguageCode, getVoiceQualityTier } from '@/utils/voiceManager';
+import { generateNaturalSpeech } from '@/utils/voiceManager';
 import { ConversationFlow } from '@/components/Practice/ConversationFlow';
 
 interface PracticeModalProps {
@@ -38,7 +38,6 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
   const [isComplete, setIsComplete] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
-  const [currentVoice, setCurrentVoice] = useState<SpeechSynthesisVoice | null>(null);
   const [showConversationFlow, setShowConversationFlow] = useState(true);
   const [hasStartedPractice, setHasStartedPractice] = useState(false);
 
@@ -213,29 +212,12 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
   };
 
   const handleListen = async (slow = false, textOverride?: string) => {
-    if ('speechSynthesis' in window) {
+    try {
       const text = textOverride || currentPhrase.native;
-      const languageCode = getLanguageCode(situation.cityId);
-      
-      // Get best available voice
-      const voice = await getHighQualityVoice(languageCode);
-      
-      if (voice && !currentVoice) {
-        setCurrentVoice(voice);
-      }
-      
-      const utterance = new SpeechSynthesisUtterance(text);
-      if (voice) {
-        utterance.voice = voice;
-      }
-      
-      utterance.rate = slow ? 0.5 : 0.8;
-      utterance.pitch = 1.0;
-      utterance.volume = 1.0;
-      
-      speechSynthesis.speak(utterance);
-    } else {
-      toast.error('Speech synthesis not available in this browser');
+      await generateNaturalSpeech(text, situation.cityId);
+    } catch (error) {
+      console.error('Error speaking phrase:', error);
+      toast.error('Speech synthesis not available');
     }
   };
 
@@ -391,13 +373,6 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
                       <BookOpen className="w-3 h-3 mr-1" />
                       {showConversationFlow ? 'Hide' : 'View'} Flow
                     </Button>
-                  )}
-                  {currentVoice && (
-                    <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
-                      {getVoiceQualityTier(currentVoice) === 'premium' ? '🎤 Premium Voice' : 
-                       getVoiceQualityTier(currentVoice) === 'standard' ? '🔊 Device Voice' : 
-                       '🔈 Basic Voice'}
-                    </span>
                   )}
                 </div>
               </div>

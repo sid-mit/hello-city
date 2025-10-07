@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ChatBubble } from "./ChatBubble";
 import { Button } from "@/components/ui/button";
-import { getHighQualityVoice, getLanguageCode } from "@/utils/voiceManager";
+import { generateNaturalSpeech } from "@/utils/voiceManager";
 import { analyzeSyllables, calculateOverallScore } from "@/utils/syllableAnalysis";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
@@ -131,37 +131,19 @@ export const ConversationReview = ({
   }, [recognition, currentPhraseIndex, phrases, phraseScores, onComplete]);
 
   const handlePlayAudio = async (phrase: Phrase) => {
-    if (!("speechSynthesis" in window)) return;
-
-    const languageCode = getLanguageCode(cityId);
-    const voice = await getHighQualityVoice(languageCode);
-
-    const utterance = new SpeechSynthesisUtterance(phrase.native);
-    if (voice) {
-      utterance.voice = voice;
+    try {
+      await generateNaturalSpeech(phrase.native, cityId);
+    } catch (error) {
+      console.error('Error playing audio:', error);
     }
-    utterance.rate = 0.8;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-
-    speechSynthesis.speak(utterance);
   };
 
-  const handlePlayServerAudio = async (serverResponse: ServerResponse) => {
-    if (!("speechSynthesis" in window)) return;
-
-    const languageCode = getLanguageCode(cityId);
-    const voice = await getHighQualityVoice(languageCode);
-
-    const utterance = new SpeechSynthesisUtterance(serverResponse.native);
-    if (voice) {
-      utterance.voice = voice;
+  const handlePlayServerAudio = async (response: ServerResponse) => {
+    try {
+      await generateNaturalSpeech(response.native, cityId);
+    } catch (error) {
+      console.error('Error playing server audio:', error);
     }
-    utterance.rate = 0.85;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-
-    speechSynthesis.speak(utterance);
   };
 
   const handleRecord = () => {
