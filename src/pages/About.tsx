@@ -81,36 +81,35 @@ const About = () => {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <motion.section
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative py-20 px-6 text-center overflow-hidden"
+        className="pt-24 pb-16 px-6 text-center"
       >
-        <div className="absolute inset-0 bg-gradient-primary opacity-5" />
-        <div className="relative max-w-4xl mx-auto">
-          <div className="text-6xl mb-4">🌍✨</div>
-          <h1 className="text-5xl md:text-6xl font-architects font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-6xl mb-6">🌍✨</div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground font-karla">
             Hello from HelloCity!
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground font-karla">
+          <p className="text-lg md:text-xl text-muted-foreground font-karla">
             Where language learning meets wanderlust
           </p>
         </div>
       </motion.section>
 
       {/* What is HelloCity Section */}
-      <section className="py-16 px-6">
-        <div className="max-w-4xl mx-auto">
+      <section className="py-12 px-6">
+        <div className="max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl md:text-4xl font-architects font-bold mb-6 text-center">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-center text-foreground font-karla">
               What is HelloCity?
             </h2>
-            <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
+            <div className="space-y-4 text-base text-muted-foreground leading-relaxed font-karla">
               <p>
                 HelloCity is your passport to confident communication in any corner of the world. We believe the best way to learn a language isn't through endless grammar drills—it's by diving into real conversations you'll actually have while traveling.
               </p>
@@ -123,18 +122,18 @@ const About = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16 px-6 bg-muted/20">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-12 px-6">
+        <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl md:text-4xl font-architects font-bold mb-12 text-center">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-10 text-center text-foreground font-karla">
               How It Works
             </h2>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-6">
               {steps.map((step, index) => {
                 const Icon = step.icon;
                 return (
@@ -145,16 +144,14 @@ const About = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
-                    <Card className="h-full hover:shadow-elegant transition-all duration-300 hover:-translate-y-1">
-                      <CardContent className="p-6 text-center">
-                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Icon className="w-8 h-8 text-primary" />
-                        </div>
-                        <div className="text-4xl mb-2">{index + 1}</div>
-                        <h3 className="text-xl font-architects font-bold mb-2">{step.title}</h3>
-                        <p className="text-muted-foreground">{step.description}</p>
-                      </CardContent>
-                    </Card>
+                    <div className="bg-white rounded-2xl p-6 text-center h-full" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                      <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-primary/5 flex items-center justify-center">
+                        <Icon className="w-7 h-7 text-primary" />
+                      </div>
+                      <div className="text-3xl font-semibold mb-3 text-muted-foreground">{index + 1}</div>
+                      <h3 className="text-lg font-semibold mb-2 text-foreground font-karla">{step.title}</h3>
+                      <p className="text-sm text-muted-foreground font-karla leading-relaxed">{step.description}</p>
+                    </div>
                   </motion.div>
                 );
               })}
@@ -164,18 +161,18 @@ const About = () => {
       </section>
 
       {/* Why HelloCity Section */}
-      <section className="py-16 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-12 px-6">
+        <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl md:text-4xl font-architects font-bold mb-12 text-center">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-10 text-center text-foreground font-karla">
               Why HelloCity?
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
               {features.map((feature, index) => {
                 const Icon = feature.icon;
                 return (
@@ -186,13 +183,11 @@ const About = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
-                    <Card className="h-full hover:shadow-elegant transition-all duration-300 hover:-translate-y-1">
-                      <CardContent className="p-6">
-                        <Icon className="w-10 h-10 text-primary mb-4" />
-                        <h3 className="text-lg font-architects font-bold mb-2">{feature.title}</h3>
-                        <p className="text-muted-foreground text-sm">{feature.description}</p>
-                      </CardContent>
-                    </Card>
+                    <div className="bg-white rounded-2xl p-5 h-full" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                      <Icon className="w-8 h-8 text-primary mb-3" />
+                      <h3 className="text-base font-semibold mb-2 text-foreground font-karla">{feature.title}</h3>
+                      <p className="text-sm text-muted-foreground font-karla leading-relaxed">{feature.description}</p>
+                    </div>
                   </motion.div>
                 );
               })}
@@ -202,18 +197,18 @@ const About = () => {
       </section>
 
       {/* Meet the Team Section */}
-      <section className="py-16 px-6 bg-muted/20">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-12 px-6">
+        <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl md:text-4xl font-architects font-bold mb-12 text-center">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-10 text-center text-foreground font-karla">
               Meet the Team
             </h2>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-6">
               {team.map((member, index) => (
                 <motion.div
                   key={member.name}
@@ -222,21 +217,19 @@ const About = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <Card className="h-full hover:shadow-elegant transition-all duration-300 hover:-translate-y-2 group">
-                    <CardContent className="p-6">
-                      <div className="text-center mb-4">
-                        <div className="text-5xl mb-2">{member.flag}</div>
-                        <div className="text-2xl font-architects mb-1 group-hover:scale-110 transition-transform">
-                          {member.greeting}
-                        </div>
-                        <h3 className="text-2xl font-architects font-bold">{member.name}</h3>
-                        <p className="text-sm text-primary font-medium mt-1">{member.role}</p>
+                  <div className="bg-white rounded-2xl p-6 h-full" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                    <div className="text-center mb-4">
+                      <div className="text-4xl mb-2">{member.flag}</div>
+                      <div className="text-xl mb-1 font-karla">
+                        {member.greeting}
                       </div>
-                      <p className="text-muted-foreground text-sm leading-relaxed italic">
-                        "{member.bio}"
-                      </p>
-                    </CardContent>
-                  </Card>
+                      <h3 className="text-xl font-semibold text-foreground font-karla">{member.name}</h3>
+                      <p className="text-xs text-primary font-medium mt-1 font-karla">{member.role}</p>
+                    </div>
+                    <p className="text-muted-foreground text-sm leading-relaxed italic font-karla">
+                      "{member.bio}"
+                    </p>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -246,23 +239,23 @@ const About = () => {
 
       {/* Mission Section */}
       <section className="py-16 px-6">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-3xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl md:text-4xl font-architects font-bold mb-6">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-foreground font-karla">
               Our Mission
             </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+            <p className="text-base text-muted-foreground leading-relaxed mb-8 font-karla">
               We're on a mission to make every traveler feel a little less foreign and a little more at home, no matter where they go. Language learning shouldn't be intimidating—it should be an adventure.
             </p>
             <Button
               size="lg"
               onClick={() => navigate('/')}
-              className="font-architects text-lg shadow-elegant hover:shadow-glow transition-all duration-300"
+              className="font-karla text-base rounded-xl"
             >
               Ready to Explore? 🚀
             </Button>
@@ -272,7 +265,7 @@ const About = () => {
 
       {/* Footer */}
       <footer className="py-8 px-6 text-center border-t">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground font-karla">
           Built with ❤️ using React, AI, and lots of coffee ☕
         </p>
       </footer>
