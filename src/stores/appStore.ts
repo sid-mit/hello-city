@@ -78,6 +78,7 @@ interface AppState {
   favoritedSituations: SavedSituation[];
   activeTab: TabType;
   hasShownFavoriteModal: boolean;
+  hasCompletedOnboarding: boolean;
   practiceHistory: PracticeHistory;
   badges: Badge[];
   practiceStreak: number;
@@ -85,6 +86,7 @@ interface AppState {
   setUserName: (name: string) => void;
   setGuestName: (name: string) => void;
   setGenderPreference: (gender: GenderVariant) => void;
+  setHasCompletedOnboarding: (completed: boolean) => void;
   selectCity: (city: City | null) => void;
   selectLocation: (location: Location | null) => void;
   selectCategory: (categoryId: string | null) => void;
@@ -118,6 +120,7 @@ export const useAppStore = create<AppState>()(
       favoritedSituations: [],
       activeTab: 'explore',
       hasShownFavoriteModal: false,
+      hasCompletedOnboarding: false,
       practiceHistory: {},
       practiceStreak: 0,
       lastPracticeDate: null,
@@ -134,6 +137,7 @@ export const useAppStore = create<AppState>()(
       setUserName: (name) => set({ userName: name }),
       setGuestName: (name) => set({ guestName: name }),
       setGenderPreference: (gender) => set({ genderPreference: gender }),
+      setHasCompletedOnboarding: (completed) => set({ hasCompletedOnboarding: completed }),
       selectCity: (city) => set({ selectedCity: city }),
       selectLocation: (location) => set({ selectedLocation: location }),
       selectCategory: (categoryId) => set({ selectedCategory: categoryId }),
@@ -338,6 +342,7 @@ export const useAppStore = create<AppState>()(
         badges: state.badges,
         practiceStreak: state.practiceStreak,
         lastPracticeDate: state.lastPracticeDate,
+        hasCompletedOnboarding: state.hasCompletedOnboarding,
       }),
     }
   )
