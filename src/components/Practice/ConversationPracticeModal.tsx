@@ -225,6 +225,7 @@ export const ConversationPracticeModal = ({
           {showConversationReview ? (
             <ConversationReview
               phrases={situation.phrases}
+              serverResponses={situation.serverResponses}
               cityId={situation.cityId}
               recognition={recognition}
               onComplete={handleConversationReviewComplete}

@@ -23,6 +23,12 @@ export interface SituationData {
     phraseIndex?: number;
     action?: string;
   }>;
+  serverResponses?: Array<{
+    afterUserPhraseIndex: number;
+    native: string;
+    romanization: string;
+    english: string;
+  }>;
   phrases: Array<{
     native: string;
     romanization: string;

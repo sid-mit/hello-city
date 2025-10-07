@@ -364,6 +364,32 @@ export const seoulData: CityDataStructure = {
             { step: 4, speaker: 'other', action: 'Server brings the dish' },
             { step: 5, speaker: 'you', phraseIndex: 2 },
           ],
+          serverResponses: [
+            {
+              afterUserPhraseIndex: 0,
+              native: '네, 주문하시겠어요?',
+              romanization: 'Ne, jumunhasigesseoyo?',
+              english: 'Yes, would you like to order?',
+            },
+            {
+              afterUserPhraseIndex: 1,
+              native: '알겠습니다. 곧 나옵니다',
+              romanization: 'Algetsseumnida. Got naopnida',
+              english: 'Understood. It will be out soon',
+            },
+            {
+              afterUserPhraseIndex: 2,
+              native: '비빔밥이 인기 많아요',
+              romanization: 'Bibimbabi ingi manayo',
+              english: 'Bibimbap is very popular',
+            },
+            {
+              afterUserPhraseIndex: 3,
+              native: '좋아요! 매운 맛으로 준비할게요',
+              romanization: 'Joayo! Maeun maseuro junbihalgeyo',
+              english: 'Great! I\'ll prepare it spicy for you',
+            },
+          ],
           phrases: [
             {
               native: '저기요!',
