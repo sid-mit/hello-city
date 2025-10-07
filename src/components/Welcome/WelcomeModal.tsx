@@ -3,41 +3,35 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { X, ChevronRight, ChevronLeft } from 'lucide-react';
-import { useAppStore, GenderVariant } from '@/stores/appStore';
-import { GenderSelector } from '@/components/Practice/GenderSelector';
+import { useAppStore } from '@/stores/appStore';
 
 const slides = [
   {
     emoji: '👋',
     title: 'Welcome to HelloCity!',
-    description: 'Your interactive companion for learning languages through travel. Master essential phrases for any destination.',
+    description: 'Learn languages naturally through real travel situations. Practice ordering food, asking for directions, and more in cities around the world.',
   },
   {
     emoji: '🗺️',
     title: 'Explore Cities',
-    description: 'Browse the interactive map, select a city, and discover phrases organized by real-world situations.',
+    description: 'Select a city on the map, choose a situation, and start learning phrases you\'ll actually use. Each phrase includes pronunciation help and cultural context.',
   },
   {
-    emoji: '💬',
-    title: 'Gendered Languages',
-    description: 'Some languages like Hindi, French, and Spanish use different phrases depending on whether you\'re male or female. Choose your preference:',
-    showGenderSelector: true,
-  },
-  {
-    emoji: '🎤',
+    emoji: '🎯',
     title: 'Practice & Perfect',
-    description: 'Use AI-powered pronunciation practice to speak like a local. Save favorites and track your progress.',
+    description: 'Listen to native speakers, practice your pronunciation, and track your progress. Ready to start your language journey?',
+    showNameInput: true,
   },
 ];
 
 export const WelcomeModal = () => {
-  const { setGuestName, guestName, genderPreference, setGenderPreference } = useAppStore();
+  const { setGuestName, guestName } = useAppStore();
   const [isVisible, setIsVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [nameInput, setNameInput] = useState('');
 
   useEffect(() => {
-    const hasSeenWelcome = localStorage.getItem('hellocity-welcome-v2');
+    const hasSeenWelcome = localStorage.getItem('hellocity-welcome-v3');
     if (!hasSeenWelcome && !guestName) {
       setIsVisible(true);
     }
@@ -61,13 +55,13 @@ export const WelcomeModal = () => {
     } else {
       setGuestName('Guest');
     }
-    localStorage.setItem('hellocity-welcome-v2', 'true');
+    localStorage.setItem('hellocity-welcome-v3', 'true');
     setIsVisible(false);
   };
 
   const handleSkip = () => {
     setGuestName('Guest');
-    localStorage.setItem('hellocity-welcome-v2', 'true');
+    localStorage.setItem('hellocity-welcome-v3', 'true');
     setIsVisible(false);
   };
 
@@ -101,7 +95,12 @@ export const WelcomeModal = () => {
                 />
               ))}
             </div>
-            <Button variant="ghost" size="icon" onClick={handleSkip}>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleSkip}
+              className="hover:bg-muted"
+            >
               <X className="w-4 h-4" />
             </Button>
           </div>
@@ -124,20 +123,7 @@ export const WelcomeModal = () => {
                 {slides[currentSlide].description}
               </p>
 
-              {slides[currentSlide].showGenderSelector && (
-                <div className="flex flex-col items-center gap-4 mb-6">
-                  <GenderSelector
-                    langCode="hi-IN"
-                    currentGender={genderPreference}
-                    onGenderChange={setGenderPreference}
-                  />
-                  <p className="text-xs text-muted-foreground italic">
-                    Don't worry, you can change this anytime during practice!
-                  </p>
-                </div>
-              )}
-
-              {isLastSlide && (
+              {slides[currentSlide].showNameInput && (
                 <div className="mb-6">
                   <label className="block text-sm font-medium mb-2 text-left">
                     What should we call you? (optional)
