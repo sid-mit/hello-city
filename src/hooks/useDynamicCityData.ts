@@ -24,6 +24,8 @@ export interface CityDataStructure {
       id: string;
       title: string;
       description: string;
+      emoji: string;
+      context: string;
       phrases: Array<{
         id: string;
         native: string;
@@ -87,6 +89,8 @@ export function useDynamicCityData({ cityId, genderPreference }: DynamicCityData
             id: situationMeta.id,
             title: situationMeta.title,
             description: situationMeta.description,
+            emoji: situationMeta.emoji,
+            context: situationMeta.context,
             phrases: phraseList,
           };
         });

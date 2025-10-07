@@ -13,6 +13,8 @@ export interface SituationMetadata {
   id: string;
   title: string;
   description: string;
+  emoji: string;
+  context: string;
 }
 
 // Category mappings (spot_type)
@@ -65,46 +67,64 @@ export const SITUATION_METADATA: Record<string, SituationMetadata> = {
     id: 'ordering',
     title: 'Ordering',
     description: 'Place your order',
+    emoji: '🍽️',
+    context: 'At the counter',
   },
   asking: {
     id: 'asking',
     title: 'Asking Questions',
     description: 'Get information',
+    emoji: '❓',
+    context: 'Making inquiries',
   },
   paying: {
     id: 'paying',
     title: 'Paying',
     description: 'Complete payment',
+    emoji: '💳',
+    context: 'At checkout',
   },
   preferences: {
     id: 'preferences',
     title: 'Preferences',
     description: 'Express your needs',
+    emoji: '⚙️',
+    context: 'Specifying preferences',
   },
   greetings: {
     id: 'greetings',
     title: 'Greetings',
     description: 'Start conversations',
+    emoji: '👋',
+    context: 'Meeting someone',
   },
   directions: {
     id: 'directions',
     title: 'Directions',
     description: 'Find your way',
+    emoji: '🗺️',
+    context: 'On the street',
   },
   tickets: {
     id: 'tickets',
     title: 'Tickets',
     description: 'Buy tickets',
+    emoji: '🎫',
+    context: 'At the ticket counter',
   },
   checkin: {
     id: 'checkin',
     title: 'Check-in',
     description: 'Hotel arrival',
+    emoji: '🔑',
+    context: 'At hotel reception',
   },
   requests: {
     id: 'requests',
     title: 'Requests',
     description: 'Ask for services',
+    emoji: '🛎️',
+    context: 'Making requests',
   },
 };
 
@@ -126,5 +146,7 @@ export function getSituationMetadata(subScenario: string): SituationMetadata {
     id: subScenario,
     title: subScenario.charAt(0).toUpperCase() + subScenario.slice(1),
     description: 'Custom situation',
+    emoji: '💬',
+    context: 'Various situations',
   };
 }

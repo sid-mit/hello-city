@@ -65,7 +65,7 @@ export const ConversationPracticeModal = ({
         seoul: "ko-KR",
         beijing: "zh-CN",
         "new-delhi": "hi-IN",
-        "mexico-city": "es-ES",
+        "mexico-city": "es-MX",
       };
       recognitionInstance.lang = languageMap[situation.cityId] || "en-US";
       recognitionInstance.continuous = false;

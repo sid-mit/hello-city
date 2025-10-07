@@ -207,9 +207,12 @@ export const MapView = () => {
         const category = cityData.categories.find(c => c.id === selectedCategory);
         if (!category) return null;
         
-        // Enrich situations with category color
+        // Enrich situations with all required fields
         const enrichedSituations = category.situations.map(situation => ({
           ...situation,
+          cityId: selectedCity.id,
+          cityName: selectedCity.name,
+          cityEmoji: selectedCity.emoji,
           categoryColor: category.color,
         }));
         
