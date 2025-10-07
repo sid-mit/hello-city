@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ChatBubble } from "./ChatBubble";
+import { Button } from "@/components/ui/button";
 import { getHighQualityVoice, getLanguageCode } from "@/utils/voiceManager";
 import { analyzeSyllables, calculateOverallScore } from "@/utils/syllableAnalysis";
 import confetti from "canvas-confetti";
+import { toast } from "sonner";
 
 interface Phrase {
   native: string;
@@ -11,109 +13,47 @@ interface Phrase {
   english: string;
 }
 
-interface ConversationMessage {
-  speaker: 'user' | 'server';
+interface ServerResponse {
+  afterUserPhraseIndex: number;
   native: string;
   romanization: string;
   english: string;
-  needsRecording?: boolean;
 }
 
 interface ConversationReviewProps {
   phrases: Phrase[];
-  conversationScript?: ConversationMessage[];
-  serverResponses?: Array<{
-    afterUserPhraseIndex: number;
-    native: string;
-    romanization: string;
-    english: string;
-  }>;
+  serverResponses?: ServerResponse[];
   cityId: string;
   recognition: any;
   onComplete: (scores: number[]) => void;
 }
 
 interface PhraseScore {
-  userPhraseIndex: number;
+  phraseIndex: number;
   score: number;
 }
 
-type MessageState = 'completed' | 'active' | 'future' | 'server-playing';
-
 export const ConversationReview = ({
   phrases,
-  conversationScript,
   serverResponses = [],
   cityId,
   recognition,
   onComplete,
 }: ConversationReviewProps) => {
-  // Use new format if available, otherwise build from legacy format
-  const script: ConversationMessage[] = conversationScript || buildLegacyScript(phrases, serverResponses);
-  
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [phraseScores, setPhraseScores] = useState<PhraseScore[]>([]);
-  const [isServerSpeaking, setIsServerSpeaking] = useState(false);
+  const [visibleServerResponses, setVisibleServerResponses] = useState<Set<number>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLDivElement>(null);
-
-  // Build legacy script from old format
-  function buildLegacyScript(
-    legacyPhrases: Phrase[],
-    legacyServerResponses: Array<{ afterUserPhraseIndex: number; native: string; romanization: string; english: string }>
-  ): ConversationMessage[] {
-    const result: ConversationMessage[] = [];
-    
-    legacyPhrases.forEach((phrase, index) => {
-      result.push({
-        speaker: 'user',
-        ...phrase,
-        needsRecording: true,
-      });
-      
-      const serverResponse = legacyServerResponses.find(sr => sr.afterUserPhraseIndex === index);
-      if (serverResponse) {
-        result.push({
-          speaker: 'server',
-          native: serverResponse.native,
-          romanization: serverResponse.romanization,
-          english: serverResponse.english,
-        });
-      }
-    });
-    
-    return result;
-  }
-
-  // Get current user phrase index (counting only user messages that need recording)
-  const getCurrentUserPhraseIndex = () => {
-    let count = 0;
-    for (let i = 0; i <= currentStepIndex && i < script.length; i++) {
-      if (script[i].speaker === 'user' && script[i].needsRecording) {
-        count++;
-      }
-    }
-    return count - 1;
-  };
-
-  const getUserPhraseIndexAtStep = (stepIndex: number) => {
-    let count = 0;
-    for (let i = 0; i <= stepIndex && i < script.length; i++) {
-      if (script[i].speaker === 'user' && script[i].needsRecording) {
-        count++;
-      }
-    }
-    return count - 1;
-  };
 
   // Auto-scroll to active bubble
   useEffect(() => {
     if (activeRef.current) {
       activeRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }, [currentStepIndex]);
+  }, [currentPhraseIndex]);
 
   // Setup speech recognition result handler
   useEffect(() => {
@@ -121,24 +61,21 @@ export const ConversationReview = ({
 
     const handleResult = (event: any) => {
       const transcript = event.results[0][0].transcript;
-      const currentMessage = script[currentStepIndex];
-      
-      if (currentMessage.speaker !== 'user' || !currentMessage.needsRecording) return;
+      const currentPhrase = phrases[currentPhraseIndex];
 
       setIsAnalyzing(true);
 
       setTimeout(() => {
         const syllableAnalyses = analyzeSyllables(
           transcript,
-          currentMessage.native,
-          currentMessage.romanization
+          currentPhrase.native,
+          currentPhrase.romanization
         );
         const score = Math.round(calculateOverallScore(syllableAnalyses));
 
-        const userPhraseIndex = getCurrentUserPhraseIndex();
         setPhraseScores((prev) => [
           ...prev,
-          { userPhraseIndex, score },
+          { phraseIndex: currentPhraseIndex, score },
         ]);
 
         if (score >= 90) {
@@ -150,26 +87,43 @@ export const ConversationReview = ({
         }
 
         setIsAnalyzing(false);
-        setIsRecording(false);
 
-        // Move to next step after a delay
+        // Show server response after user completes their phrase
         setTimeout(() => {
-          const nextStepIndex = currentStepIndex + 1;
+          setIsRecording(false);
           
-          if (nextStepIndex < script.length) {
-            setCurrentStepIndex(nextStepIndex);
+          // Check if there's a server response for this phrase
+          const serverResponse = serverResponses.find(
+            (sr) => sr.afterUserPhraseIndex === currentPhraseIndex
+          );
+
+          if (serverResponse) {
+            // Show server response
+            setVisibleServerResponses((prev) => new Set(prev).add(currentPhraseIndex));
             
-            // If next is a server message, auto-play it
-            if (script[nextStepIndex].speaker === 'server') {
-              setTimeout(() => {
-                handlePlayAudio(script[nextStepIndex]);
-              }, 300);
-            }
+            // Play server audio
+            setTimeout(() => {
+              handlePlayServerAudio(serverResponse);
+            }, 300);
+
+            // Move to next phrase after server speaks
+            setTimeout(() => {
+              if (currentPhraseIndex < phrases.length - 1) {
+                setCurrentPhraseIndex((prev) => prev + 1);
+              } else {
+                // All phrases completed
+                onComplete(phraseScores.map((ps) => ps.score).concat(score));
+              }
+            }, 3000);
           } else {
-            // Conversation complete
-            onComplete(phraseScores.map((ps) => ps.score).concat(score));
+            // No server response, move to next immediately
+            if (currentPhraseIndex < phrases.length - 1) {
+              setCurrentPhraseIndex((prev) => prev + 1);
+            } else {
+              onComplete(phraseScores.map((ps) => ps.score).concat(score));
+            }
           }
-        }, 2000);
+        }, 2500);
       }, 500);
     };
 
@@ -178,28 +132,38 @@ export const ConversationReview = ({
     return () => {
       recognition.onresult = null;
     };
-  }, [recognition, currentStepIndex, script, phraseScores, onComplete]);
+  }, [recognition, currentPhraseIndex, phrases, phraseScores, onComplete]);
 
-  const handlePlayAudio = async (message: ConversationMessage) => {
+  const handlePlayAudio = async (phrase: Phrase) => {
     if (!("speechSynthesis" in window)) return;
 
     const languageCode = getLanguageCode(cityId);
     const voice = await getHighQualityVoice(languageCode);
 
-    const utterance = new SpeechSynthesisUtterance(message.native);
+    const utterance = new SpeechSynthesisUtterance(phrase.native);
     if (voice) {
       utterance.voice = voice;
     }
-    utterance.rate = message.speaker === 'server' ? 0.85 : 0.8;
+    utterance.rate = 0.8;
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
 
-    if (message.speaker === 'server') {
-      setIsServerSpeaking(true);
-      utterance.onend = () => {
-        setIsServerSpeaking(false);
-      };
+    speechSynthesis.speak(utterance);
+  };
+
+  const handlePlayServerAudio = async (serverResponse: ServerResponse) => {
+    if (!("speechSynthesis" in window)) return;
+
+    const languageCode = getLanguageCode(cityId);
+    const voice = await getHighQualityVoice(languageCode);
+
+    const utterance = new SpeechSynthesisUtterance(serverResponse.native);
+    if (voice) {
+      utterance.voice = voice;
     }
+    utterance.rate = 0.85;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
 
     speechSynthesis.speak(utterance);
   };
@@ -217,29 +181,39 @@ export const ConversationReview = ({
     }, 4000);
   };
 
-  const getMessageState = (stepIndex: number): MessageState => {
-    const message = script[stepIndex];
-    
-    if (stepIndex < currentStepIndex) {
-      return 'completed';
-    }
-    
-    if (stepIndex === currentStepIndex) {
-      if (message.speaker === 'user' && message.needsRecording) {
-        return 'active';
-      }
-      if (message.speaker === 'server') {
-        return 'server-playing';
-      }
-    }
-    
-    return 'future';
+  const getScoreForPhrase = (phraseIndex: number): number | undefined => {
+    return phraseScores.find((ps) => ps.phraseIndex === phraseIndex)?.score;
   };
 
-  const getScoreForStep = (stepIndex: number): number | undefined => {
-    const userPhraseIndex = getUserPhraseIndexAtStep(stepIndex);
-    return phraseScores.find((ps) => ps.userPhraseIndex === userPhraseIndex)?.score;
-  };
+  // Build conversation messages (user phrases + server responses)
+  const conversationMessages: Array<{
+    type: 'user' | 'server';
+    phraseIndex?: number;
+    phrase?: Phrase;
+    serverResponse?: ServerResponse;
+  }> = [];
+
+  phrases.forEach((phrase, index) => {
+    // Add user message
+    conversationMessages.push({
+      type: 'user',
+      phraseIndex: index,
+      phrase,
+    });
+
+    // Add server response if visible
+    if (visibleServerResponses.has(index)) {
+      const serverResponse = serverResponses.find(
+        (sr) => sr.afterUserPhraseIndex === index
+      );
+      if (serverResponse) {
+        conversationMessages.push({
+          type: 'server',
+          serverResponse,
+        });
+      }
+    }
+  });
 
   return (
     <div ref={scrollRef} className="space-y-6">
@@ -251,40 +225,53 @@ export const ConversationReview = ({
       </div>
 
       <div className="space-y-4 px-2">
-        {script.map((message, stepIndex) => {
-          const state = getMessageState(stepIndex);
-          const score = message.speaker === 'user' ? getScoreForStep(stepIndex) : undefined;
-          const isActive = state === 'active';
-          const isCompleted = state === 'completed';
-          const isFuture = state === 'future';
-          const isCurrentServer = state === 'server-playing';
+        {conversationMessages.map((message, index) => {
+          if (message.type === 'user' && message.phrase && message.phraseIndex !== undefined) {
+            const score = getScoreForPhrase(message.phraseIndex);
+            const isActive = message.phraseIndex === currentPhraseIndex && !score;
+            const isPast = message.phraseIndex < currentPhraseIndex || score !== undefined;
 
-          return (
-            <div
-              key={`${message.speaker}-${stepIndex}`}
-              ref={isActive ? activeRef : null}
-            >
-              <ChatBubble
-                speaker={message.speaker === 'user' ? 'you' : 'other'}
-                phrase={message}
-                isActive={isActive}
-                isPast={isCompleted}
-                isFuture={isFuture}
-                isLocked={isFuture}
-                isCompleted={isCompleted && message.speaker === 'server'}
-                isServerSpeaking={isCurrentServer && isServerSpeaking}
-                onPlayAudio={() => handlePlayAudio(message)}
-                onRecord={isActive && message.speaker === 'user' ? handleRecord : undefined}
-                isRecording={isRecording && isActive}
-                isAnalyzing={isAnalyzing && isActive}
-                score={score}
-              />
-            </div>
-          );
+            return (
+              <div
+                key={`user-${message.phraseIndex}`}
+                ref={isActive ? activeRef : null}
+              >
+                <ChatBubble
+                  speaker="you"
+                  phrase={message.phrase}
+                  isActive={isActive}
+                  isPast={isPast}
+                  onPlayAudio={() => handlePlayAudio(message.phrase!)}
+                  onRecord={isActive ? handleRecord : undefined}
+                  isRecording={isRecording && isActive}
+                  isAnalyzing={isAnalyzing && isActive}
+                  score={score}
+                />
+              </div>
+            );
+          } else if (message.type === 'server' && message.serverResponse) {
+            return (
+              <motion.div
+                key={`server-${index}`}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <ChatBubble
+                  speaker="other"
+                  phrase={message.serverResponse}
+                  isActive={false}
+                  isPast={true}
+                  onPlayAudio={() => handlePlayServerAudio(message.serverResponse!)}
+                />
+              </motion.div>
+            );
+          }
+          return null;
         })}
       </div>
 
-      {currentStepIndex === 0 && phraseScores.length === 0 && (
+      {currentPhraseIndex === 0 && phraseScores.length === 0 && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
