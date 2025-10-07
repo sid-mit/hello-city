@@ -8,7 +8,7 @@ import { CityMarker } from './CityMarker';
 import { PhraseDrawer } from '../PhraseDrawer/PhraseDrawer';
 import { CitySelector } from '../CitySelector/CitySelector';
 import { Button } from '../ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { createRoot } from 'react-dom/client';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -231,8 +231,9 @@ export const MapView = () => {
       {/* Loading state */}
       {selectedCity && isCityDataLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-40">
-          <div className="text-center">
-            <p className="text-lg font-semibold">Loading phrases...</p>
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-lg font-semibold">Loading phrases</p>
           </div>
         </div>
       )}

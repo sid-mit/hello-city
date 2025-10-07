@@ -534,8 +534,8 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
                     )}
                   </motion.button>
                   <p className="mt-4 text-sm text-muted-foreground">
-                    {practiceState === 'recording' ? 'Recording...' : 
-                     practiceState === 'processing' ? 'Analyzing pronunciation...' :
+                    {practiceState === 'recording' ? 'Recording' : 
+                     practiceState === 'processing' ? 'Analyzing pronunciation' :
                      'Tap to record'}
                   </p>
                 </div>

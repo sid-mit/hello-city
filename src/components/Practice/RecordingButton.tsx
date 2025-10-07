@@ -30,12 +30,12 @@ export const RecordingButton = ({
         {isAnalyzing ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            Analyzing...
+            Analyzing
           </>
         ) : (
           <>
             <Mic className="mr-2 h-5 w-5" />
-            {isRecording ? "Recording..." : "Tap to Record"}
+            {isRecording ? "Recording" : "Tap to Record"}
           </>
         )}
       </Button>

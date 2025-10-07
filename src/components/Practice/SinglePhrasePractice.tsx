@@ -191,12 +191,12 @@ export const SinglePhrasePractice = ({
               {isAnalyzing ? (
                 <>
                   <Loader2 className="mr-3 h-6 w-6 animate-spin" />
-                  Analyzing...
+                  Analyzing
                 </>
               ) : isRecording ? (
                 <>
                   <Mic className="mr-3 h-6 w-6 animate-pulse" />
-                  Recording...
+                  Recording
                 </>
               ) : (
                 <>

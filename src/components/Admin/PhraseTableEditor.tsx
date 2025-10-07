@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
-import { Pencil, Trash2, Plus, Save, X } from 'lucide-react';
+import { Pencil, Trash2, Plus, Save, X, Loader2 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface Phrase {
@@ -148,7 +148,14 @@ export function PhraseTableEditor() {
   };
 
   if (isLoading) {
-    return <Card className="p-6">Loading phrases...</Card>;
+    return (
+      <Card className="p-6">
+        <div className="flex items-center gap-3">
+          <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          <span>Loading phrases</span>
+        </div>
+      </Card>
+    );
   }
 
   return (

@@ -78,32 +78,14 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
         <div className="px-5 pt-6 pb-4 border-b border-border">
           <div className="flex items-center gap-3 mb-2">
             <span className="text-[28px] leading-none">{categoryEmoji}</span>
-            <h2 className="text-[20px] font-semibold" style={{ color: '#1a1a1a' }}>
+            <h2 className="text-[20px] font-semibold text-foreground">
               {categoryTitle}
             </h2>
           </div>
           {categoryDescription && (
-            <p className="text-[14px] leading-relaxed" style={{ color: '#6b7280' }}>
+            <p className="text-[14px] leading-relaxed text-muted-foreground">
               {categoryDescription}
             </p>
-          )}
-          {/* Dot Indicators */}
-          {situations.length > 1 && (
-            <div className="flex items-center justify-center gap-1.5 mt-4">
-              {situations.map((_, index) => (
-                <div
-                  key={index}
-                  className="rounded-full transition-all duration-300"
-                  style={{
-                    width: currentCardIndex === index ? '20px' : '6px',
-                    height: '6px',
-                    backgroundColor: currentCardIndex === index 
-                      ? '#1a1a1a' 
-                      : '#d1d5db',
-                  }}
-                />
-              ))}
-            </div>
           )}
         </div>
 
@@ -112,7 +94,7 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
           onClick={onClose}
           className="absolute top-4 right-4 z-10 w-[44px] h-[44px] flex items-center justify-center transition-colors hover:bg-muted rounded-full"
         >
-          <X className="w-[28px] h-[28px]" style={{ color: '#6b7280' }} />
+          <X className="w-[28px] h-[28px] text-muted-foreground" />
         </button>
 
         {/* Horizontal Scrollable Situation Cards */}

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, Users } from "lucide-react";
+import { X, Users, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { useAppStore } from "@/stores/appStore";
 import { analyzeSyllables, calculateOverallScore } from "@/utils/syllableAnalysis";
 import { generateNaturalSpeech } from "@/utils/voiceManager";
-import { ProgressDots } from "./ProgressDots";
+
 import { CollapsiblePastSteps } from "./CollapsiblePastSteps";
 import { CurrentStepCard } from "./CurrentStepCard";
 import { RecordingButton } from "./RecordingButton";
@@ -275,12 +275,9 @@ export const ConversationPracticeModal = ({
               </Button>
             </div>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">
-              Step {completedSteps + 1}/{totalSteps}
-            </span>
-            <ProgressDots total={totalSteps} current={completedSteps + 1} />
-          </div>
+          <span className="text-sm font-medium text-muted-foreground">
+            Step {completedSteps + 1} of {totalSteps}
+          </span>
         </div>
 
         <div className="p-6 space-y-6">
@@ -331,14 +328,18 @@ export const ConversationPracticeModal = ({
                   size="lg"
                   disabled={isGeneratingResponses}
                 >
-                  <Users className="h-5 w-5 mr-2" />
-                  {isGeneratingResponses ? 'Preparing conversation...' : 'Practice Full Conversation'}
+                  {isGeneratingResponses ? (
+                    <>
+                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                      Generating Conversation
+                    </>
+                  ) : (
+                    <>
+                      <Users className="h-5 w-5 mr-2" />
+                      Practice Full Conversation
+                    </>
+                  )}
                 </Button>
-                {isGeneratingResponses && (
-                  <p className="text-xs text-muted-foreground text-center mt-2">
-                    Generating realistic responses for a natural conversation...
-                  </p>
-                )}
               </div>
             </div>
           ) : practiceMode === 'single-phrase' && selectedPhraseIndex !== null ? (
