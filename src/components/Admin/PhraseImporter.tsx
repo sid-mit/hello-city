@@ -4,15 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
-import { generateSampleCSV } from '@/utils/csvParser';
-import { Upload, Download, CheckCircle, AlertCircle, Loader2, Play } from 'lucide-react';
+import { parsePhrasesCSV, generateSampleCSV, type ParsedPhrase } from '@/utils/csvParser';
+import { Upload, Download, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { importAllCSVFiles } from '@/utils/importCSVData';
 
 export const PhraseImporter = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [isBulkImporting, setIsBulkImporting] = useState(false);
   const [results, setResults] = useState<{ success: number; failed: number; errors: string[] } | null>(null);
   const { toast } = useToast();
 
@@ -43,102 +41,54 @@ export const PhraseImporter = () => {
     window.URL.revokeObjectURL(url);
   };
 
-  const handleBulkImport = async () => {
-    setIsBulkImporting(true);
-    setResults(null);
-
-    try {
-      toast({
-        title: 'Starting bulk import',
-        description: 'Importing all CSV files...',
-      });
-
-      const importResults = await importAllCSVFiles();
-      
-      const totalSuccess = importResults.reduce((sum, r) => sum + r.success, 0);
-      const totalFailed = importResults.reduce((sum, r) => sum + r.failed + r.skipped, 0);
-      const allErrors = importResults.flatMap(r => 
-        r.errors.length > 0 ? [`${r.file}: ${r.errors.join(', ')}`] : []
-      );
-
-      setResults({
-        success: totalSuccess,
-        failed: totalFailed,
-        errors: allErrors
-      });
-
-      if (totalSuccess > 0) {
-        toast({
-          title: 'Bulk import completed',
-          description: `Successfully imported ${totalSuccess} phrases across all files`,
-        });
-      }
-
-      if (totalFailed > 0) {
-        toast({
-          title: 'Some imports had issues',
-          description: `${totalFailed} phrases failed or were skipped`,
-          variant: 'destructive',
-        });
-      }
-    } catch (error) {
-      toast({
-        title: 'Bulk import failed',
-        description: error instanceof Error ? error.message : 'Unknown error occurred',
-        variant: 'destructive',
-      });
-      setResults({
-        success: 0,
-        failed: 0,
-        errors: [error instanceof Error ? error.message : 'Unknown error']
-      });
-    } finally {
-      setIsBulkImporting(false);
-    }
-  };
-
   const handleUpload = async () => {
     if (!file) return;
 
     setIsUploading(true);
     const errors: string[] = [];
+    let successCount = 0;
+    let failedCount = 0;
 
     try {
       const content = await file.text();
+      const phrases = parsePhrasesCSV(content);
 
       toast({
         title: 'Processing phrases',
-        description: 'Uploading to backend for normalization...',
+        description: `Found ${phrases.length} phrases to import`,
       });
 
-      // Call backend import function
-      const { data, error } = await supabase.functions.invoke('import-phrases', {
-        body: { csvContent: content }
-      });
+      // Import phrases in batches
+      const batchSize = 50;
+      for (let i = 0; i < phrases.length; i += batchSize) {
+        const batch = phrases.slice(i, i + batchSize);
+        
+        const { data, error } = await supabase
+          .from('phrases')
+          .insert(batch)
+          .select();
 
-      if (error) {
-        throw error;
+        if (error) {
+          failedCount += batch.length;
+          errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${error.message}`);
+        } else {
+          successCount += data?.length || 0;
+        }
       }
 
-      const result = data as { success: number; failed: number; skipped: number; errors: string[] };
-      
-      setResults({ 
-        success: result.success, 
-        failed: result.failed + result.skipped, 
-        errors: result.errors 
-      });
+      setResults({ success: successCount, failed: failedCount, errors });
 
-      if (result.success > 0) {
+      if (successCount > 0) {
         toast({
           title: 'Import completed',
-          description: `Successfully imported ${result.success} phrases${result.skipped > 0 ? ` (${result.skipped} skipped)` : ''}`,
+          description: `Successfully imported ${successCount} phrases`,
         });
       }
 
-      if (result.failed > 0 || result.skipped > 0) {
+      if (failedCount > 0) {
         toast({
-          title: 'Some imports had issues',
-          description: `${result.failed} failed, ${result.skipped} skipped`,
+          title: 'Some imports failed',
+          description: `${failedCount} phrases failed to import`,
           variant: 'destructive',
         });
       }
@@ -167,24 +117,6 @@ export const PhraseImporter = () => {
 
         <div className="space-y-4">
           <div className="flex gap-2">
-            <Button
-              variant="default"
-              onClick={handleBulkImport}
-              disabled={isBulkImporting}
-              className="flex items-center gap-2"
-            >
-              {isBulkImporting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Importing All Files...
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4" />
-                  Import All CSV Files
-                </>
-              )}
-            </Button>
             <Button
               variant="outline"
               onClick={downloadSampleCSV}
