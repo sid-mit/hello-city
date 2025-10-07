@@ -357,6 +357,61 @@ export const seoulData: CityDataStructure = {
           context: 'When you\'re ready to order at a restaurant',
           categoryColor: '#F97316',
           culturalTip: 'Point to menu or picture if unsure; "이거요!" (igeoyo - "this one!") works great. In Korean restaurants, it\'s common to call the server by saying "저기요!" loudly.',
+          conversationScript: [
+            {
+              speaker: 'user',
+              native: '저기요!',
+              romanization: 'Jeogiyo!',
+              english: 'Excuse me!',
+              needsRecording: true,
+            },
+            {
+              speaker: 'server',
+              native: '네, 주문하시겠어요?',
+              romanization: 'Ne, jumunhasigesseoyo?',
+              english: 'Yes, would you like to order?',
+            },
+            {
+              speaker: 'user',
+              native: '이거 주세요',
+              romanization: 'Igeo juseyo',
+              english: 'Please give me this',
+              needsRecording: true,
+            },
+            {
+              speaker: 'server',
+              native: '알겠습니다. 곧 나옵니다',
+              romanization: 'Algetsseumnida. Got naopnida',
+              english: 'Understood. It will be out soon',
+            },
+            {
+              speaker: 'user',
+              native: '뭐가 맛있어요?',
+              romanization: 'Mwoga masisseoyo?',
+              english: 'What\'s good here?',
+              needsRecording: true,
+            },
+            {
+              speaker: 'server',
+              native: '비빔밥이 인기 많아요',
+              romanization: 'Bibimbabi ingi manayo',
+              english: 'Bibimbap is very popular',
+            },
+            {
+              speaker: 'user',
+              native: '매운 거 괜찮아요',
+              romanization: 'Maeun geo gwaenchanayo',
+              english: 'Spicy is okay',
+              needsRecording: true,
+            },
+            {
+              speaker: 'server',
+              native: '좋아요! 매운 맛으로 준비할게요',
+              romanization: 'Joayo! Maeun maseuro junbihalgeyo',
+              english: 'Great! I\'ll prepare it spicy for you',
+            },
+          ],
+          // Legacy format for backward compatibility
           conversationFlow: [
             { step: 1, speaker: 'you', phraseIndex: 0 },
             { step: 2, speaker: 'other', action: 'Server approaches your table' },

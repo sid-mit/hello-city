@@ -23,6 +23,15 @@ export interface SituationData {
     phraseIndex?: number;
     action?: string;
   }>;
+  // New format: unified conversation script
+  conversationScript?: Array<{
+    speaker: 'user' | 'server';
+    native: string;
+    romanization: string;
+    english: string;
+    needsRecording?: boolean;
+  }>;
+  // Legacy format (for backward compatibility)
   serverResponses?: Array<{
     afterUserPhraseIndex: number;
     native: string;
