@@ -14,7 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      phrases: {
+        Row: {
+          city: string
+          created_at: string | null
+          female_native: string | null
+          female_romanized: string | null
+          female_tts: string | null
+          id: string
+          is_gendered: boolean | null
+          lang_code: string
+          male_native: string | null
+          male_romanized: string | null
+          male_tts: string | null
+          neutral_native: string
+          neutral_romanized: string
+          neutral_tts: string
+          notes: string | null
+          phrase_key: string
+          spot_type: string
+          sub_scenario: string
+          translation_en: string
+          updated_at: string | null
+        }
+        Insert: {
+          city: string
+          created_at?: string | null
+          female_native?: string | null
+          female_romanized?: string | null
+          female_tts?: string | null
+          id?: string
+          is_gendered?: boolean | null
+          lang_code: string
+          male_native?: string | null
+          male_romanized?: string | null
+          male_tts?: string | null
+          neutral_native: string
+          neutral_romanized: string
+          neutral_tts: string
+          notes?: string | null
+          phrase_key: string
+          spot_type: string
+          sub_scenario: string
+          translation_en: string
+          updated_at?: string | null
+        }
+        Update: {
+          city?: string
+          created_at?: string | null
+          female_native?: string | null
+          female_romanized?: string | null
+          female_tts?: string | null
+          id?: string
+          is_gendered?: boolean | null
+          lang_code?: string
+          male_native?: string | null
+          male_romanized?: string | null
+          male_tts?: string | null
+          neutral_native?: string
+          neutral_romanized?: string
+          neutral_tts?: string
+          notes?: string | null
+          phrase_key?: string
+          spot_type?: string
+          sub_scenario?: string
+          translation_en?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
