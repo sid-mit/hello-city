@@ -32,7 +32,7 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
     }
 
     const container = e.currentTarget;
-    const cardWidth = 320 + 16; // card width + gap
+    const cardWidth = 280 + 16; // card width + gap
     const scrollPosition = container.scrollLeft;
     const newIndex = Math.round(scrollPosition / cardWidth);
     setCurrentCardIndex(newIndex);
@@ -75,26 +75,21 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
         </div>
 
         {/* Category Header */}
-        <div 
-          className="px-6 py-4 border-b border-border"
-          style={{
-            background: categoryColor 
-              ? `linear-gradient(to right, ${categoryColor}10, transparent)`
-              : undefined
-          }}
-        >
+        <div className="px-5 pt-6 pb-4 border-b border-border">
           <div className="flex items-center gap-3 mb-2">
-            <span className="text-3xl">{categoryEmoji}</span>
-            <h2 className="text-xl font-bold">{categoryTitle}</h2>
+            <span className="text-[28px] leading-none">{categoryEmoji}</span>
+            <h2 className="text-[20px] font-semibold" style={{ color: '#1a1a1a' }}>
+              {categoryTitle}
+            </h2>
           </div>
           {categoryDescription && (
-            <p className="text-sm text-muted-foreground ml-11">
+            <p className="text-[14px] leading-relaxed" style={{ color: '#6b7280' }}>
               {categoryDescription}
             </p>
           )}
           {/* Dot Indicators */}
           {situations.length > 1 && (
-            <div className="flex items-center justify-center gap-1.5 mt-3">
+            <div className="flex items-center justify-center gap-1.5 mt-4">
               {situations.map((_, index) => (
                 <div
                   key={index}
@@ -103,8 +98,8 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
                     width: currentCardIndex === index ? '20px' : '6px',
                     height: '6px',
                     backgroundColor: currentCardIndex === index 
-                      ? categoryColor || 'hsl(var(--primary))' 
-                      : 'hsl(var(--muted-foreground) / 0.3)',
+                      ? '#1a1a1a' 
+                      : '#d1d5db',
                   }}
                 />
               ))}
@@ -113,24 +108,23 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
         </div>
 
         {/* Close Button */}
-        <Button
-          variant="ghost"
-          size="icon"
+        <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10"
+          className="absolute top-4 right-4 z-10 w-[44px] h-[44px] flex items-center justify-center transition-colors hover:bg-muted rounded-full"
         >
-          <X className="w-5 h-5" />
-        </Button>
+          <X className="w-[28px] h-[28px]" style={{ color: '#6b7280' }} />
+        </button>
 
         {/* Horizontal Scrollable Situation Cards */}
         <div className="relative">
           <div 
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex overflow-x-auto gap-4 px-5 py-5 snap-x snap-mandatory scrollbar-hide"
+            className="flex overflow-x-auto px-5 py-5 snap-x snap-mandatory scrollbar-hide"
             style={{ 
               scrollSnapType: 'x mandatory',
               WebkitOverflowScrolling: 'touch',
+              gap: '16px',
             }}
           >
             {situations.map((situation, index) => (
@@ -151,7 +145,7 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
             <div 
               className="absolute right-0 top-0 bottom-0 w-20 pointer-events-none"
               style={{
-                background: 'linear-gradient(to left, hsl(var(--card)), transparent)',
+                background: 'linear-gradient(to left, #FFFFFF, transparent)',
               }}
             />
           )}

@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Star, Mic } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/stores/appStore';
 import { toast } from 'sonner';
@@ -66,132 +65,76 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
     setShowPracticeModal(true);
   };
 
-  const practiceHistory = useAppStore((state) => state.practiceHistory[situation.id]);
-  const hasPracticed = !!practiceHistory;
-  const needsReview = hasPracticed && practiceHistory.lastPracticed 
-    ? (new Date().getTime() - new Date(practiceHistory.lastPracticed).getTime()) / (1000 * 60 * 60 * 24) > 7
-    : false;
-
-  const borderColor = situation.categoryColor || 'transparent';
-  const phrasesToShow = situation.phrases.slice(0, 3);
-  const hasMorePhrases = situation.phrases.length > 3;
+  // Calculate difficulty based on phrase count
+  const getDifficulty = () => {
+    const count = situation.phrases.length;
+    if (count <= 3) return 'Essential';
+    if (count <= 5) return 'Important';
+    return 'Advanced';
+  };
 
   return (
     <>
       <div 
-        className="bg-card rounded-2xl p-4 shadow-md flex flex-col border-l-4 hover:shadow-lg transition-all duration-300" 
+        className="bg-white rounded-2xl flex flex-col transition-transform active:scale-[0.99]" 
         style={{ 
-          width: '320px', 
-          minWidth: '320px', 
-          minHeight: '240px',
-          borderLeftColor: borderColor,
-          boxShadow: `0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)`,
-        }}
-        onMouseEnter={(e) => {
-          if (borderColor !== 'transparent') {
-            e.currentTarget.style.boxShadow = `0 10px 15px -3px ${borderColor}20, 0 4px 6px -4px ${borderColor}30`;
-          }
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.boxShadow = `0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)`;
+          width: '280px', 
+          minWidth: '280px',
+          padding: '20px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
         }}
       >
-        {/* Header */}
-        <div className="flex items-start justify-between mb-2">
+        {/* Header Row: Emoji + Title + Star */}
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <span className="text-2xl shrink-0">{situation.emoji}</span>
-            <h3 className="text-base font-semibold text-foreground line-clamp-1">{situation.title}</h3>
+            <span className="text-[28px] leading-none">{situation.emoji}</span>
+            <h3 className="text-[17px] font-semibold leading-tight" style={{ color: '#1a1a1a' }}>
+              {situation.title}
+            </h3>
           </div>
-          <motion.button
+          <button
             onClick={handleFavoriteClick}
-            className="shrink-0"
-            animate={{
-              scale: isAnimating ? [1, 1.2, 1] : 1,
-            }}
-            transition={{ duration: 0.3 }}
+            className="shrink-0 w-[44px] h-[44px] flex items-center justify-center -mr-2 transition-transform active:scale-95"
           >
             <Star
-              className={`w-5 h-5 transition-colors ${
+              className={`w-6 h-6 transition-colors ${
                 isFavorited
-                  ? 'fill-yellow-400 text-yellow-400'
-                  : 'text-muted-foreground'
+                  ? 'fill-[#fbbf24] text-[#fbbf24]'
+                  : 'text-[#d1d5db]'
               }`}
               strokeWidth={2}
             />
-          </motion.button>
+          </button>
         </div>
 
-        {/* Description */}
-        <p className="text-sm text-muted-foreground mb-3 leading-5 line-clamp-1">
+        {/* Description (optional, can be removed if redundant) */}
+        <p className="text-[14px] leading-[1.5] mb-3 line-clamp-2" style={{ color: '#6b7280' }}>
           {situation.description}
         </p>
 
-        {/* Context Badge */}
-        <div className="mb-3">
-          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-muted text-xs text-muted-foreground">
-            📍 {situation.context}
+        {/* Phrase Count with Difficulty */}
+        <div className="mb-4">
+          <span className="text-[13px]" style={{ color: '#9ca3af' }}>
+            💬 {situation.phrases.length} phrases • {getDifficulty()}
           </span>
         </div>
-
-        {/* Phrase Preview - Romanization First */}
-        <div className="mb-4 flex-1">
-          <p className="text-base font-medium mb-2">
-            {phrasesToShow[0]?.romanization}
-          </p>
-          <p className="text-sm text-muted-foreground mb-1">
-            "{phrasesToShow[0]?.english}"
-          </p>
-          {phrasesToShow[0] && (
-            <p className="text-xs text-muted-foreground">
-              {phrasesToShow[0].native}
-            </p>
-          )}
-        </div>
-
-        {/* Phrase Count */}
-        <div className="mb-3">
-          <span className="text-xs font-medium text-muted-foreground">
-            💬 {situation.phrases.length} phrases to learn
-          </span>
-        </div>
-
-        {/* Progress Indicator */}
-        {hasPracticed && (
-          <div className="flex items-center gap-2 mb-2 text-xs">
-            {needsReview ? (
-              <span className="flex items-center gap-1 text-yellow-600">
-                ⚠️ Review needed
-              </span>
-            ) : (
-              <span className="flex items-center gap-1 text-green-600">
-                ✓ {practiceHistory.bestScore}% best
-              </span>
-            )}
-          </div>
-        )}
 
         {/* Practice Button */}
         <Button
           onClick={handlePracticeClick}
-          className="w-full h-12 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl mt-auto"
-          variant="ghost"
-          style={borderColor !== 'transparent' ? {
-            backgroundColor: `${borderColor}15`,
-            color: borderColor,
-          } : undefined}
+          className="w-full h-[44px] rounded-[10px] text-[15px] font-medium transition-all active:scale-[0.98]"
+          style={{ 
+            backgroundColor: '#f3f4f6',
+            color: '#1a1a1a',
+          }}
           onMouseEnter={(e) => {
-            if (borderColor !== 'transparent') {
-              e.currentTarget.style.backgroundColor = `${borderColor}25`;
-            }
+            e.currentTarget.style.backgroundColor = '#e5e7eb';
           }}
           onMouseLeave={(e) => {
-            if (borderColor !== 'transparent') {
-              e.currentTarget.style.backgroundColor = `${borderColor}15`;
-            }
+            e.currentTarget.style.backgroundColor = '#f3f4f6';
           }}
         >
-          <Mic className="w-4 h-4 mr-2" />
-          Practice Now
+          🎤 Practice Now
         </Button>
       </div>
 
