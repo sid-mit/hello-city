@@ -100,6 +100,7 @@ interface AppState {
     syllableData?: Array<{ syllable: string; score: number }>
   ) => void;
   getProblemSyllables: () => Array<{ syllable: string; data: SyllableHistory }>;
+  getMasteredSyllables: () => Array<{ syllable: string; data: SyllableHistory }>;
   unlockBadge: (badgeId: string) => void;
   updateStreak: () => void;
 }
@@ -260,6 +261,39 @@ export const useAppStore = create<AppState>()(
           .filter(([_, data]) => data.successRate < 0.7 && data.attempts >= 2)
           .map(([syllable, data]) => ({ syllable, data }))
           .sort((a, b) => a.data.successRate - b.data.successRate);
+      },
+      getMasteredSyllables: () => {
+        const state = get();
+        const allSyllables: { [key: string]: SyllableHistory } = {};
+        
+        // Aggregate syllable data across all situations
+        Object.values(state.practiceHistory).forEach((history) => {
+          Object.entries(history.syllableHistory || {}).forEach(([syllable, data]) => {
+            if (!allSyllables[syllable]) {
+              allSyllables[syllable] = data;
+            } else {
+              // Merge data
+              const existing = allSyllables[syllable];
+              const totalAttempts = existing.attempts + data.attempts;
+              const combinedSuccessRate = 
+                (existing.successRate * existing.attempts + data.successRate * data.attempts) / totalAttempts;
+              
+              allSyllables[syllable] = {
+                syllable,
+                attempts: totalAttempts,
+                successRate: combinedSuccessRate,
+                lastScore: data.lastScore,
+                improvementTrend: data.improvementTrend,
+              };
+            }
+          });
+        });
+        
+        // Filter to mastered syllables (success rate >= 90%)
+        return Object.entries(allSyllables)
+          .filter(([_, data]) => data.successRate >= 0.9 && data.attempts >= 3)
+          .map(([syllable, data]) => ({ syllable, data }))
+          .sort((a, b) => b.data.successRate - a.data.successRate);
       },
       unlockBadge: (badgeId) =>
         set((state) => ({

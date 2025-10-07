@@ -19,7 +19,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 export const LearnTab = () => {
   const { setActiveTab, favoritedSituations, guestName, practiceHistory } = useAppStore();
   const [sortBy, setSortBy] = useState('dateAdded');
-  const [showBadges, setShowBadges] = useState(false);
 
   const sortedSituations = [...favoritedSituations].sort((a, b) => {
     switch (sortBy) {
@@ -98,31 +97,25 @@ export const LearnTab = () => {
                 📚 {favoritedSituations.length} situations saved
               </p>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowBadges(!showBadges)}
-              className="gap-2"
-            >
-              <Trophy className="w-4 h-4" />
-              Badges
-            </Button>
           </div>
           
-          <StreakCounter />
+          <div className="flex items-center gap-3">
+            <StreakCounter />
+          </div>
         </motion.div>
 
-        {/* Badges Section */}
-        {showBadges && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            className="mb-6 p-4 bg-card rounded-xl border border-border"
-          >
-            <h3 className="text-lg font-semibold mb-4">🏆 Your Badges</h3>
-            <BadgeSystem />
-          </motion.div>
-        )}
+        {/* Badges Section - Always Visible */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 p-4 bg-card rounded-xl border border-border"
+        >
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-yellow-500" />
+            Your Achievements
+          </h3>
+          <BadgeSystem />
+        </motion.div>
 
         {/* Problem Syllables Dashboard */}
         <ProblemSyllablesDashboard />
