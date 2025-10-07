@@ -8,6 +8,7 @@ import {
   configureUtterance, 
   getSpeechPreferences 
 } from './enhancedSpeech';
+import { toast } from '@/hooks/use-toast';
 
 /**
  * Generate natural speech using browser's Web Speech API
@@ -25,11 +26,38 @@ export async function generateNaturalSpeech(
       // Get language code for city
       const languageCode = getLanguageCode(cityId);
       
-      // Select best available voice for this language
-      const voice = selectBestVoice(languageCode);
+      // Wait for voices to be ready
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length === 0) {
+        toast({
+          title: "Voice not ready",
+          description: "Please try again in a moment.",
+          variant: "destructive",
+        });
+        reject(new Error('No voices available'));
+        return;
+      }
       
+      // Select best available voice for this language
+      let voice = selectBestVoice(languageCode);
+      
+      // Fallback: if no voice found, try to get ANY voice for the language
       if (!voice) {
-        console.warn(`No voice found for ${languageCode}, using default`);
+        console.warn(`No premium voice found for ${languageCode}, trying fallback...`);
+        const fallbackVoice = voices.find(v => v.lang.startsWith(languageCode.split('-')[0]));
+        
+        if (fallbackVoice) {
+          voice = fallbackVoice;
+          console.log(`Using fallback voice: ${voice.name}`);
+        } else {
+          toast({
+            title: "Voice unavailable",
+            description: `No voice found for this language. Try using Chrome browser.`,
+            variant: "destructive",
+          });
+          reject(new Error(`No voice available for ${languageCode}`));
+          return;
+        }
       }
 
       // Get user preferences
@@ -38,13 +66,16 @@ export async function generateNaturalSpeech(
       // Process text with enhancements
       const enhancedText = processTextWithEnhancements(text, preferences, languageCode);
 
+      if (!enhancedText || enhancedText.trim().length === 0) {
+        console.error('Empty text provided to speech synthesis');
+        reject(new Error('Empty text'));
+        return;
+      }
+
       // Create utterance
       const utterance = new SpeechSynthesisUtterance(enhancedText);
       utterance.lang = languageCode;
-      
-      if (voice) {
-        utterance.voice = voice;
-      }
+      utterance.voice = voice;
 
       // Configure with enhanced settings
       configureUtterance(utterance, preferences, languageCode);
@@ -56,14 +87,26 @@ export async function generateNaturalSpeech(
 
       utterance.onerror = (event) => {
         console.error('Speech synthesis error:', event);
+        toast({
+          title: "Playback failed",
+          description: "Unable to play audio. Please try again.",
+          variant: "destructive",
+        });
         reject(new Error(`Speech synthesis failed: ${event.error}`));
       };
 
-      // Speak
-      window.speechSynthesis.speak(utterance);
+      // Add small delay before speaking to avoid Chrome race condition
+      setTimeout(() => {
+        window.speechSynthesis.speak(utterance);
+      }, 100);
       
     } catch (error) {
       console.error('Error in generateNaturalSpeech:', error);
+      toast({
+        title: "Audio error",
+        description: "Something went wrong. Please refresh and try again.",
+        variant: "destructive",
+      });
       reject(error);
     }
   });

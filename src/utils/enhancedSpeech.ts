@@ -135,7 +135,7 @@ export function getSpeechPreferences(): EnhancedSpeechOptions {
   return {
     speed: 0.85, // Slower default for learning
     pitch: 1.0,
-    emphasizeSyllables: true,
+    emphasizeSyllables: false, // Disabled - causes Chrome TTS to fail
     addPauses: false,
   };
 }
