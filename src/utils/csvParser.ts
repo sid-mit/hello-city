@@ -35,6 +35,7 @@ export const parsePhrasesCSV = (csvContent: string): ParsedPhrase[] => {
   }
 
   const phrases: ParsedPhrase[] = [];
+  const invalidRows: number[] = [];
 
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
@@ -52,7 +53,18 @@ export const parsePhrasesCSV = (csvContent: string): ParsedPhrase[] => {
       phrase[header] = value || undefined;
     });
 
+    // Validate that neutral_native doesn't contain underscores or dashes as placeholders
+    if (phrase.neutral_native && /^[_—\-\s]+$/.test(phrase.neutral_native)) {
+      invalidRows.push(i + 1);
+      console.warn(`Row ${i + 1}: neutral_native contains only placeholders (underscores/dashes). Skipping.`);
+      continue;
+    }
+
     phrases.push(phrase as ParsedPhrase);
+  }
+
+  if (invalidRows.length > 0) {
+    console.warn(`Skipped ${invalidRows.length} rows with invalid native text: rows ${invalidRows.join(', ')}`);
   }
 
   return phrases;

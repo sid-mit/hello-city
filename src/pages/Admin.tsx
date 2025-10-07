@@ -1,5 +1,6 @@
 import { PhraseImporter } from '@/components/Admin/PhraseImporter';
 import { PhraseTableEditor } from '@/components/Admin/PhraseTableEditor';
+import { PhraseResetter } from '@/components/Admin/PhraseResetter';
 
 const Admin = () => {
   return (
@@ -9,6 +10,7 @@ const Admin = () => {
         
         <div className="space-y-8">
           <PhraseImporter />
+          <PhraseResetter />
           <PhraseTableEditor />
         </div>
       </div>
