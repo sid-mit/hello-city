@@ -1,5 +1,6 @@
 import { useAppStore, TabType } from '@/stores/appStore';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const tabs = [
   { id: 'explore' as TabType, label: 'Map' },
@@ -8,6 +9,7 @@ const tabs = [
 
 export const UnifiedHeader = () => {
   const { activeTab, setActiveTab } = useAppStore();
+  const navigate = useNavigate();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
@@ -57,6 +59,7 @@ export const UnifiedHeader = () => {
           {/* Right Navigation Links */}
           <nav className="hidden md:flex items-center font-karla" style={{ gap: '50px' }}>
             <button
+              onClick={() => navigate('/about')}
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
               About Us
