@@ -53,6 +53,16 @@ export const parsePhrasesCSV = (csvContent: string): ParsedPhrase[] => {
       phrase[header] = value || undefined;
     });
 
+    // Normalize city name to lowercase
+    if (phrase.city) {
+      phrase.city = phrase.city.toLowerCase().trim();
+    }
+
+    // Normalize sub_scenario: replace spaces with underscores
+    if (phrase.sub_scenario) {
+      phrase.sub_scenario = phrase.sub_scenario.toLowerCase().trim().replace(/\s+/g, '_');
+    }
+
     // Validate that neutral_native doesn't contain underscores or dashes as placeholders
     if (phrase.neutral_native && /^[_—\-\s]+$/.test(phrase.neutral_native)) {
       invalidRows.push(i + 1);

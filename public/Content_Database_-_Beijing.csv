@@ -1,0 +1,91 @@
+city,spot_type,sub_scenario,phrase_key,lang_code,translation_en,neutral_native,neutral_romanized,neutral_tts
+Beijing,restaurant,ordering,restaurant.ordering.excuse_me,,Excuse me!,打扰一下！,Dǎ rǎo yī xià!,打扰一下！
+Beijing,restaurant,ordering,restaurant.ordering.menu_please,,Menu please,能看一下菜单吗？,Néng kàn yī xià cài dān ma?,能看一下菜单吗？
+Beijing,restaurant,ordering,restaurant.ordering.what_do_you_recommend,,What do you recommend?,有什么推荐吗？,Yǒu shé me tuī jiàn ma?,有什么推荐吗？
+Beijing,restaurant,ordering,restaurant.ordering.this_one_please,,This one please,我想要这个。,Wǒ xiǎng yào zhè ge.,我想要这个。
+Beijing,restaurant,ordering,restaurant.ordering.water_please,,Water please,能给我点水吗？,Néng gěi wǒ diǎn shuǐ ma?,能给我点水吗？
+Beijing,restaurant,dietary,restaurant.dietary.i_have_a_nut_allergy,,I have a nut allergy,我对坚果过敏。,Wǒ duì jiān guǒ guòmǐn.,我对坚果过敏。
+Beijing,restaurant,dietary,restaurant.dietary.i_cant_eat_seafood,,I can't eat seafood,我不能吃海鲜。,Wǒ bù néng chī hǎi xiān.,我不能吃海鲜。
+Beijing,restaurant,dietary,restaurant.dietary.no_spicy_please,,No spicy please,不要辣。,Bù yào là.,不要辣。
+Beijing,restaurant,dietary,restaurant.dietary.im_vegetarian,,I'm vegetarian,我是素食主义者。,Wǒ shì sù shí zhǔ yì zhě.,我是素食主义者。
+Beijing,restaurant,paying,restaurant.paying.check_please,,Check please,结账。,Jié zhàng.,结账。
+Beijing,restaurant,paying,restaurant.paying.can_i_pay_by_card,,Can I pay by card?,能用银行卡支付吗？,Néng yòng yín háng kǎ zhī fù ma?,能用银行卡支付吗？
+Beijing,restaurant,paying,restaurant.paying.receipt_please,,Receipt please,给我看一下账单。,Gěi wǒ kàn yī xià zhàng dān.,给我看一下账单。
+Beijing,restaurant,paying,restaurant.paying.separate_checks_please,,Separate checks please,分开结账。,Fēn kāi jié zhàng.,分开结账。
+Beijing,cafe,ordering,cafe.ordering.one_americano_please,,One americano please,一杯美式咖啡,Yī bēi měi shì kā fēi,一杯美式咖啡
+Beijing,cafe,ordering,cafe.ordering.hot_please,,Hot please,要热的,Yào rè de,要热的
+Beijing,cafe,finding facilities,cafe.ordering.to-go_please,,To-go please,带走,Dài zǒu,带走
+Beijing,cafe,finding facilities,cafe.finding facilities .can_i_sit_here,,Can I sit here?,我能坐这吗？,Wǒ néng zuò zhè ma?,我能坐这吗？
+Beijing,cafe,finding facilities,cafe.finding facilities .any_seats_with_outlets,,Any seats with outlets?,有带插座的座位吗？,Yǒu dài chā zuò de zuò wèi ma?,有带插座的座位吗？
+Beijing,cafe,finding facilities,cafe.finding facilities .whats_the_wifi_password,,What's the wifi password?,WIFI密码是多少？,WIFI mì mǎ shì duō shǎo?,WIFI密码是多少？
+Beijing,cafe,casual_chat,cafe.casual_chat.nice_atmosphere_here,,Nice atmosphere here!,这里环境真好！,Zhè lǐ huán jìng zhēn hǎo!,这里环境真好！
+Beijing,cafe,casual_chat,cafe.casual_chat.so_instagram-worthy,,So Instagram-worthy!,这值得在Instagram上分享！,Zhè zhí dé zài Instagram shàng fēn xiǎng!,这值得在Instagram上分享！
+Beijing,cafe,casual_chat,cafe.casual_chat.thanks_for_the_cafe_recommendation,,Thanks for the cafe recommendation!,感谢您推荐这家咖啡厅！,Gǎn xiè nín tuī jiàn zhè jiā kā fēi tīng!,感谢您推荐这家咖啡馆！
+Beijing,subway,buying_ticket,subway.buying_ticket.i_want_to_recharge_t-money_card,,I want to recharge Beijing Transit Card,我想要充值我的北京交通卡,Wǒ xiǎng yào chōng zhí wǒ de běi jīng jiāo tōng kǎ,我想要充值我的北京交通卡
+Beijing,subway,buying_ticket,subway.buying_ticket.single-use_card_please,,Single-use card please,我想要单次卡,Wǒ xiǎng yào dān cì kǎ,我想要单次卡
+Beijing,subway,directions,subway.directions.how_do_i_get_to_gangnam_station,,How do I get to Beijing station?,去北京站怎么走？,Qù běi jīng zhàn zěnme zǒu?,去北京站怎么走？
+Beijing,subway,directions,subway.directions.which_exit_number,,Which exit number?,从哪个口出？,Cóng nǎ ge kǒu chū?,从哪个口出？
+Beijing,subway,directions,subway.directions.do_i_need_to_transfer,,Do I need to transfer?,需要换乘吗？,Xū yào huàn chéng ma?,需要换乘吗？
+Beijing,subway,reading_map,subway.reading_map.where_are_we,,Where are we?,我们现在在哪？,Wǒ men xiàn zài zài nǎ?,我们现在在哪？
+Beijing,subway,reading_map,subway.reading_map.is_this_the_right_direction,,Is this the right direction?,这个方向对吗？,Zhè ge fāng xiàng duì ma?,这个方向对吗？
+Beijing,taxi,getting_in,taxi.getting_in.hello,,Hello,你好,Nǐ hǎo,你好
+Beijing,taxi,getting_in,taxi.getting_in.can_i_get_in,,Can I get in?,我能进去吗？,Wǒ néng jìn qù ma?,我能进去吗？
+Beijing,taxi,destination,taxi.destination.to_myeongdong_please,,To Lama Temple please,去雍和宫,Qù yōng hé gōng,去雍和宫
+Beijing,taxi,destination,taxi.destination.to_this_address_please,,To this address please,去这个地方,Qù zhè ge dì fāng,去这个地方
+Beijing,taxi,destination,taxi.destination.quickly_please,,Quickly please,能快点吗,Néng kuài diǎn ma,能快点吗
+Beijing,taxi,paying,taxi.paying.can_i_pay_by_card,,Can I pay by card?,能用银行卡支付吗？,Néng yòng yín háng kǎ zhī fù ma?,能用银行卡支付吗？
+Beijing,taxi,paying,taxi.paying.receipt_please,,Receipt please,看一下账单。,kàn yī xià zhàng dān.,看一下账单。
+Beijing,shopping,price,shopping.price.how_much_is_this,,How much is this?,多少钱？,Duō shǎo qián?,多少钱？
+Beijing,shopping,price,shopping.price.do_you_have_cheaper_ones,,Do you have cheaper ones?,有更便宜的吗？,Yǒu gèng pián yí de ma?,有更便宜的吗？
+Beijing,shopping,trying_on,shopping.trying_on.can_i_try_this_on,,Can I try this on?,能试穿一下吗？,Néng shì chuān yī xià ma?,能试穿一下吗？
+Beijing,shopping,trying_on,shopping.trying_on.do_you_have_a_bigger_size,,Do you have a bigger size?,有更大的吗？,Yǒu gèng dà de ma?,有更大的吗？
+Beijing,shopping,trying_on,shopping.trying_on.do_you_have_other_colors,,Do you have other colors?,有别的颜色的吗？,Yǒu bié de yán sè de ma?,有别的颜色的吗？
+Beijing,shopping,trying_on,shopping.trying_on.this_is_really_pretty,,This is really pretty!,这个好看！,Zhè ge hǎo kàn!,这个好看！
+Beijing,shopping,trying_on,shopping.trying_on.wow_so_cute,,Wow! So cute!,哇！真好看！,Wa! Zhēn hǎo kàn!,哇！真好看！
+Beijing,shopping,paying,shopping.paying.ill_take_it,,I'll take it,我要这个。,Wǒ yào zhè ge.,这个我要了。
+Beijing,shopping,paying,shopping.paying.card_okay,,Card okay?,能用银行卡吧？,Néng yòng yín háng kǎ ba?,能用银行卡吧？
+Beijing,shopping,paying,shopping.paying.tax_refund_available,,Tax refund available?,可以退税吗？,Kě yǐ tuì shuì ma?,可以退税吗？
+Beijing,hotel,checkin,hotel.checkin.id_like_to_check_in,,I'd like to check in,我想办理入住,Wǒ xiǎng bàn lǐ rù zhù,我想办理入住
+Beijing,hotel,checkin,hotel.checkin.i_have_a_reservation,,I have a reservation,我预约了,Wǒ yù yuē le,我预约了
+Beijing,hotel,checkin,hotel.checkin.room_key_please,,Room key please,能给我房间钥匙吗？,Néng gěi wǒ fáng jiān yào shi ma?,能给我房间钥匙吗？
+Beijing,hotel,checkin,hotel.checkin.whats_the_wifi_password,,What's the wifi password?,WIFI密码是多少？,WIFI mì mǎ shì duō shǎo?,WIFI密码是多少？
+Beijing,hotel,checkin,hotel.checkin.is_breakfast_included,,Is breakfast included?,包含早餐吗？,Bāo hán zǎo cān ma?,包含早餐吗？
+Beijing,hotel,room_service,hotel.room_service.more_towels_please,,More towels please,再给我一条毛巾,Zài gěi wǒ yī tiáo máo jīn,再给我一条毛巾
+Beijing,hotel,room_service,hotel.room_service.id_like_to_order_room_service,,I'd like to order room service,我想叫客房服务,wǒ xiǎng jiào kè fáng fú wù,我想叫客房服务
+Beijing,hotel,room_service,hotel.room_service.please_clean_the_room,,Please clean the room,请帮我打扫一下房间,qǐng bāng wǒ dǎ sǎo yī xià fáng jiān,请帮我打扫一下房间
+Beijing,hotel,checkout,hotel.checkout.id_like_to_check_out,,I'd like to check out,我想退房,wǒ xiǎng tuì fáng,我想退房
+Beijing,hotel,checkout,hotel.checkout.can_i_leave_my_luggage,,Can I leave my luggage?,我能把行李寄存在这吗？,wǒ néng bǎ xíng lǐ jì cún zài zhè ma?,我能把行李寄存在这吗？
+Beijing,pharmacy,symptoms,pharmacy.symptoms.i_have_a_headache,,I have a headache,我有点头疼,Wǒ yǒu diǎn tóu téng,我有点头疼
+Beijing,pharmacy,symptoms,pharmacy.symptoms.i_have_a_stomachache,,I have a stomachache,我胃疼,wǒ wèi téng,我胃疼
+Beijing,pharmacy,symptoms,pharmacy.symptoms.i_have_a_cold,,I have a cold,我感冒了,wǒ gǎn mào le,我感冒了
+Beijing,pharmacy,symptoms,pharmacy.symptoms.i_have_a_fever,,I have a fever,我发烧了,wǒ fā shāo le,我发烧了
+Beijing,pharmacy,medicine,pharmacy.medicine.do_you_have_painkillers,,Do you have painkillers?,有止痛药吗？,yǒu zhǐ tòng yào ma?,有止痛药吗？
+Beijing,pharmacy,medicine,pharmacy.medicine.cold_medicine_please,,Cold medicine please,请给我点感冒药,Qǐng gěi wǒ diǎn gǎn mào yào,请给我点感冒药
+Beijing,pharmacy,directions,pharmacy.directions.where_is_the_hospital,,Where is the hospital?,医院在哪？,yī yuàn zài nǎ?,医院在哪？
+Beijing,pharmacy,paying,pharmacy.paying.how_much,,How much?,多少钱？,Duōs hǎo qián?,多少钱？
+Beijing,museum,ticket,museum.ticket.one_ticket_please,,One ticket please,一张票,Yī zhāng piào,一张票
+Beijing,museum,ticket,museum.ticket.student_discount_available,,Student discount available?,有学生优惠吗？,yǒu xué shēng yōuhuì ma?,有学生优惠吗？
+Beijing,museum,info,museum.info.do_you_have_audio_guides,,Do you have audio guides?,有语音导览吗？,Yǒu yǔ yīn dǎo lǎn ma?,有语音导览吗？
+Beijing,museum,info,museum.info.what_time_do_you_close,,What time do you close?,几点关门？,Jǐ diǎn guān mén?,几点关门？
+Beijing,museum,info,museum.info.are_there_special_exhibitions,,Are there special exhibitions?,有特展吗？,Yǒu tè zhǎn ma?,有特展吗？
+Beijing,museum,facilities,museum.facilities.where_is_the_restroom,,Where is the restroom?,卫生间在哪？,Wèi shēng jiān zài nǎ?,卫生间在哪？
+Beijing,museum,facilities,museum.facilities.is_there_a_cafe,,Is there a cafe?,附近有咖啡厅吗？,Fù jìn yǒu kā fēi tīng ma?,附近有咖啡厅吗？
+Beijing,police,reporting,police.reporting.please_help,,Please help,能帮我一下吗,Néng bāng wǒ yī xià ma,能帮我一下吗
+Beijing,police,reporting,police.reporting.i_lost_my_wallet,,I lost my wallet,我钱包丢了,wǒ qián bāo diū le,我钱包丢了
+Beijing,police,reporting,police.reporting.i_lost_my_passport,,I lost my passport,我护照丢了,wǒ hù zhào diū le,我护照丢了
+Beijing,police,directions,police.directions.where_is_the_embassy,,Where is the embassy?,大使馆在哪里？,dà shǐ guǎn zài nǎ lǐ?,大使馆在哪里？
+Beijing,police,help,police.help.can_you_speak_english,,Can you speak English?,你能说英语吗？,Nǐ néng shuō yīng yǔ ma?,你能说英语吗？
+Beijing,police,help,police.help.i_want_to_report,,I want to report,我要报警,Wǒ yào bào jǐng,我要报警
+Beijing,police,help,police.help.i_need_an_interpreter,,I need an interpreter,我需要一名翻译,wǒ xū yào yī míng fān yì,我需要一名翻译
+Beijing,bar,ordering,bar.ordering.one_bottle_of_soju,,One bottle of soju!,要一瓶烧酒！,yào yī píng shāo jiǔ!,要一瓶烧酒！
+Beijing,bar,ordering,bar.ordering.make_me_a_somaek_sojubeer,,Make me a somaek (soju+beer),给我一杯烧啤,Gěi wǒ yī bēi shāo pí,给我一杯烧啤
+Beijing,bar,ordering,bar.ordering.what_snacks_are_good,,What snacks are good?,有什么好吃的零食推荐吗？,Yǒu shé me hào chī de líng shí tuī jiàn ma?,有什么好吃的零食推荐吗？
+Beijing,bar,ordering,bar.ordering.just_one_more_drink,,Just one more drink!,再来一杯！,Zài lái yī bēi!,再来一杯！
+Beijing,bar,toasting,bar.toasting.cheers,,Cheers!,干杯！,Gān bēi!,干杯！
+Beijing,bar,toasting,bar.toasting.bottoms_up,,Bottoms up!,干杯！,Gān bēi!,干杯！
+Beijing,bar,toasting,bar.toasting.want_to_go_to_round_2,,Want to go to round 2?,你想再来一杯吗？,Nǐ xiǎng zài lái yī bēi ma?,你想再来一杯吗？
+Beijing,bar,toasting,bar.toasting.its_fire_friday,,It's Fire Friday!,周五嗨起来,Zhōu wǔ hāi qǐ lái,周五嗨起来
+Beijing,bar,toasting,bar.toasting.lets_be_friends,,Let's be friends!,交个朋友吧！,Jiāo gè péng yǒu ba!,交个朋友吧！
+Beijing,bar,socializing,bar.socializing.follow_me_on_insta,,Follow me on Insta!,关注我Instagram账号吧！,Guān zhù wǒ Instagram zhàng hào ba!,关注我Instagram账号！
+Beijing,bar,socializing,bar.socializing.give_me_your_kakaotalk,,Give me your WeChat,能给我你的微信吗,Néng gěi wǒ nǐ de wéi xìn ma,能给我你的微信吗
+Beijing,bar,socializing,bar.socializing.do_you_come_here_often,,Do you come here often?,你经常来这里吗？,Nǐ jīng cháng lái zhè lǐ ma?,你经常来这里吗？

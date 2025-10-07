@@ -132,11 +132,11 @@ export async function generateNaturalSpeech(
  */
 function getVoiceIdForCity(cityId: string): string {
   const voiceMap: Record<string, string> = {
-    'paris': 'EXAVITQu4vr4xnSDxMaL', // Sarah - multilingual
-    'seoul': 'EXAVITQu4vr4xnSDxMaL', // Sarah - multilingual
-    'beijing': 'EXAVITQu4vr4xnSDxMaL', // Sarah - multilingual
-    'new-delhi': 'EXAVITQu4vr4xnSDxMaL', // Sarah - multilingual
-    'mexico-city': 'EXAVITQu4vr4xnSDxMaL', // Sarah - multilingual
+    'paris': 'EXAVITQu4vr4xnSDxMaL', // Sarah - French
+    'seoul': 'pFZP5JQG7iQjIQuC4Bku', // Lily - Asian languages
+    'beijing': 'pFZP5JQG7iQjIQuC4Bku', // Lily - Chinese (Mandarin)
+    'new-delhi': 'XrExE9yKIg1WjnnlVkGX', // Matilda - Hindi/Indian languages
+    'mexico-city': 'EXAVITQu4vr4xnSDxMaL', // Sarah - Spanish
   };
 
   return voiceMap[cityId] || 'EXAVITQu4vr4xnSDxMaL';

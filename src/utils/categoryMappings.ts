@@ -99,6 +99,30 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     description: 'Emergency assistance',
     mapPosition: [48.8550, 2.3450],
   },
+  pharmacy: {
+    id: 'pharmacy',
+    emoji: '💊',
+    title: 'Pharmacy & Health',
+    color: '#27AE60',
+    description: 'Medical and health needs',
+    mapPosition: [48.8500, 2.3550],
+  },
+  metro: {
+    id: 'metro',
+    emoji: '🚇',
+    title: 'Metro',
+    color: '#3498DB',
+    description: 'Navigate the metro system',
+    mapPosition: [48.8738, 2.2950],
+  },
+  auto: {
+    id: 'auto',
+    emoji: '🛺',
+    title: 'Auto Rickshaw',
+    color: '#F39C12',
+    description: 'Getting around by auto',
+    mapPosition: [48.8680, 2.3180],
+  },
 };
 
 // Situation mappings (sub_scenario)
@@ -165,6 +189,41 @@ export const SITUATION_METADATA: Record<string, SituationMetadata> = {
     description: 'Ask for services',
     emoji: '🛎️',
     context: 'Making requests',
+  },
+  dietary_preference: {
+    id: 'dietary_preference',
+    title: 'Dietary Preferences',
+    description: 'Express dietary needs',
+    emoji: '🥗',
+    context: 'Specifying diet',
+  },
+  asking_recommendation: {
+    id: 'asking_recommendation',
+    title: 'Recommendations',
+    description: 'Get suggestions',
+    emoji: '⭐',
+    context: 'Asking for advice',
+  },
+  paying_bill: {
+    id: 'paying_bill',
+    title: 'Paying the Bill',
+    description: 'Settle payment',
+    emoji: '💰',
+    context: 'At checkout',
+  },
+  small_talk: {
+    id: 'small_talk',
+    title: 'Small Talk',
+    description: 'Casual conversation',
+    emoji: '💬',
+    context: 'Social interaction',
+  },
+  finding_facilities: {
+    id: 'finding_facilities',
+    title: 'Finding Facilities',
+    description: 'Locate amenities',
+    emoji: '🚻',
+    context: 'Looking for facilities',
   },
 };
 
