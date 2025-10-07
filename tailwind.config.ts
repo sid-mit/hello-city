@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        karla: ['Karla', 'sans-serif'],
+        gilroy: ['Gilroy', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         architects: ['Architects Daughter', 'cursive'],
+        sans: ['Gilroy', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
