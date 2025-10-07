@@ -252,6 +252,14 @@ export const ConversationPracticeModal = ({
                   : undefined
               }
             />
+          ) : practiceMode === 'conversation' ? (
+            <ConversationReview
+              phrases={situation.phrases}
+              serverResponses={situation.serverResponses}
+              cityId={situation.cityId}
+              recognition={recognition}
+              onComplete={handleConversationReviewComplete}
+            />
           ) : showConversationReview ? (
             <ConversationReview
               phrases={situation.phrases}
