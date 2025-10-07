@@ -44,14 +44,16 @@ export async function generateNaturalSpeech(
       // Ensure audio is unlocked (must be called from a user gesture)
       await ensureAudioUnlocked();
 
-      // Get voice ID based on city
+      // Get voice ID and language code based on city
       const voiceId = getVoiceIdForCity(cityId);
+      const language = getLanguageCodeForCity(cityId);
 
       if (TTS_DEBUG) {
         console.log('🎤 ElevenLabs TTS Request:', {
           text: text.substring(0, 50),
           cityId,
-          voiceId
+          voiceId,
+          language
         });
       }
 
@@ -59,7 +61,7 @@ export async function generateNaturalSpeech(
 
       // Call ElevenLabs edge function
       const { data, error } = await supabase.functions.invoke('text-to-speech', {
-        body: { text, voiceId },
+        body: { text, voiceId, language },
       });
 
       if (error) {
@@ -140,6 +142,21 @@ function getVoiceIdForCity(cityId: string): string {
   };
 
   return voiceMap[cityId] || 'EXAVITQu4vr4xnSDxMaL';
+}
+
+/**
+ * Map city IDs to language codes for ElevenLabs
+ */
+function getLanguageCodeForCity(cityId: string): string {
+  const languageMap: Record<string, string> = {
+    'paris': 'fr',
+    'seoul': 'ko',
+    'beijing': 'zh',
+    'new-delhi': 'hi',
+    'mexico-city': 'es',
+  };
+
+  return languageMap[cityId] || 'en';
 }
 
 /**

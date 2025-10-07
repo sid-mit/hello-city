@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voiceId = 'EXAVITQu4vr4xnSDxMaL' } = await req.json();
+    const { text, voiceId = 'EXAVITQu4vr4xnSDxMaL', language = 'en' } = await req.json();
 
     if (!text) {
       throw new Error('Text is required');
@@ -36,11 +36,15 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           text,
-          model_id: 'eleven_turbo_v2_5',
+          model_id: 'eleven_multilingual_v2',
+          language_code: language,
           voice_settings: {
-            stability: 0.5,
+            stability: 0.85,
             similarity_boost: 0.75,
+            style: 0,
           },
+          pronunciation_dictionary_locators: [],
+          speed: 0.95,
         }),
       }
     );
