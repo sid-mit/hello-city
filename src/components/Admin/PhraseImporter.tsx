@@ -46,49 +46,43 @@ export const PhraseImporter = () => {
 
     setIsUploading(true);
     const errors: string[] = [];
-    let successCount = 0;
-    let failedCount = 0;
 
     try {
       const content = await file.text();
-      const phrases = parsePhrasesCSV(content);
 
       toast({
         title: 'Processing phrases',
-        description: `Found ${phrases.length} phrases to import`,
+        description: 'Uploading to backend for normalization...',
       });
 
-      // Import phrases in batches
-      const batchSize = 50;
-      for (let i = 0; i < phrases.length; i += batchSize) {
-        const batch = phrases.slice(i, i + batchSize);
-        
-        const { data, error } = await supabase
-          .from('phrases')
-          .insert(batch)
-          .select();
+      // Call backend import function
+      const { data, error } = await supabase.functions.invoke('import-phrases', {
+        body: { csvContent: content }
+      });
 
-        if (error) {
-          failedCount += batch.length;
-          errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${error.message}`);
-        } else {
-          successCount += data?.length || 0;
-        }
+      if (error) {
+        throw error;
       }
 
-      setResults({ success: successCount, failed: failedCount, errors });
+      const result = data as { success: number; failed: number; skipped: number; errors: string[] };
+      
+      setResults({ 
+        success: result.success, 
+        failed: result.failed + result.skipped, 
+        errors: result.errors 
+      });
 
-      if (successCount > 0) {
+      if (result.success > 0) {
         toast({
           title: 'Import completed',
-          description: `Successfully imported ${successCount} phrases`,
+          description: `Successfully imported ${result.success} phrases${result.skipped > 0 ? ` (${result.skipped} skipped)` : ''}`,
         });
       }
 
-      if (failedCount > 0) {
+      if (result.failed > 0 || result.skipped > 0) {
         toast({
-          title: 'Some imports failed',
-          description: `${failedCount} phrases failed to import`,
+          title: 'Some imports had issues',
+          description: `${result.failed} failed, ${result.skipped} skipped`,
           variant: 'destructive',
         });
       }
