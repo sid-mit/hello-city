@@ -4,9 +4,26 @@ import { UnifiedHeader } from '@/components/Header/UnifiedHeader';
 import { WelcomeModal } from '@/components/Welcome/WelcomeModal';
 import { useAppStore } from '@/stores/appStore';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAutoImport } from '@/hooks/useAutoImport';
+import { Loader2 } from 'lucide-react';
 
 const Index = () => {
   const { activeTab } = useAppStore();
+  const { isImporting, isChecking } = useAutoImport();
+
+  // Show loading overlay during first-time import
+  if (isChecking || isImporting) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <p className="text-lg text-muted-foreground">
+            {isChecking ? 'Checking database...' : 'Setting up your data for the first time...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-screen overflow-hidden relative">
