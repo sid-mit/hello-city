@@ -1,4 +1,4 @@
-import { Volume2, Mic, Loader2 } from "lucide-react";
+import { Volume2, Mic, Loader2, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ChatAvatar } from "./ChatAvatar";
@@ -15,6 +15,7 @@ interface ChatBubbleProps {
   phrase: Phrase;
   isActive?: boolean;
   isPast?: boolean;
+  isFuture?: boolean;
   onPlayAudio: () => void;
   onRecord?: () => void;
   isRecording?: boolean;
@@ -27,6 +28,7 @@ export const ChatBubble = ({
   phrase,
   isActive = false,
   isPast = false,
+  isFuture = false,
   onPlayAudio,
   onRecord,
   isRecording = false,
@@ -55,10 +57,18 @@ export const ChatBubble = ({
             : "bg-muted border-2 border-border rounded-tl-sm",
           isActive && isUser && !score && "ring-2 ring-primary shadow-lg",
           isRecording && "ring-2 ring-blue-400 animate-pulse",
-          isPast && "opacity-70"
+          isPast && "opacity-70",
+          isFuture && "opacity-40 grayscale"
         )}
       >
-        <div className="space-y-1 pr-8">
+        {/* Lock icon overlay for future messages */}
+        {isFuture && (
+          <div className="absolute inset-0 flex items-center justify-center bg-background/20 rounded-2xl backdrop-blur-[2px]">
+            <Lock className="w-6 h-6 text-muted-foreground/50" />
+          </div>
+        )}
+        
+        <div className={cn("space-y-1 pr-8", isFuture && "blur-[1px]")}>
           <p className="text-base md:text-lg font-semibold">{phrase.native}</p>
           <p className="text-sm text-muted-foreground italic">{phrase.romanization}</p>
           <p className="text-xs text-muted-foreground">{phrase.english}</p>
@@ -67,9 +77,11 @@ export const ChatBubble = ({
         {/* Audio Button - All bubbles */}
         <button
           onClick={onPlayAudio}
+          disabled={isFuture}
           className={cn(
             "absolute bottom-3 right-3 p-1.5 rounded-full transition-colors",
-            "hover:bg-background/50"
+            "hover:bg-background/50",
+            isFuture && "opacity-30 cursor-not-allowed"
           )}
           aria-label="Play audio"
         >
@@ -80,7 +92,7 @@ export const ChatBubble = ({
         {isUser && !score && onRecord && (
           <button
             onClick={onRecord}
-            disabled={isRecording || isAnalyzing}
+            disabled={isRecording || isAnalyzing || isFuture}
             className={cn(
               "absolute top-3 right-3 p-2 rounded-full transition-colors",
               "bg-primary text-primary-foreground hover:bg-primary/90",
