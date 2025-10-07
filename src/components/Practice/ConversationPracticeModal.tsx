@@ -13,6 +13,7 @@ import { CurrentStepCard } from "./CurrentStepCard";
 import { RecordingButton } from "./RecordingButton";
 import { ScoreDisplay } from "./ScoreDisplay";
 import { NextStepPreview } from "./NextStepPreview";
+import { ConversationReview } from "./ConversationReview";
 import { SituationData } from "@/components/Cards/SituationCard";
 import { toast } from "sonner";
 
@@ -43,6 +44,8 @@ export const ConversationPracticeModal = ({
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
+  const [showConversationReview, setShowConversationReview] = useState(false);
+  const [conversationReviewScores, setConversationReviewScores] = useState<number[]>([]);
 
   // Initialize speech recognition
   useEffect(() => {
@@ -189,6 +192,13 @@ export const ConversationPracticeModal = ({
       ? situation.phrases[nextFlow.phraseIndex].native
       : null;
   const remainingSteps = totalSteps - completedSteps;
+  
+  const isFinalComplete = conversationReviewScores.length > 0;
+
+  const handleConversationReviewComplete = (scores: number[]) => {
+    setConversationReviewScores(scores);
+    unlockBadge('first-steps');
+  };
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
@@ -212,7 +222,14 @@ export const ConversationPracticeModal = ({
         </div>
 
         <div className="p-6 space-y-6">
-          {!isComplete ? (
+          {showConversationReview ? (
+            <ConversationReview
+              phrases={situation.phrases}
+              cityId={situation.cityId}
+              recognition={recognition}
+              onComplete={handleConversationReviewComplete}
+            />
+          ) : !isComplete ? (
             <>
               {/* Collapsible Past Steps */}
               <CollapsiblePastSteps
@@ -274,13 +291,57 @@ export const ConversationPracticeModal = ({
                 remainingSteps={remainingSteps}
               />
             </>
+          ) : isFinalComplete ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-8 space-y-6"
+            >
+              <h3 className="text-3xl font-bold">🎉 Conversation Complete!</h3>
+
+              <ScoreDisplay
+                score={Math.round(
+                  conversationReviewScores.reduce((sum, s) => sum + s, 0) /
+                    conversationReviewScores.length
+                )}
+              />
+
+              <div className="text-left bg-muted/50 rounded-lg p-4 space-y-2">
+                <p className="text-sm font-medium text-muted-foreground">
+                  📊 Full Conversation Results:
+                </p>
+                <p className="text-sm">
+                  • Perfect phrases:{" "}
+                  {conversationReviewScores.filter((s) => s >= 90).length}/
+                  {conversationReviewScores.length}
+                </p>
+                <p className="text-sm">
+                  • Good phrases:{" "}
+                  {conversationReviewScores.filter((s) => s >= 80 && s < 90).length}
+                  /{conversationReviewScores.length}
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => window.location.reload()}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Practice Again
+                </Button>
+                <Button onClick={onClose} className="flex-1">
+                  Back to Learn
+                </Button>
+              </div>
+            </motion.div>
           ) : (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="text-center py-8 space-y-6"
             >
-              <h3 className="text-3xl font-bold">🎉 Well Done!</h3>
+              <h3 className="text-3xl font-bold">🎉 Practice Complete!</h3>
 
               <ScoreDisplay
                 score={Math.round(
@@ -291,7 +352,7 @@ export const ConversationPracticeModal = ({
 
               <div className="text-left bg-muted/50 rounded-lg p-4 space-y-2">
                 <p className="text-sm font-medium text-muted-foreground">
-                  📊 Your Progress:
+                  📊 Individual Practice Results:
                 </p>
                 <p className="text-sm">
                   • Perfect phrases:{" "}
@@ -308,17 +369,26 @@ export const ConversationPracticeModal = ({
                 </p>
               </div>
 
-              <div className="flex gap-3">
+              <div className="space-y-3">
                 <Button
-                  onClick={() => window.location.reload()}
-                  variant="outline"
-                  className="flex-1"
+                  onClick={() => setShowConversationReview(true)}
+                  className="w-full"
+                  size="lg"
                 >
-                  Practice Again
+                  Continue to Full Conversation 💬
                 </Button>
-                <Button onClick={onClose} className="flex-1">
-                  Back to Learn
-                </Button>
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => window.location.reload()}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    Practice Again
+                  </Button>
+                  <Button onClick={onClose} variant="outline" className="flex-1">
+                    Back to Learn
+                  </Button>
+                </div>
               </div>
             </motion.div>
           )}
