@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Volume2, Check } from 'lucide-react';
+import { Volume2, Check, Sparkles } from 'lucide-react';
 import { Phrase } from '@/stores/appStore';
 import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 import { useAppStore } from '@/stores/appStore';
-import { generateNaturalSpeech } from '@/utils/voiceManager';
+import { generateNaturalSpeech, VoiceSource } from '@/utils/voiceManager';
 
 interface PhraseCardProps {
   phrase: Phrase;
@@ -12,13 +13,15 @@ interface PhraseCardProps {
 
 export const PhraseCard = ({ phrase }: PhraseCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [voiceSource, setVoiceSource] = useState<VoiceSource | null>(null);
   const { learnedPhrases, markPhraseAsLearned } = useAppStore();
   const isLearned = learnedPhrases.has(phrase.id);
 
   const handleSpeak = async () => {
     try {
       setIsPlaying(true);
-      await generateNaturalSpeech(phrase.text, 'paris'); // Default to French
+      const result = await generateNaturalSpeech(phrase.text, 'paris'); // Default to French
+      setVoiceSource(result.source);
       setIsPlaying(false);
       if (!isLearned) {
         markPhraseAsLearned(phrase.id);
@@ -26,6 +29,7 @@ export const PhraseCard = ({ phrase }: PhraseCardProps) => {
     } catch (error) {
       console.error('Error playing audio:', error);
       setIsPlaying(false);
+      setVoiceSource(null);
     }
   };
 
@@ -54,10 +58,23 @@ export const PhraseCard = ({ phrase }: PhraseCardProps) => {
         </Button>
 
         <div className="flex-1 min-w-0">
-          {/* Native Phrase */}
-          <p className="text-lg font-semibold text-foreground mb-1">
-            {phrase.text}
-          </p>
+          {/* Native Phrase with Voice Source Badge */}
+          <div className="flex items-center gap-2 mb-1">
+            <p className="text-lg font-semibold text-foreground">
+              {phrase.text}
+            </p>
+            {voiceSource === 'browser' && (
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4">
+                🎤
+              </Badge>
+            )}
+            {voiceSource === 'elevenlabs' && (
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 border-primary/30">
+                <Sparkles className="w-2.5 h-2.5 mr-0.5" />
+                AI
+              </Badge>
+            )}
+          </div>
           
           {/* Translation */}
           <p className="text-sm text-muted-foreground mb-1">
