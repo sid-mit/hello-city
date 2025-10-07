@@ -79,8 +79,22 @@ export function useDynamicCityData({ cityId, genderPreference }: DynamicCityData
         });
       });
 
+      // Get city coordinates for proper marker positioning
+      const cityCoordinates: Record<string, [number, number]> = {
+        'seoul': [37.5665, 126.9780],
+        'beijing': [39.9042, 116.4074],
+        'new-delhi': [28.6139, 77.2090],
+        'new delhi': [28.6139, 77.2090],
+        'paris': [48.8566, 2.3522],
+        'mexico-city': [19.4326, -99.1332],
+        'mexico city': [19.4326, -99.1332],
+      };
+
+      const baseLat = cityCoordinates[cityId]?.[0] || 0;
+      const baseLng = cityCoordinates[cityId]?.[1] || 0;
+
       // Transform into CityDataStructure
-      const categories = Array.from(categoryMap.entries()).map(([spotType, situationMap]) => {
+      const categories = Array.from(categoryMap.entries()).map(([spotType, situationMap], index) => {
         const categoryMeta = getCategoryMetadata(spotType);
 
         const situations = Array.from(situationMap.entries()).map(([subScenario, phraseList]) => {
@@ -95,13 +109,19 @@ export function useDynamicCityData({ cityId, genderPreference }: DynamicCityData
           };
         });
 
+        // Generate positions in a circle around the city center
+        const radius = 0.03; // ~3km radius
+        const angle = (index / Array.from(categoryMap.entries()).length) * 2 * Math.PI;
+        const offsetLat = radius * Math.cos(angle);
+        const offsetLng = radius * Math.sin(angle);
+
         return {
           id: categoryMeta.id,
           emoji: categoryMeta.emoji,
           title: categoryMeta.title,
           color: categoryMeta.color,
           description: categoryMeta.description,
-          mapPosition: categoryMeta.mapPosition,
+          mapPosition: [baseLat + offsetLat, baseLng + offsetLng] as [number, number],
           situations,
         };
       });

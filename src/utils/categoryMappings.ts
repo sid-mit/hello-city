@@ -25,7 +25,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     title: 'Café & Bakery',
     color: '#8B4513',
     description: 'Order drinks and pastries',
-    mapPosition: [48.8566, 2.3522], // Paris coordinates (default)
+    mapPosition: [48.8566, 2.3522],
   },
   restaurant: {
     id: 'restaurant',
@@ -35,13 +35,29 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     description: 'Dining and ordering food',
     mapPosition: [48.8606, 2.3376],
   },
+  subway: {
+    id: 'subway',
+    emoji: '🚇',
+    title: 'Subway',
+    color: '#4169E1',
+    description: 'Navigate the metro system',
+    mapPosition: [48.8738, 2.2950],
+  },
   transit: {
     id: 'transit',
-    emoji: '🚇',
+    emoji: '🚌',
     title: 'Transit',
     color: '#4169E1',
     description: 'Navigate public transportation',
     mapPosition: [48.8738, 2.2950],
+  },
+  taxi: {
+    id: 'taxi',
+    emoji: '🚕',
+    title: 'Taxi',
+    color: '#FFD700',
+    description: 'Getting around by taxi',
+    mapPosition: [48.8700, 2.3100],
   },
   shopping: {
     id: 'shopping',
@@ -58,6 +74,30 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     color: '#4682B4',
     description: 'Check-in and hotel services',
     mapPosition: [48.8584, 2.2945],
+  },
+  bar: {
+    id: 'bar',
+    emoji: '🍺',
+    title: 'Bar & Nightlife',
+    color: '#9B59B6',
+    description: 'Socialize and order drinks',
+    mapPosition: [48.8620, 2.3400],
+  },
+  museum: {
+    id: 'museum',
+    emoji: '🏛️',
+    title: 'Museum',
+    color: '#2ECC71',
+    description: 'Visit cultural sites',
+    mapPosition: [48.8610, 2.3360],
+  },
+  police: {
+    id: 'police',
+    emoji: '🚨',
+    title: 'Police & Emergency',
+    color: '#E74C3C',
+    description: 'Emergency assistance',
+    mapPosition: [48.8550, 2.3450],
   },
 };
 
