@@ -147,6 +147,18 @@ export const ConversationPracticeModal = ({
     };
   }, [currentStep]);
 
+  // Add escape key handler to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [onClose]);
+
   const handleListen = async (phraseIndex: number) => {
     try {
       const phrase = situation.phrases[phraseIndex];
@@ -310,6 +322,7 @@ export const ConversationPracticeModal = ({
               cityId={situation.cityId}
               recognition={recognition}
               onComplete={handleConversationReviewComplete}
+              onBack={() => setPracticeMode('selection')}
             />
           ) : showConversationReview ? (
             <ConversationReview

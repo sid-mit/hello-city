@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { ChatBubble } from "./ChatBubble";
 import { generateNaturalSpeech } from "@/utils/voiceManager";
 import { analyzeSyllables, calculateOverallScore } from "@/utils/syllableAnalysis";
@@ -25,6 +27,7 @@ interface ConversationReviewProps {
   cityId: string;
   recognition: any;
   onComplete: (scores: number[]) => void;
+  onBack?: () => void;
 }
 
 interface PhraseScore {
@@ -38,6 +41,7 @@ export const ConversationReview = ({
   cityId,
   recognition,
   onComplete,
+  onBack,
 }: ConversationReviewProps) => {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
@@ -192,11 +196,27 @@ export const ConversationReview = ({
 
   return (
     <div ref={scrollRef} className="space-y-6">
-      <div className="text-center py-4 border-b">
-        <h3 className="text-lg font-semibold">Full Conversation Practice</h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          Practice the complete conversation flow
-        </p>
+      <div className="py-4 border-b">
+        <div className="flex items-center gap-4">
+          {onBack && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onBack}
+              className="gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+          )}
+          <div className="flex-1 text-center">
+            <h3 className="text-lg font-semibold">Full Conversation Practice</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Practice the complete conversation flow
+            </p>
+          </div>
+          {onBack && <div className="w-20" />}
+        </div>
       </div>
 
       <div className="space-y-4 px-2">
