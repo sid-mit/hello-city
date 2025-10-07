@@ -44,6 +44,7 @@ export const ConversationReview = ({
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [phraseScores, setPhraseScores] = useState<PhraseScore[]>([]);
+  const [visibleServerResponses, setVisibleServerResponses] = useState<Set<number>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLDivElement>(null);
 
@@ -97,6 +98,9 @@ export const ConversationReview = ({
           );
 
           if (serverResponse) {
+            // Show server response
+            setVisibleServerResponses((prev) => new Set(prev).add(currentPhraseIndex));
+            
             // Play server audio
             setTimeout(() => {
               handlePlayServerAudio(serverResponse);
@@ -181,7 +185,7 @@ export const ConversationReview = ({
     return phraseScores.find((ps) => ps.phraseIndex === phraseIndex)?.score;
   };
 
-  // Build FULL conversation messages (user phrases + server responses) - ALL VISIBLE FROM START
+  // Build conversation messages (user phrases + server responses)
   const conversationMessages: Array<{
     type: 'user' | 'server';
     phraseIndex?: number;
@@ -197,15 +201,17 @@ export const ConversationReview = ({
       phrase,
     });
 
-    // Add server response (if exists) - ALWAYS show, not conditionally
-    const serverResponse = serverResponses.find(
-      (sr) => sr.afterUserPhraseIndex === index
-    );
-    if (serverResponse) {
-      conversationMessages.push({
-        type: 'server',
-        serverResponse,
-      });
+    // Add server response if visible
+    if (visibleServerResponses.has(index)) {
+      const serverResponse = serverResponses.find(
+        (sr) => sr.afterUserPhraseIndex === index
+      );
+      if (serverResponse) {
+        conversationMessages.push({
+          type: 'server',
+          serverResponse,
+        });
+      }
     }
   });
 
@@ -223,8 +229,7 @@ export const ConversationReview = ({
           if (message.type === 'user' && message.phrase && message.phraseIndex !== undefined) {
             const score = getScoreForPhrase(message.phraseIndex);
             const isActive = message.phraseIndex === currentPhraseIndex && !score;
-            const isPast = score !== undefined;
-            const isFuture = message.phraseIndex > currentPhraseIndex && !score;
+            const isPast = message.phraseIndex < currentPhraseIndex || score !== undefined;
 
             return (
               <div
@@ -236,7 +241,6 @@ export const ConversationReview = ({
                   phrase={message.phrase}
                   isActive={isActive}
                   isPast={isPast}
-                  isFuture={isFuture}
                   onPlayAudio={() => handlePlayAudio(message.phrase!)}
                   onRecord={isActive ? handleRecord : undefined}
                   isRecording={isRecording && isActive}
@@ -249,16 +253,15 @@ export const ConversationReview = ({
             return (
               <motion.div
                 key={`server-${index}`}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4 }}
               >
                 <ChatBubble
                   speaker="other"
                   phrase={message.serverResponse}
                   isActive={false}
-                  isPast={false}
-                  isFuture={false}
+                  isPast={true}
                   onPlayAudio={() => handlePlayServerAudio(message.serverResponse!)}
                 />
               </motion.div>

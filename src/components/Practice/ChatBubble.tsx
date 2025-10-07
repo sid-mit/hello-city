@@ -1,4 +1,4 @@
-import { Volume2, Mic, Loader2, Lock } from "lucide-react";
+import { Volume2, Mic, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ChatAvatar } from "./ChatAvatar";
@@ -15,7 +15,6 @@ interface ChatBubbleProps {
   phrase: Phrase;
   isActive?: boolean;
   isPast?: boolean;
-  isFuture?: boolean;
   onPlayAudio: () => void;
   onRecord?: () => void;
   isRecording?: boolean;
@@ -28,7 +27,6 @@ export const ChatBubble = ({
   phrase,
   isActive = false,
   isPast = false,
-  isFuture = false,
   onPlayAudio,
   onRecord,
   isRecording = false,
@@ -57,41 +55,29 @@ export const ChatBubble = ({
             : "bg-muted border-2 border-border rounded-tl-sm",
           isActive && isUser && !score && "ring-2 ring-primary shadow-lg",
           isRecording && "ring-2 ring-blue-400 animate-pulse",
-          isPast && "opacity-70",
-          isFuture && "opacity-40 grayscale"
+          isPast && "opacity-70"
         )}
       >
-        <div className={cn("space-y-1 pr-8", isFuture && "blur-[1px]")}>
+        <div className="space-y-1 pr-8">
           <p className="text-base md:text-lg font-semibold">{phrase.native}</p>
           <p className="text-sm text-muted-foreground italic">{phrase.romanization}</p>
           <p className="text-xs text-muted-foreground">{phrase.english}</p>
         </div>
 
-        {/* Lock Icon for Future Messages */}
-        {isFuture && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-background/80 rounded-full p-3">
-              <Lock className="w-6 h-6 text-muted-foreground" />
-            </div>
-          </div>
-        )}
-
-        {/* Audio Button - All bubbles (disabled for future) */}
+        {/* Audio Button - All bubbles */}
         <button
           onClick={onPlayAudio}
-          disabled={isFuture}
           className={cn(
             "absolute bottom-3 right-3 p-1.5 rounded-full transition-colors",
-            "hover:bg-background/50",
-            isFuture && "opacity-0 pointer-events-none"
+            "hover:bg-background/50"
           )}
           aria-label="Play audio"
         >
           <Volume2 className="w-4 h-4 text-muted-foreground" />
         </button>
 
-        {/* Recording Button - User bubbles only (disabled for future) */}
-        {isUser && !score && onRecord && !isFuture && (
+        {/* Recording Button - User bubbles only */}
+        {isUser && !score && onRecord && (
           <button
             onClick={onRecord}
             disabled={isRecording || isAnalyzing}
