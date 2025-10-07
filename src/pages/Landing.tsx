@@ -258,19 +258,17 @@ const Landing = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.6 }}
-        className="absolute flex flex-col items-center gap-20"
+        className="absolute flex flex-col items-center gap-12 sm:gap-16 md:gap-20 w-[90%] sm:w-[85%] md:w-full max-w-[570px] px-4 sm:px-6 md:px-0"
         style={{
           left: '50%',
           top: '50%',
           transform: 'translate(-50%, -50%)',
-          width: '570px',
         }}
       >
-        <div className="flex flex-col items-center gap-6 w-full">
+        <div className="flex flex-col items-center gap-4 sm:gap-5 md:gap-6 w-full">
           <h1
-            className="font-['Gilroy'] font-bold text-center"
+            className="font-['Gilroy'] font-bold text-center text-2xl sm:text-3xl md:text-[40px] leading-tight"
             style={{
-              fontSize: '40px',
               color: '#404040',
               letterSpacing: '0.8px',
             }}
@@ -278,9 +276,8 @@ const Landing = () => {
             Say Hello to Your Next City
           </h1>
           <p
-            className="font-['Gilroy'] font-normal text-center"
+            className="font-['Gilroy'] font-normal text-center text-sm sm:text-base md:text-[16px]"
             style={{
-              fontSize: '16px',
               color: '#404040',
             }}
           >
@@ -292,13 +289,11 @@ const Landing = () => {
           whileHover={{ scale: 1.05, boxShadow: '0 8px 20px rgba(42, 100, 236, 0.3)' }}
           whileTap={{ scale: 0.98 }}
           onClick={handleStart}
-          className="font-['Outfit'] font-bold"
+          className="font-['Outfit'] font-bold px-12 sm:px-16 md:px-20 py-3 text-base md:text-lg"
           style={{
-            padding: '12px 80px',
             borderRadius: '30px',
             background: '#BDD1FF',
             color: '#2A64EC',
-            fontSize: '18px',
             border: 'none',
             cursor: 'pointer',
           }}
