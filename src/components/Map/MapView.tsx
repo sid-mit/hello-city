@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import mapboxgl from 'mapbox-gl';
 import { useAppStore } from '@/stores/appStore';
 import { cities } from '@/data/cities';
-import { getCityData } from '@/data/cityData';
+import { useDynamicCityData } from '@/hooks/useDynamicCityData';
 import { CityMarker } from './CityMarker';
 import { PhraseDrawer } from '../PhraseDrawer/PhraseDrawer';
 import { CitySelector } from '../CitySelector/CitySelector';
@@ -17,13 +17,17 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoiYW5pbnlhZyIsImEiOiJjbWdmNHF6MHUwNG9oMmtuMGhubWR
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
 export const MapView = () => {
-  const { selectedCity, selectedCategory, selectCity, selectCategory } = useAppStore();
+  const { selectedCity, selectedCategory, genderPreference, selectCity, selectCategory } = useAppStore();
   const [showCitySelector, setShowCitySelector] = useState(false);
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
 
-  const cityData = selectedCity ? getCityData(selectedCity.id) : null;
+  // Fetch dynamic city data from database
+  const { data: cityData, isLoading: isCityDataLoading } = useDynamicCityData({
+    cityId: selectedCity?.id || '',
+    genderPreference,
+  });
 
   const handleCityClick = useCallback((city: any) => {
     selectCity(city);
@@ -107,8 +111,8 @@ export const MapView = () => {
 
         markersRef.current.push(marker);
       });
-    } else if (cityData) {
-      // Show category markers
+    } else if (cityData && !isCityDataLoading) {
+      // Show category markers from database
       cityData.categories.forEach((category) => {
         const el = document.createElement('div');
         el.className = 'cursor-pointer transform transition-all hover:scale-110';
@@ -126,7 +130,7 @@ export const MapView = () => {
         markersRef.current.push(marker);
       });
     }
-  }, [selectedCity, cityData, handleCityClick, handleCategoryClick]);
+  }, [selectedCity, cityData, isCityDataLoading, handleCityClick, handleCategoryClick]);
 
   return (
     <motion.div
@@ -199,7 +203,7 @@ export const MapView = () => {
       />
 
       {/* Phrase Drawer */}
-      {selectedCategory && cityData && (() => {
+      {selectedCategory && cityData && !isCityDataLoading && (() => {
         const category = cityData.categories.find(c => c.id === selectedCategory);
         if (!category) return null;
         
@@ -220,6 +224,27 @@ export const MapView = () => {
           />
         );
       })()}
+
+      {/* Loading state */}
+      {selectedCity && isCityDataLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-40">
+          <div className="text-center">
+            <p className="text-lg font-semibold">Loading phrases...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Empty state */}
+      {selectedCity && !isCityDataLoading && (!cityData || cityData.categories.length === 0) && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-40">
+          <div className="text-center max-w-md px-4">
+            <p className="text-lg font-semibold mb-2">No phrases found</p>
+            <p className="text-sm text-muted-foreground">
+              This city doesn't have any phrases yet. Import phrases via the Admin panel.
+            </p>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };

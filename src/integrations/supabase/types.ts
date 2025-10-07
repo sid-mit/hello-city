@@ -22,7 +22,6 @@ export type Database = {
           female_romanized: string | null
           female_tts: string | null
           id: string
-          is_gendered: boolean | null
           lang_code: string
           male_native: string | null
           male_romanized: string | null
@@ -44,7 +43,6 @@ export type Database = {
           female_romanized?: string | null
           female_tts?: string | null
           id?: string
-          is_gendered?: boolean | null
           lang_code: string
           male_native?: string | null
           male_romanized?: string | null
@@ -66,7 +64,6 @@ export type Database = {
           female_romanized?: string | null
           female_tts?: string | null
           id?: string
-          is_gendered?: boolean | null
           lang_code?: string
           male_native?: string | null
           male_romanized?: string | null

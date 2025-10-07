@@ -89,12 +89,38 @@ export const generateSampleCSV = (): string => {
     'male_native', 'male_romanized', 'male_tts', 'notes'
   ];
 
-  const sampleRow = [
-    'paris', 'cafe', 'ordering', 'coffee_order', 'fr',
-    'I would like a coffee please', 'Je voudrais un café s\'il vous plaît',
-    'Zhuh voo-dreh uhn ka-feh seel voo pleh', 'Je voudrais un café s\'il vous plaît',
-    '', '', '', '', '', '', 'Common phrase for ordering'
+  const sampleRows = [
+    // Paris cafe example (gender-neutral)
+    [
+      'paris', 'cafe', 'ordering', 'coffee_order', 'fr',
+      'I would like a coffee please', 'Je voudrais un café s\'il vous plaît',
+      'Zhuh voo-dreh uhn ka-feh seel voo pleh', 'Je voudrais un café s\'il vous plaît',
+      '', '', '', '', '', '', 'Common phrase for ordering'
+    ],
+    // Seoul restaurant example (non-gendered)
+    [
+      'seoul', 'restaurant', 'asking', 'menu_request', 'ko',
+      'Can I see the menu?', '메뉴 좀 보여주세요',
+      'Menyu jom boyeojuseyo', '메뉴 좀 보여주세요',
+      '', '', '', '', '', '', 'Polite form'
+    ],
+    // New Delhi restaurant example (gendered)
+    [
+      'new-delhi', 'restaurant', 'asking', 'menu_request', 'hi',
+      'Can I see the menu?', 'मेनू दिखाइए',
+      'Menu dikhaiye', 'Menu dikhaiye',
+      'दीदी मेनू दिखाइए', 'Didi menu dikhaiye', 'Didi menu dikhaiye',
+      'भैया मेनू दिखाइए', 'Bhaiya menu dikhaiye', 'Bhaiya menu dikhaiye',
+      'Using didi (sister) for female, bhaiya (brother) for male'
+    ],
+    // Mexico City cafe example (gendered)
+    [
+      'mexico-city', 'cafe', 'ordering', 'coffee_order', 'es-MX',
+      'I would like a coffee please', 'Quisiera un café por favor',
+      'Kee-see-eh-rah oon kah-feh por fah-vor', 'Quisiera un café por favor',
+      '', '', '', '', '', '', 'Neutral form works for both genders in Spanish'
+    ],
   ];
 
-  return [headers.join(','), sampleRow.join(',')].join('\n');
+  return [headers.join(','), ...sampleRows.map(row => row.join(','))].join('\n');
 };

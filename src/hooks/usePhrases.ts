@@ -34,14 +34,13 @@ export function usePhrases({ city, spotType, subScenario, genderPreference }: Ph
         let native = phrase.neutral_native;
         let romanization = phrase.neutral_romanized;
 
-        if (phrase.is_gendered) {
-          if (genderPreference === 'female' && phrase.female_native) {
-            native = phrase.female_native;
-            romanization = phrase.female_romanized;
-          } else if (genderPreference === 'male' && phrase.male_native) {
-            native = phrase.male_native;
-            romanization = phrase.male_romanized;
-          }
+        // Use gender-specific variant if available
+        if (genderPreference === 'female' && phrase.female_native) {
+          native = phrase.female_native;
+          romanization = phrase.female_romanized || phrase.neutral_romanized;
+        } else if (genderPreference === 'male' && phrase.male_native) {
+          native = phrase.male_native;
+          romanization = phrase.male_romanized || phrase.neutral_romanized;
         }
 
         return {

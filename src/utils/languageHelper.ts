@@ -5,10 +5,10 @@ const LANGUAGE_MAP: Record<string, LanguageCode> = {
   seoul: "ko-KR",
   beijing: "zh-CN",
   "new-delhi": "hi-IN",
-  "mexico-city": "es-ES",
+  "mexico-city": "es-MX",
 };
 
-const GENDERED_LANGUAGES: LanguageCode[] = ['hi-IN', 'fr-FR', 'es-ES'];
+const GENDERED_LANGUAGES: LanguageCode[] = ['hi-IN', 'fr-FR', 'es-MX'];
 
 export function getLanguageCode(cityId: string): LanguageCode {
   return LANGUAGE_MAP[cityId] || "en-US" as LanguageCode;

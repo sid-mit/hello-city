@@ -3,9 +3,9 @@ import { User, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export type GenderVariant = 'neutral' | 'female' | 'male';
-export type LanguageCode = 'ko-KR' | 'zh-CN' | 'hi-IN' | 'fr-FR' | 'es-ES';
+export type LanguageCode = 'ko-KR' | 'zh-CN' | 'hi-IN' | 'fr-FR' | 'es-MX';
 
-const GENDERED_LANGUAGES: LanguageCode[] = ['hi-IN', 'fr-FR', 'es-ES'];
+const GENDERED_LANGUAGES: LanguageCode[] = ['hi-IN', 'fr-FR', 'es-MX'];
 
 interface GenderSelectorProps {
   langCode: LanguageCode;

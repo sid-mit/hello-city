@@ -1,11 +1,16 @@
 import { PhraseImporter } from '@/components/Admin/PhraseImporter';
+import { PhraseTableEditor } from '@/components/Admin/PhraseTableEditor';
 
 const Admin = () => {
   return (
     <div className="min-h-screen bg-background p-8">
-      <div className="container mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Admin Dashboard</h1>
-        <PhraseImporter />
+      <div className="container mx-auto space-y-8">
+        <h1 className="text-4xl font-bold">Admin Dashboard</h1>
+        
+        <div className="space-y-8">
+          <PhraseImporter />
+          <PhraseTableEditor />
+        </div>
       </div>
     </div>
   );
