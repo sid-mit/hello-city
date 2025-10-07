@@ -4,6 +4,7 @@ import { Volume2, Check } from 'lucide-react';
 import { Phrase } from '@/stores/appStore';
 import { Button } from '../ui/button';
 import { useAppStore } from '@/stores/appStore';
+import { generateNaturalSpeech } from '@/utils/voiceManager';
 
 interface PhraseCardProps {
   phrase: Phrase;
@@ -14,29 +15,17 @@ export const PhraseCard = ({ phrase }: PhraseCardProps) => {
   const { learnedPhrases, markPhraseAsLearned } = useAppStore();
   const isLearned = learnedPhrases.has(phrase.id);
 
-  const handleSpeak = () => {
-    if ('speechSynthesis' in window) {
+  const handleSpeak = async () => {
+    try {
       setIsPlaying(true);
-      
-      // Cancel any ongoing speech
-      window.speechSynthesis.cancel();
-      
-      const utterance = new SpeechSynthesisUtterance(phrase.text);
-      utterance.lang = 'fr-FR'; // French language
-      utterance.rate = 0.8; // Slightly slower for learning
-      
-      utterance.onend = () => {
-        setIsPlaying(false);
-        if (!isLearned) {
-          markPhraseAsLearned(phrase.id);
-        }
-      };
-      
-      utterance.onerror = () => {
-        setIsPlaying(false);
-      };
-      
-      window.speechSynthesis.speak(utterance);
+      await generateNaturalSpeech(phrase.text, 'paris'); // Default to French
+      setIsPlaying(false);
+      if (!isLearned) {
+        markPhraseAsLearned(phrase.id);
+      }
+    } catch (error) {
+      console.error('Error playing audio:', error);
+      setIsPlaying(false);
     }
   };
 
