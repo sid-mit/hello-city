@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ScoreBadge } from "./ScoreBadge";
 import { analyzeSyllables, calculateOverallScore } from "@/utils/syllableAnalysis";
 import { generateNaturalSpeech } from "@/utils/voiceManager";
+import { GenderSelector, type LanguageCode } from "./GenderSelector";
+import { useAppStore } from "@/stores/appStore";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
 
@@ -35,6 +37,7 @@ export const SinglePhrasePractice = ({
   onBack,
   onNext,
 }: SinglePhrasePracticeProps) => {
+  const { genderPreference, setGenderPreference } = useAppStore();
   const [step, setStep] = useState<Step>("listen");
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -116,6 +119,14 @@ export const SinglePhrasePractice = ({
     setStep("listen");
   };
 
+  const langCode = ({
+    paris: "fr-FR",
+    seoul: "ko-KR",
+    beijing: "zh-CN",
+    "new-delhi": "hi-IN",
+    "mexico-city": "es-ES",
+  }[cityId] || "en-US") as LanguageCode;
+
   return (
     <div className="space-y-6 py-4">
       {/* Header */}
@@ -124,9 +135,16 @@ export const SinglePhrasePractice = ({
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
         </Button>
-        <span className="text-sm font-medium text-muted-foreground">
-          Phrase {phraseIndex + 1}/{totalPhrases}
-        </span>
+        <div className="flex items-center gap-3">
+          <GenderSelector
+            langCode={langCode}
+            currentGender={genderPreference}
+            onGenderChange={setGenderPreference}
+          />
+          <span className="text-sm font-medium text-muted-foreground">
+            Phrase {phraseIndex + 1}/{totalPhrases}
+          </span>
+        </div>
       </div>
 
       <AnimatePresence mode="wait">

@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { SituationData } from '@/components/Cards/SituationCard';
 
+export type GenderVariant = 'neutral' | 'female' | 'male';
+
 export interface City {
   id: string;
   name: string;
@@ -68,6 +70,7 @@ interface SavedSituation extends SituationData {
 interface AppState {
   userName: string;
   guestName: string;
+  genderPreference: GenderVariant;
   selectedCity: City | null;
   selectedLocation: Location | null;
   selectedCategory: string | null;
@@ -81,6 +84,7 @@ interface AppState {
   lastPracticeDate: string | null;
   setUserName: (name: string) => void;
   setGuestName: (name: string) => void;
+  setGenderPreference: (gender: GenderVariant) => void;
   selectCity: (city: City | null) => void;
   selectLocation: (location: Location | null) => void;
   selectCategory: (categoryId: string | null) => void;
@@ -105,6 +109,7 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       userName: '',
       guestName: '',
+      genderPreference: 'female',
       selectedCity: null,
       selectedLocation: null,
       selectedCategory: null,
@@ -127,6 +132,7 @@ export const useAppStore = create<AppState>()(
       ],
       setUserName: (name) => set({ userName: name }),
       setGuestName: (name) => set({ guestName: name }),
+      setGenderPreference: (gender) => set({ genderPreference: gender }),
       selectCity: (city) => set({ selectedCity: city }),
       selectLocation: (location) => set({ selectedLocation: location }),
       selectCategory: (categoryId) => set({ selectedCategory: categoryId }),
@@ -291,6 +297,7 @@ export const useAppStore = create<AppState>()(
       name: 'hellocity-storage',
       partialize: (state) => ({
         guestName: state.guestName,
+        genderPreference: state.genderPreference,
         favoritedSituations: state.favoritedSituations,
         hasShownFavoriteModal: state.hasShownFavoriteModal,
         practiceHistory: state.practiceHistory,

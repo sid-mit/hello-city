@@ -4,7 +4,6 @@ import { UnifiedHeader } from '@/components/Header/UnifiedHeader';
 import { WelcomeModal } from '@/components/Welcome/WelcomeModal';
 import { useAppStore } from '@/stores/appStore';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GenderSelectorDemo } from '@/components/Practice/GenderSelector';
 
 const Index = () => {
   const { activeTab } = useAppStore();
@@ -16,11 +15,6 @@ const Index = () => {
       
       {/* Unified Header */}
       <UnifiedHeader />
-      
-      {/* Gender Toggle Prototype Demo */}
-      <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 max-w-2xl w-full px-4">
-        <GenderSelectorDemo />
-      </div>
       
       {/* Content Area */}
       <div className="w-full h-full">

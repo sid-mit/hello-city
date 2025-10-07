@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { X, ChevronRight, ChevronLeft } from 'lucide-react';
-import { useAppStore } from '@/stores/appStore';
+import { useAppStore, GenderVariant } from '@/stores/appStore';
+import { GenderSelector } from '@/components/Practice/GenderSelector';
 
 const slides = [
   {
@@ -17,6 +18,12 @@ const slides = [
     description: 'Browse the interactive map, select a city, and discover phrases organized by real-world situations.',
   },
   {
+    emoji: '💬',
+    title: 'Gendered Languages',
+    description: 'Some languages like Hindi, French, and Spanish use different phrases depending on whether you\'re male or female. Choose your preference:',
+    showGenderSelector: true,
+  },
+  {
     emoji: '🎤',
     title: 'Practice & Perfect',
     description: 'Use AI-powered pronunciation practice to speak like a local. Save favorites and track your progress.',
@@ -24,13 +31,13 @@ const slides = [
 ];
 
 export const WelcomeModal = () => {
-  const { setGuestName, guestName } = useAppStore();
+  const { setGuestName, guestName, genderPreference, setGenderPreference } = useAppStore();
   const [isVisible, setIsVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [nameInput, setNameInput] = useState('');
 
   useEffect(() => {
-    const hasSeenWelcome = localStorage.getItem('hellocity-welcome-shown');
+    const hasSeenWelcome = localStorage.getItem('hellocity-welcome-v2');
     if (!hasSeenWelcome && !guestName) {
       setIsVisible(true);
     }
@@ -54,13 +61,13 @@ export const WelcomeModal = () => {
     } else {
       setGuestName('Guest');
     }
-    localStorage.setItem('hellocity-welcome-shown', 'true');
+    localStorage.setItem('hellocity-welcome-v2', 'true');
     setIsVisible(false);
   };
 
   const handleSkip = () => {
     setGuestName('Guest');
-    localStorage.setItem('hellocity-welcome-shown', 'true');
+    localStorage.setItem('hellocity-welcome-v2', 'true');
     setIsVisible(false);
   };
 
@@ -116,6 +123,19 @@ export const WelcomeModal = () => {
               <p className="text-muted-foreground leading-relaxed mb-6">
                 {slides[currentSlide].description}
               </p>
+
+              {slides[currentSlide].showGenderSelector && (
+                <div className="flex flex-col items-center gap-4 mb-6">
+                  <GenderSelector
+                    langCode="hi-IN"
+                    currentGender={genderPreference}
+                    onGenderChange={setGenderPreference}
+                  />
+                  <p className="text-xs text-muted-foreground italic">
+                    Don't worry, you can change this anytime during practice!
+                  </p>
+                </div>
+              )}
 
               {isLastSlide && (
                 <div className="mb-6">

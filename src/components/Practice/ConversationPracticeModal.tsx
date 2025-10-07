@@ -17,6 +17,7 @@ import { ConversationReview } from "./ConversationReview";
 import { PracticeStyleSelector } from "./PracticeStyleSelector";
 import { SinglePhrasePractice } from "./SinglePhrasePractice";
 import { SituationData } from "@/components/Cards/SituationCard";
+import { GenderSelector, type LanguageCode } from "./GenderSelector";
 import { toast } from "sonner";
 
 interface ConversationPracticeModalProps {
@@ -33,7 +34,7 @@ export const ConversationPracticeModal = ({
   situation,
   onClose,
 }: ConversationPracticeModalProps) => {
-  const { updatePracticeHistory, updateStreak, unlockBadge } = useAppStore();
+  const { updatePracticeHistory, updateStreak, unlockBadge, genderPreference, setGenderPreference } = useAppStore();
   
   // Auto-generate conversation flow if none exists
   const conversationFlow = situation.conversationFlow || situation.phrases.map((phrase, index) => ([
@@ -59,12 +60,12 @@ export const ConversationPracticeModal = ({
         (window as any).SpeechRecognition;
       const recognitionInstance = new SpeechRecognition();
 
-      const languageMap: Record<string, string> = {
+      const languageMap: Record<string, LanguageCode> = {
         paris: "fr-FR",
         seoul: "ko-KR",
         beijing: "zh-CN",
         "new-delhi": "hi-IN",
-        "mexico-city": "es-MX",
+        "mexico-city": "es-ES",
       };
       recognitionInstance.lang = languageMap[situation.cityId] || "en-US";
       recognitionInstance.continuous = false;
@@ -205,9 +206,24 @@ export const ConversationPracticeModal = ({
               <span className="text-2xl">{situation.emoji}</span>
               <h2 className="text-xl font-bold">{situation.title}</h2>
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="h-5 w-5" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <GenderSelector
+                langCode={
+                  ({
+                    paris: "fr-FR",
+                    seoul: "ko-KR",
+                    beijing: "zh-CN",
+                    "new-delhi": "hi-IN",
+                    "mexico-city": "es-ES",
+                  }[situation.cityId] || "en-US") as LanguageCode
+                }
+                currentGender={genderPreference}
+                onGenderChange={setGenderPreference}
+              />
+              <Button variant="ghost" size="icon" onClick={onClose}>
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">
