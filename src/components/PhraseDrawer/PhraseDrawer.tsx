@@ -142,7 +142,7 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
             >
               {situations.map((situation, index) => (
                 <motion.div
-                  key={situation.id}
+                  key={`${situation.id}-${index}`}
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
