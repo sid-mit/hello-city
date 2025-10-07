@@ -90,34 +90,58 @@ export function selectBestVoice(languageCode: string): SpeechSynthesisVoice | nu
 }
 
 /**
- * Calculate voice quality score (0-100)
+ * Calculate voice quality score with enhanced native accent prioritization
  */
 function calculateVoiceQuality(voice: SpeechSynthesisVoice, targetLang: string): number {
-  let score = 50; // Base score
+  let score = 0;
 
-  // Prefer Google voices (highest quality)
-  if (voice.name.toLowerCase().includes('google')) {
-    score += 30;
-  }
-  // Prefer Microsoft/Apple voices
-  else if (voice.name.toLowerCase().includes('microsoft') || 
-           voice.name.toLowerCase().includes('apple')) {
-    score += 20;
+  // CRITICAL: Prioritize local/native voices (highest quality)
+  if (voice.localService) {
+    score += 50; // Massive boost for installed OS voices
   }
 
-  // Prefer exact language match
+  // Exact language match (including region, e.g., zh-CN vs zh-TW)
   if (voice.lang === targetLang) {
+    score += 30;
+  } else if (voice.lang.startsWith(targetLang.split('-')[0])) {
+    // Partial match (e.g., zh-TW when looking for zh-CN)
     score += 15;
   }
 
-  // Prefer local voices (faster, more reliable)
-  if (voice.localService) {
+  // Vendor quality ranking (platform-specific best voices)
+  const vendorName = voice.name.toLowerCase();
+  if (vendorName.includes('google')) {
+    score += 25; // Google voices are excellent for web
+  } else if (vendorName.includes('microsoft')) {
+    score += 22; // Microsoft has great multilingual support
+  } else if (vendorName.includes('apple')) {
+    score += 20; // Apple voices are high quality on macOS/iOS
+  }
+
+  // Premium/Enhanced voice indicators
+  if (vendorName.includes('premium') || 
+      vendorName.includes('enhanced') ||
+      vendorName.includes('natural') ||
+      vendorName.includes('neural')) {
+    score += 15;
+  }
+
+  // Language-specific optimizations
+  if (targetLang.startsWith('zh') && vendorName.includes('chinese')) {
+    score += 10;
+  } else if (targetLang.startsWith('ko') && vendorName.includes('korean')) {
+    score += 10;
+  } else if (targetLang.startsWith('ja') && vendorName.includes('japanese')) {
+    score += 10;
+  } else if (targetLang.startsWith('hi') && vendorName.includes('hindi')) {
+    score += 10;
+  } else if (targetLang.startsWith('fr') && vendorName.includes('french')) {
     score += 10;
   }
 
-  // Prefer natural sounding names
-  if (voice.name.match(/natural|enhanced|premium|quality/i)) {
-    score += 10;
+  // Penalize very generic names
+  if (voice.name === 'Default' || voice.name === 'default') {
+    score -= 30;
   }
 
   return score;

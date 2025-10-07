@@ -11,11 +11,12 @@ export interface EnhancedSpeechOptions {
 }
 
 /**
- * Process text with SSML-like enhancements
+ * Process text with SSML-like enhancements for better pronunciation
  */
 export function processTextWithEnhancements(
   text: string,
-  options: EnhancedSpeechOptions = {}
+  options: EnhancedSpeechOptions = {},
+  languageCode?: string
 ): string {
   let processedText = text;
 
@@ -25,12 +26,42 @@ export function processTextWithEnhancements(
   }
 
   if (options.emphasizeSyllables) {
-    // Add slight pauses between syllables for languages like Korean, Chinese
-    // This helps with pronunciation clarity
-    processedText = addSyllableBreaks(processedText);
+    // Add language-specific syllable emphasis
+    processedText = addLanguageSpecificBreaks(processedText, languageCode);
   }
 
   return processedText;
+}
+
+/**
+ * Add language-specific breaks and emphasis for better pronunciation
+ */
+function addLanguageSpecificBreaks(text: string, languageCode?: string): string {
+  if (!languageCode) return text;
+
+  const lang = languageCode.toLowerCase();
+
+  // Chinese (Mandarin) - Add slight pauses between characters
+  if (lang.startsWith('zh')) {
+    const chars = text.split('');
+    return chars.join(' ');
+  }
+
+  // Korean - Add micro-pauses between syllable blocks
+  if (lang.startsWith('ko')) {
+    // Korean syllables are already distinct, just add slight spacing
+    const chars = text.split('');
+    return chars.join(' ');
+  }
+
+  // Japanese - Similar to Korean
+  if (lang.startsWith('ja')) {
+    const chars = text.split('');
+    return chars.join(' ');
+  }
+
+  // For other languages, return as-is
+  return text;
 }
 
 /**
@@ -43,24 +74,45 @@ function addSyllableBreaks(text: string): string {
 }
 
 /**
- * Configure utterance with enhanced settings
+ * Configure utterance with enhanced settings optimized for language learning
  */
 export function configureUtterance(
   utterance: SpeechSynthesisUtterance,
-  options: EnhancedSpeechOptions = {}
+  options: EnhancedSpeechOptions = {},
+  languageCode?: string
 ): void {
-  // Speed control (0.5 - 1.5)
+  const lang = languageCode?.toLowerCase() || '';
+
+  // Language-specific speed adjustments
   if (options.speed !== undefined) {
     utterance.rate = Math.max(0.5, Math.min(1.5, options.speed));
   } else if (options.slowMotion) {
-    utterance.rate = 0.7; // Slower for learning
+    utterance.rate = 0.65; // Very slow for learning
   } else {
-    utterance.rate = 0.9; // Slightly slower than normal for clarity
+    // Language-specific default speeds for clarity
+    if (lang.startsWith('hi')) {
+      utterance.rate = 0.85; // Hindi - moderate for clarity
+    } else if (lang.startsWith('ko') || lang.startsWith('zh') || lang.startsWith('ja')) {
+      utterance.rate = 0.8; // Asian languages - slower for syllable distinction
+    } else if (lang.startsWith('fr')) {
+      utterance.rate = 0.88; // French - slightly slower
+    } else {
+      utterance.rate = 0.85; // Default slower for learning
+    }
   }
 
-  // Pitch control (0.8 - 1.2)
+  // Language-specific pitch adjustments for natural sound
   if (options.pitch !== undefined) {
     utterance.pitch = Math.max(0.8, Math.min(1.2, options.pitch));
+  } else {
+    // Subtle pitch adjustments per language
+    if (lang.startsWith('fr')) {
+      utterance.pitch = 1.05; // French benefits from slightly higher pitch
+    } else if (lang.startsWith('zh')) {
+      utterance.pitch = 1.02; // Chinese tones need slight elevation
+    } else {
+      utterance.pitch = 1.0;
+    }
   }
 
   // Volume (always at max for clarity)
@@ -81,7 +133,7 @@ export function getSpeechPreferences(): EnhancedSpeechOptions {
   }
   
   return {
-    speed: 0.9,
+    speed: 0.85, // Slower default for learning
     pitch: 1.0,
     emphasizeSyllables: true,
     addPauses: false,

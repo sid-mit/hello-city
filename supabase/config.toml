@@ -1,4 +1,1 @@
 project_id = "omexhqvirftngwlqhigi"
-
-[functions.generate-speech]
-verify_jwt = false

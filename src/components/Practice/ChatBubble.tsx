@@ -1,10 +1,8 @@
-import { Volume2, Mic, Loader2, Lock, Sparkles } from "lucide-react";
+import { Volume2, Mic, Loader2, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ChatAvatar } from "./ChatAvatar";
 import { ScoreBadge } from "./ScoreBadge";
-import { Badge } from "@/components/ui/badge";
-import { VoiceSource } from "@/utils/voiceManager";
 
 interface Phrase {
   native: string;
@@ -23,7 +21,6 @@ interface ChatBubbleProps {
   isRecording?: boolean;
   isAnalyzing?: boolean;
   score?: number;
-  voiceSource?: VoiceSource | null;
 }
 
 export const ChatBubble = ({
@@ -37,7 +34,6 @@ export const ChatBubble = ({
   isRecording = false,
   isAnalyzing = false,
   score,
-  voiceSource = null,
 }: ChatBubbleProps) => {
   const isUser = speaker === 'you';
 
@@ -73,20 +69,7 @@ export const ChatBubble = ({
         )}
         
         <div className={cn("space-y-1 pr-8", isFuture && "blur-[1px]")}>
-          <div className="flex items-center gap-2 mb-1">
-            <p className="text-lg md:text-xl font-bold">{phrase.romanization}</p>
-            {voiceSource === 'browser' && (
-              <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4">
-                🎤
-              </Badge>
-            )}
-            {voiceSource === 'elevenlabs' && (
-              <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 border-primary/30">
-                <Sparkles className="w-2.5 h-2.5 mr-0.5" />
-                AI
-              </Badge>
-            )}
-          </div>
+          <p className="text-lg md:text-xl font-bold">{phrase.romanization}</p>
           <p className="text-sm text-muted-foreground">"{phrase.english}"</p>
           <p className="text-xs text-muted-foreground">{phrase.native}</p>
         </div>

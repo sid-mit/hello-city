@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ChatBubble } from "./ChatBubble";
-import { Button } from "@/components/ui/button";
-import { generateNaturalSpeech, VoiceSource } from "@/utils/voiceManager";
+import { generateNaturalSpeech } from "@/utils/voiceManager";
 import { analyzeSyllables, calculateOverallScore } from "@/utils/syllableAnalysis";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
@@ -44,7 +43,6 @@ export const ConversationReview = ({
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [phraseScores, setPhraseScores] = useState<PhraseScore[]>([]);
-  const [voiceSources, setVoiceSources] = useState<Map<number, VoiceSource>>(new Map());
   const scrollRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLDivElement>(null);
 
@@ -100,8 +98,7 @@ export const ConversationReview = ({
           if (serverResponse) {
             // Play server audio
             setTimeout(() => {
-              // Use negative index for server responses to distinguish from user phrases
-              handlePlayServerAudio(serverResponse, -(currentPhraseIndex + 1));
+              handlePlayServerAudio(serverResponse);
             }, 300);
 
             // Move to next phrase after server speaks
@@ -132,19 +129,17 @@ export const ConversationReview = ({
     };
   }, [recognition, currentPhraseIndex, phrases, phraseScores, onComplete]);
 
-  const handlePlayAudio = async (phrase: Phrase, index: number) => {
+  const handlePlayAudio = async (phrase: Phrase) => {
     try {
-      const result = await generateNaturalSpeech(phrase.native, cityId);
-      setVoiceSources(prev => new Map(prev).set(index, result.source));
+      await generateNaturalSpeech(phrase.native, cityId);
     } catch (error) {
       console.error('Error playing audio:', error);
     }
   };
 
-  const handlePlayServerAudio = async (response: ServerResponse, index: number) => {
+  const handlePlayServerAudio = async (response: ServerResponse) => {
     try {
-      const result = await generateNaturalSpeech(response.native, cityId);
-      setVoiceSources(prev => new Map(prev).set(index, result.source));
+      await generateNaturalSpeech(response.native, cityId);
     } catch (error) {
       console.error('Error playing server audio:', error);
     }
@@ -223,12 +218,11 @@ export const ConversationReview = ({
                   isActive={isActive}
                   isPast={isPast}
                   isFuture={isFuture}
-                  onPlayAudio={() => handlePlayAudio(message.phrase!, message.phraseIndex!)}
+                  onPlayAudio={() => handlePlayAudio(message.phrase!)}
                   onRecord={isActive ? handleRecord : undefined}
                   isRecording={isRecording && isActive}
                   isAnalyzing={isAnalyzing && isActive}
                   score={score}
-                  voiceSource={voiceSources.get(message.phraseIndex!)}
                 />
               </div>
             );
@@ -251,8 +245,7 @@ export const ConversationReview = ({
                   isActive={false}
                   isPast={!isFuture}
                   isFuture={isFuture}
-                  onPlayAudio={() => handlePlayServerAudio(message.serverResponse!, index)}
-                  voiceSource={voiceSources.get(index)}
+                  onPlayAudio={() => handlePlayServerAudio(message.serverResponse!)}
                 />
               </motion.div>
             );
