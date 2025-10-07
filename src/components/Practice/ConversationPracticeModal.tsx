@@ -42,7 +42,7 @@ export const ConversationPracticeModal = ({
     { step: index * 2 + 2, speaker: 'other' as const, action: 'Responds appropriately' }
   ])).flat();
   
-  const [practiceMode, setPracticeMode] = useState<'selection' | 'conversation' | 'single-phrase'>('selection');
+  const [practiceMode, setPracticeMode] = useState<'conversation' | 'single-phrase'>('conversation');
   const [selectedPhraseIndex, setSelectedPhraseIndex] = useState<number | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
@@ -220,6 +220,27 @@ export const ConversationPracticeModal = ({
                 currentGender={genderPreference}
                 onGenderChange={setGenderPreference}
               />
+              {practiceMode === "conversation" && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPracticeMode('single-phrase')}
+                >
+                  📝 Individual Phrases
+                </Button>
+              )}
+              {practiceMode === "single-phrase" && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedPhraseIndex(null);
+                    setPracticeMode('conversation');
+                  }}
+                >
+                  💬 Full Conversation
+                </Button>
+              )}
               <Button variant="ghost" size="icon" onClick={onClose}>
                 <X className="h-5 w-5" />
               </Button>
@@ -234,15 +255,21 @@ export const ConversationPracticeModal = ({
         </div>
 
         <div className="p-6 space-y-6">
-          {practiceMode === 'selection' ? (
-            <PracticeStyleSelector
-              phrases={situation.phrases}
-              onSelectConversation={() => setPracticeMode('conversation')}
-              onSelectIndividualPhrase={(index) => {
-                setSelectedPhraseIndex(index);
-                setPracticeMode('single-phrase');
-              }}
-            />
+          {practiceMode === 'single-phrase' && selectedPhraseIndex === null ? (
+            <div className="space-y-3">
+              <h3 className="font-semibold text-lg mb-4">Choose a phrase to practice:</h3>
+              {situation.phrases.map((phrase, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  className="w-full text-left h-auto py-4 px-4 flex flex-col items-start gap-2"
+                  onClick={() => setSelectedPhraseIndex(index)}
+                >
+                  <span className="font-medium">{phrase.romanization}</span>
+                  <span className="text-sm text-muted-foreground">"{phrase.english}"</span>
+                </Button>
+              ))}
+            </div>
           ) : practiceMode === 'single-phrase' && selectedPhraseIndex !== null ? (
             <SinglePhrasePractice
               phrase={situation.phrases[selectedPhraseIndex]}
@@ -252,7 +279,6 @@ export const ConversationPracticeModal = ({
               recognition={recognition}
               onBack={() => {
                 setSelectedPhraseIndex(null);
-                setPracticeMode('selection');
               }}
               onNext={
                 selectedPhraseIndex < situation.phrases.length - 1

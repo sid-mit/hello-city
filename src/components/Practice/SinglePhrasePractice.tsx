@@ -26,7 +26,7 @@ interface SinglePhrasePracticeProps {
   onNext?: () => void;
 }
 
-type Step = "listen" | "record" | "result";
+type Step = "record" | "result";
 
 export const SinglePhrasePractice = ({
   phrase,
@@ -38,7 +38,7 @@ export const SinglePhrasePractice = ({
   onNext,
 }: SinglePhrasePracticeProps) => {
   const { genderPreference, setGenderPreference } = useAppStore();
-  const [step, setStep] = useState<Step>("listen");
+  const [step, setStep] = useState<Step>("record");
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [score, setScore] = useState<number | null>(null);
@@ -116,7 +116,7 @@ export const SinglePhrasePractice = ({
 
   const handleTryAgain = () => {
     setScore(null);
-    setStep("listen");
+    setStep("record");
   };
 
   const langCode = ({
@@ -148,50 +148,6 @@ export const SinglePhrasePractice = ({
       </div>
 
       <AnimatePresence mode="wait">
-        {step === "listen" && (
-          <motion.div
-            key="listen"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="space-y-6"
-          >
-            <div className="text-center py-8 space-y-4">
-              <h3 className="text-sm font-medium text-muted-foreground uppercase">
-                Step 1: Listen
-              </h3>
-              <div className="space-y-3">
-                <p className="text-3xl font-bold text-foreground">
-                  {phrase.romanization}
-                </p>
-                <p className="text-xl text-muted-foreground">
-                  "{phrase.english}"
-                </p>
-                <p className="text-base text-muted-foreground">{phrase.native}</p>
-              </div>
-            </div>
-
-            <Button
-              onClick={handleListen}
-              variant="outline"
-              size="lg"
-              className="w-full h-16 text-lg"
-            >
-              <Volume2 className="mr-3 h-6 w-6" />
-              Listen to Pronunciation
-            </Button>
-
-            <Button
-              onClick={() => setStep("record")}
-              size="lg"
-              className="w-full h-16 text-lg"
-            >
-              Ready to Practice
-              <ArrowRight className="ml-3 h-5 w-5" />
-            </Button>
-          </motion.div>
-        )}
-
         {step === "record" && (
           <motion.div
             key="record"
@@ -202,7 +158,7 @@ export const SinglePhrasePractice = ({
           >
             <div className="text-center py-8 space-y-4">
               <h3 className="text-sm font-medium text-muted-foreground uppercase">
-                Step 2: Record Yourself
+                Practice Your Pronunciation
               </h3>
               <div className="space-y-3">
                 <p className="text-3xl font-bold text-foreground">
