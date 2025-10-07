@@ -78,6 +78,7 @@ interface AppState {
   favoritedSituations: SavedSituation[];
   activeTab: TabType;
   hasShownFavoriteModal: boolean;
+  hasSeenLanding: boolean;
   practiceHistory: PracticeHistory;
   badges: Badge[];
   practiceStreak: number;
@@ -93,6 +94,7 @@ interface AppState {
   toggleFavorite: (situation: SituationData) => void;
   isSituationFavorited: (situationId: string) => boolean;
   setHasShownFavoriteModal: (shown: boolean) => void;
+  setHasSeenLanding: (seen: boolean) => void;
   updatePracticeHistory: (
     situationId: string,
     score: number,
@@ -118,6 +120,7 @@ export const useAppStore = create<AppState>()(
       favoritedSituations: [],
       activeTab: 'explore',
       hasShownFavoriteModal: false,
+      hasSeenLanding: false,
       practiceHistory: {},
       practiceStreak: 0,
       lastPracticeDate: null,
@@ -170,6 +173,7 @@ export const useAppStore = create<AppState>()(
         return get().favoritedSituations.some((s) => s.id === situationId);
       },
       setHasShownFavoriteModal: (shown) => set({ hasShownFavoriteModal: shown }),
+      setHasSeenLanding: (seen) => set({ hasSeenLanding: seen }),
       updatePracticeHistory: (situationId, score, phraseId, syllableData) =>
         set((state) => {
           const existing = state.practiceHistory[situationId] || {
@@ -334,6 +338,7 @@ export const useAppStore = create<AppState>()(
         genderPreference: state.genderPreference,
         favoritedSituations: state.favoritedSituations,
         hasShownFavoriteModal: state.hasShownFavoriteModal,
+        hasSeenLanding: state.hasSeenLanding,
         practiceHistory: state.practiceHistory,
         badges: state.badges,
         practiceStreak: state.practiceStreak,
