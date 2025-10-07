@@ -1,8 +1,10 @@
-import { Volume2, Mic, Loader2, Lock } from "lucide-react";
+import { Volume2, Mic, Loader2, Lock, RotateCcw, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ChatAvatar } from "./ChatAvatar";
 import { ScoreBadge } from "./ScoreBadge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 interface Phrase {
   native: string;
@@ -18,6 +20,8 @@ interface ChatBubbleProps {
   isFuture?: boolean;
   onPlayAudio: () => void;
   onRecord?: () => void;
+  onRetry?: () => void;
+  onContinue?: () => void;
   isRecording?: boolean;
   isAnalyzing?: boolean;
   score?: number;
@@ -31,6 +35,8 @@ export const ChatBubble = ({
   isFuture = false,
   onPlayAudio,
   onRecord,
+  onRetry,
+  onContinue,
   isRecording = false,
   isAnalyzing = false,
   score,
@@ -74,44 +80,85 @@ export const ChatBubble = ({
           <p className="text-xs text-muted-foreground">{phrase.native}</p>
         </div>
 
-        {/* Audio Button - All bubbles */}
-        <button
-          onClick={onPlayAudio}
-          disabled={isFuture}
-          className={cn(
-            "absolute bottom-3 right-3 p-1.5 rounded-full transition-colors",
-            "hover:bg-background/50",
-            isFuture && "opacity-30 cursor-not-allowed"
-          )}
-          aria-label="Play audio"
-        >
-          <Volume2 className="w-4 h-4 text-muted-foreground" />
-        </button>
+        {/* Speaker Button - Top right */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={onPlayAudio}
+                disabled={isFuture}
+                className={cn(
+                  "absolute top-3 right-3 p-2 rounded-full transition-colors",
+                  "hover:bg-background/50",
+                  isFuture && "opacity-30 cursor-not-allowed"
+                )}
+                aria-label="Play audio"
+              >
+                <Volume2 className="w-5 h-5 text-muted-foreground" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>🔊 Listen</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
-        {/* Recording Button - User bubbles only */}
+        {/* Recording Button - Bottom right (User bubbles only, when no score) */}
         {isUser && !score && onRecord && (
-          <button
-            onClick={onRecord}
-            disabled={isRecording || isAnalyzing || isFuture}
-            className={cn(
-              "absolute top-3 right-3 p-2 rounded-full transition-colors",
-              "bg-primary text-primary-foreground hover:bg-primary/90",
-              "disabled:opacity-50 disabled:cursor-not-allowed"
-            )}
-            aria-label="Record audio"
-          >
-            {isAnalyzing ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Mic className="w-4 h-4" />
-            )}
-          </button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={onRecord}
+                  disabled={isRecording || isAnalyzing || isFuture}
+                  className={cn(
+                    "absolute bottom-3 right-3 p-2 rounded-full transition-colors",
+                    "bg-primary text-primary-foreground hover:bg-primary/90",
+                    "disabled:opacity-50 disabled:cursor-not-allowed"
+                  )}
+                  aria-label="Record audio"
+                >
+                  {isAnalyzing ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Mic className="w-5 h-5" />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>🎤 Record</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )}
 
-        {/* Score Badge - After recording */}
+        {/* Score Badge with Actions - After recording */}
         {isUser && score !== undefined && (
-          <div className="mt-3 pt-3 border-t border-blue-300">
+          <div className="mt-3 pt-3 border-t border-blue-300 space-y-2">
             <ScoreBadge score={score} />
+            <div className="flex gap-2">
+              {onRetry && (
+                <Button
+                  onClick={onRetry}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 gap-1"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  Try Again
+                </Button>
+              )}
+              {onContinue && (
+                <Button
+                  onClick={onContinue}
+                  size="sm"
+                  className="flex-1 gap-1"
+                >
+                  Continue
+                  <ArrowRight className="w-3 h-3" />
+                </Button>
+              )}
+            </div>
           </div>
         )}
       </div>

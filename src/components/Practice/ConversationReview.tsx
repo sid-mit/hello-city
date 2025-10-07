@@ -47,6 +47,7 @@ export const ConversationReview = ({
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [phraseScores, setPhraseScores] = useState<PhraseScore[]>([]);
+  const [waitingForContinue, setWaitingForContinue] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLDivElement>(null);
 
@@ -89,40 +90,18 @@ export const ConversationReview = ({
         }
 
         setIsAnalyzing(false);
+        setIsRecording(false);
+        setWaitingForContinue(true);
 
-        // Show server response after user completes their phrase
-        setTimeout(() => {
-          setIsRecording(false);
-          
-          // Check if there's a server response for this phrase
-          const serverResponse = serverResponses.find(
-            (sr) => sr.afterUserPhraseIndex === currentPhraseIndex
-          );
-
-          if (serverResponse) {
-            // Play server audio
-            setTimeout(() => {
-              handlePlayServerAudio(serverResponse);
-            }, 300);
-
-            // Move to next phrase after server speaks
-            setTimeout(() => {
-              if (currentPhraseIndex < phrases.length - 1) {
-                setCurrentPhraseIndex((prev) => prev + 1);
-              } else {
-                // All phrases completed
-                onComplete(phraseScores.map((ps) => ps.score).concat(score));
-              }
-            }, 3000);
-          } else {
-            // No server response, move to next immediately
-            if (currentPhraseIndex < phrases.length - 1) {
-              setCurrentPhraseIndex((prev) => prev + 1);
-            } else {
-              onComplete(phraseScores.map((ps) => ps.score).concat(score));
-            }
-          }
-        }, 2500);
+        // Play server response audio if exists
+        const serverResponse = serverResponses.find(
+          (sr) => sr.afterUserPhraseIndex === currentPhraseIndex
+        );
+        if (serverResponse) {
+          setTimeout(() => {
+            handlePlayServerAudio(serverResponse);
+          }, 1000);
+        }
       }, 500);
     };
 
@@ -164,6 +143,23 @@ export const ConversationReview = ({
 
   const getScoreForPhrase = (phraseIndex: number): number | undefined => {
     return phraseScores.find((ps) => ps.phraseIndex === phraseIndex)?.score;
+  };
+
+  const handleRetry = (phraseIndex: number) => {
+    setPhraseScores((prev) => prev.filter((ps) => ps.phraseIndex !== phraseIndex));
+    setCurrentPhraseIndex(phraseIndex);
+    setWaitingForContinue(false);
+  };
+
+  const handleContinue = () => {
+    setWaitingForContinue(false);
+    
+    if (currentPhraseIndex < phrases.length - 1) {
+      setCurrentPhraseIndex((prev) => prev + 1);
+    } else {
+      // All phrases completed
+      onComplete(phraseScores.map((ps) => ps.score));
+    }
   };
 
   // Build complete conversation with all messages visible from start
@@ -224,13 +220,14 @@ export const ConversationReview = ({
           if (message.type === 'user' && message.phrase && message.phraseIndex !== undefined) {
             const score = getScoreForPhrase(message.phraseIndex);
             const isActive = message.phraseIndex === currentPhraseIndex && !score;
-            const isPast = score !== undefined;
+            const isPast = score !== undefined && message.phraseIndex < currentPhraseIndex;
             const isFuture = message.phraseIndex > currentPhraseIndex && !score;
+            const showActions = message.phraseIndex === currentPhraseIndex && score !== undefined && waitingForContinue;
 
             return (
               <div
                 key={`user-${message.phraseIndex}`}
-                ref={isActive ? activeRef : null}
+                ref={isActive || showActions ? activeRef : null}
               >
                 <ChatBubble
                   speaker="you"
@@ -240,6 +237,8 @@ export const ConversationReview = ({
                   isFuture={isFuture}
                   onPlayAudio={() => handlePlayAudio(message.phrase!)}
                   onRecord={isActive ? handleRecord : undefined}
+                  onRetry={showActions ? () => handleRetry(message.phraseIndex!) : undefined}
+                  onContinue={showActions ? handleContinue : undefined}
                   isRecording={isRecording && isActive}
                   isAnalyzing={isAnalyzing && isActive}
                   score={score}
