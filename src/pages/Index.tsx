@@ -1,7 +1,7 @@
 import { MapView } from '@/components/Map/MapView';
 import { LearnTab } from '@/components/Learn/LearnTab';
 import { UnifiedHeader } from '@/components/Header/UnifiedHeader';
-import { CloudJourneyOnboarding } from '@/components/Welcome/CloudJourneyOnboarding';
+import { WelcomeModal } from '@/components/Welcome/WelcomeModal';
 import { useAppStore } from '@/stores/appStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -10,8 +10,8 @@ const Index = () => {
 
   return (
     <div className="w-full h-screen overflow-hidden relative">
-      {/* Cloud Journey Onboarding */}
-      <CloudJourneyOnboarding />
+      {/* Welcome Modal */}
+      <WelcomeModal />
       
       {/* Unified Header */}
       <UnifiedHeader />

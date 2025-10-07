@@ -133,29 +133,8 @@ export const MapView = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="relative w-full h-screen overflow-hidden"
+      className="relative w-full h-screen"
     >
-      {/* Cloud Background Layers */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#E8F4F8] via-[#C5E3ED] to-[#A5D4E6] opacity-30" />
-      
-      <motion.div
-        className="absolute inset-0 opacity-20 pointer-events-none"
-        style={{
-          backgroundImage: 'url(/src/assets/clouds/cloud-layer-3.png)',
-          backgroundSize: 'auto 40%',
-          backgroundRepeat: 'repeat-x',
-          backgroundPosition: 'center bottom',
-        }}
-        animate={{
-          backgroundPosition: ['0% bottom', '100% bottom'],
-        }}
-        transition={{
-          duration: 80,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
-      />
-
       {/* Back/City Info Bar (below header) */}
       {selectedCity && (
         <div className="absolute top-20 left-0 right-0 z-10 glass border-b border-border/50">
@@ -183,7 +162,7 @@ export const MapView = () => {
       )}
 
       {/* Map */}
-      <div ref={mapContainer} className="w-full h-full relative z-[5]" />
+      <div ref={mapContainer} className="w-full h-full" />
 
       {/* Bottom Center: Text + Button (only when no city selected) */}
       {!selectedCity && (
@@ -195,14 +174,14 @@ export const MapView = () => {
         >
           <div className="mx-auto w-full max-w-md px-4 flex flex-col items-center gap-4 text-center pointer-events-auto">
             {/* Instructional Text */}
-            <p className="text-sm text-foreground/80 font-karla drop-shadow-md">
+            <p className="text-sm text-foreground/80 font-karla">
               Click on any city marker to start learning essential phrases
             </p>
             
             {/* Choose City Button */}
             <Button
               onClick={() => setShowCitySelector(true)}
-              className="px-8 py-6 text-base font-karla shadow-lg"
+              className="px-8 py-6 text-base font-karla"
               size="lg"
             >
               Choose City
