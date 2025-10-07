@@ -9,6 +9,40 @@ import {
   getSpeechPreferences 
 } from './enhancedSpeech';
 import { toast } from '@/hooks/use-toast';
+import { ensureAudioUnlocked } from './audioUnlocker';
+
+// Diagnostics flag: enable with ?ttsdebug=1
+const TTS_DEBUG = (() => {
+  try { return new URLSearchParams(window.location.search).has('ttsdebug'); } catch { return false; }
+})();
+
+// Simple environment flags
+let isSpeaking = false;
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+// Wait for voices to be ready (poll + event)
+async function waitForVoicesReady(timeout = 2500): Promise<SpeechSynthesisVoice[]> {
+  return new Promise((resolve) => {
+    const synth = window.speechSynthesis;
+    const existing = synth.getVoices();
+    if (existing.length > 0) return resolve(existing);
+
+    let finished = false;
+    const done = () => {
+      if (finished) return;
+      finished = true;
+      resolve(synth.getVoices());
+    };
+
+    const onChange = () => {
+      synth.removeEventListener('voiceschanged', onChange as any);
+      done();
+    };
+
+    synth.addEventListener('voiceschanged', onChange as any, { once: true } as any);
+    setTimeout(done, timeout);
+  });
+}
 
 /**
  * Generate natural speech using browser's Web Speech API
@@ -18,96 +52,152 @@ export async function generateNaturalSpeech(
   text: string,
   cityId: string
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      // Cancel any ongoing speech
+      // Prevent re-entrancy to avoid cancel/error loops
+      if (isSpeaking) {
+        if (TTS_DEBUG) console.debug('[TTS] Already speaking, ignoring new request');
+        resolve();
+        return;
+      }
+
+      // Stop any ongoing speech and allow engine to settle
       window.speechSynthesis.cancel();
+      await new Promise((r) => setTimeout(r, 100));
+
+      // Ensure audio is unlocked (must be called from a user gesture)
+      await ensureAudioUnlocked();
 
       // Get language code for city
       const languageCode = getLanguageCode(cityId);
-      
-      // Wait for voices to be ready
-      const voices = window.speechSynthesis.getVoices();
-      if (voices.length === 0) {
+
+      // Wait for voices to be available
+      const voices = await waitForVoicesReady(2500);
+      if (!voices || voices.length === 0) {
         toast({
-          title: "Voice not ready",
-          description: "Please try again in a moment.",
-          variant: "destructive",
+          title: 'Voice not ready',
+          description: 'Please try again in a moment.',
+          variant: 'destructive',
         });
         reject(new Error('No voices available'));
         return;
       }
-      
+
       // Select best available voice for this language
       let voice = selectBestVoice(languageCode);
-      
-      // Fallback: if no voice found, try to get ANY voice for the language
+
+      // Fallback: if no voice found, try to get ANY voice for the language family
       if (!voice) {
-        console.warn(`No premium voice found for ${languageCode}, trying fallback...`);
-        const fallbackVoice = voices.find(v => v.lang.startsWith(languageCode.split('-')[0]));
-        
+        if (TTS_DEBUG) console.warn(`[TTS] No premium voice for ${languageCode}, trying fallback...`);
+        const fallbackVoice = voices.find((v) => v.lang === languageCode || v.lang.startsWith(languageCode.split('-')[0]));
         if (fallbackVoice) {
           voice = fallbackVoice;
-          console.log(`Using fallback voice: ${voice.name}`);
+          if (TTS_DEBUG) console.log(`[TTS] Using fallback voice: ${voice.name}`);
         } else {
           toast({
-            title: "Voice unavailable",
+            title: 'Voice unavailable',
             description: `No voice found for this language. Try using Chrome browser.`,
-            variant: "destructive",
+            variant: 'destructive',
           });
           reject(new Error(`No voice available for ${languageCode}`));
           return;
         }
       }
 
-      // Get user preferences
+      // Get user preferences and process text
       const preferences = getSpeechPreferences();
-
-      // Process text with enhancements
       const enhancedText = processTextWithEnhancements(text, preferences, languageCode);
-
       if (!enhancedText || enhancedText.trim().length === 0) {
-        console.error('Empty text provided to speech synthesis');
+        if (TTS_DEBUG) console.error('[TTS] Empty text provided to speech synthesis');
         reject(new Error('Empty text'));
         return;
       }
 
-      // Create utterance
-      const utterance = new SpeechSynthesisUtterance(enhancedText);
-      utterance.lang = languageCode;
-      utterance.voice = voice;
+      // Retry watchdog logic
+      let retried = false;
 
-      // Configure with enhanced settings
-      configureUtterance(utterance, preferences, languageCode);
+      const speakOnce = (dropVoice: boolean) => {
+        const utterance = new SpeechSynthesisUtterance(enhancedText);
+        utterance.lang = languageCode;
+        // Safari is unreliable when setting explicit voice; rely on lang only
+        if (!dropVoice && !isSafari && voice) {
+          utterance.voice = voice;
+        }
 
-      // Set up event handlers
-      utterance.onend = () => {
-        resolve();
+        // Configure with enhanced settings
+        configureUtterance(utterance, preferences, languageCode);
+
+        let started = false;
+        isSpeaking = true;
+
+        const startTimer = setTimeout(() => {
+          if (!started) {
+            if (TTS_DEBUG) console.warn('[TTS] onstart not fired, retrying with safer fallback');
+            window.speechSynthesis.cancel();
+            if (!retried) {
+              retried = true;
+              // Retry with voice dropped (browser default for lang)
+              setTimeout(() => speakOnce(true), 120);
+            } else {
+              isSpeaking = false;
+              toast({
+                title: 'Playback failed',
+                description: 'Unable to play audio. Please try again.',
+                variant: 'destructive',
+              });
+              reject(new Error('Speech synthesis timed out'));
+            }
+          }
+        }, 1200);
+
+        utterance.onstart = () => {
+          started = true;
+          clearTimeout(startTimer);
+          if (TTS_DEBUG) console.debug('[TTS] onstart', { voice: utterance.voice?.name, lang: utterance.lang, dropVoice, isSafari });
+        };
+
+        utterance.onend = () => {
+          clearTimeout(startTimer);
+          isSpeaking = false;
+          resolve();
+        };
+
+        utterance.onerror = (event) => {
+          clearTimeout(startTimer);
+          isSpeaking = false;
+          const anyEvent: any = event;
+          // Ignore interruption errors caused by quick user actions
+          if (anyEvent?.error === 'interrupted') {
+            if (TTS_DEBUG) console.debug('[TTS] interrupted');
+            resolve();
+            return;
+          }
+          console.error('Speech synthesis error:', event);
+          toast({
+            title: 'Playback failed',
+            description: 'Unable to play audio. Please try again.',
+            variant: 'destructive',
+          });
+          reject(new Error(`Speech synthesis failed: ${anyEvent?.error || 'unknown'}`));
+        };
+
+        // Small delay to avoid Chrome race condition
+        setTimeout(() => {
+          window.speechSynthesis.speak(utterance);
+        }, 100);
       };
 
-      utterance.onerror = (event) => {
-        console.error('Speech synthesis error:', event);
-        toast({
-          title: "Playback failed",
-          description: "Unable to play audio. Please try again.",
-          variant: "destructive",
-        });
-        reject(new Error(`Speech synthesis failed: ${event.error}`));
-      };
-
-      // Add small delay before speaking to avoid Chrome race condition
-      setTimeout(() => {
-        window.speechSynthesis.speak(utterance);
-      }, 100);
-      
+      // First attempt: normal path (voice set except on Safari)
+      speakOnce(false);
     } catch (error) {
       console.error('Error in generateNaturalSpeech:', error);
+      isSpeaking = false;
       toast({
-        title: "Audio error",
-        description: "Something went wrong. Please refresh and try again.",
-        variant: "destructive",
+        title: 'Audio error',
+        description: 'Something went wrong. Please refresh and try again.',
+        variant: 'destructive',
       });
-      reject(error);
+      reject(error as Error);
     }
   });
 }
