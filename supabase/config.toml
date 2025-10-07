@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.import-phrases]
 verify_jwt = false
+
+[functions.generate-conversation-responses]
+verify_jwt = false

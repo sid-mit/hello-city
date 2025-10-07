@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { useAppStore } from "@/stores/appStore";
@@ -19,6 +19,7 @@ import { SinglePhrasePractice } from "./SinglePhrasePractice";
 import { SituationData } from "@/components/Cards/SituationCard";
 import { GenderSelector, type LanguageCode } from "./GenderSelector";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ConversationPracticeModalProps {
   situation: SituationData;
@@ -51,6 +52,8 @@ export const ConversationPracticeModal = ({
   const [stepResults, setStepResults] = useState<StepResult[]>([]);
   const [showConversationReview, setShowConversationReview] = useState(false);
   const [conversationReviewScores, setConversationReviewScores] = useState<number[]>([]);
+  const [serverResponses, setServerResponses] = useState<any[]>([]);
+  const [isGeneratingResponses, setIsGeneratingResponses] = useState(false);
 
   // Initialize speech recognition
   useEffect(() => {
@@ -182,6 +185,39 @@ export const ConversationPracticeModal = ({
     }, 4000);
   };
 
+  const handleGenerateConversation = async () => {
+    setIsGeneratingResponses(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-conversation-responses', {
+        body: {
+          city: situation.cityId,
+          spotType: 'general', // Generic spot type since not in SituationData
+          subScenario: situation.title,
+          phrases: situation.phrases.map(phrase => ({
+            native: phrase.native,
+            romanization: phrase.romanization,
+            english: phrase.english
+          })),
+          genderPreference: genderPreference
+        }
+      });
+
+      if (error) throw error;
+      
+      if (data?.responses) {
+        setServerResponses(data.responses);
+        setPracticeMode('conversation');
+      } else {
+        throw new Error('No responses generated');
+      }
+    } catch (error) {
+      console.error('Error generating conversation:', error);
+      toast.error('Failed to generate conversation. Please try again.');
+    } finally {
+      setIsGeneratingResponses(false);
+    }
+  };
+
   const currentFlow = conversationFlow[currentStep];
   const isComplete = currentStep >= conversationFlow.length;
   const userSteps = conversationFlow
@@ -290,12 +326,19 @@ export const ConversationPracticeModal = ({
                   Practice the entire conversation flow with realistic responses
                 </p>
                 <Button
-                  onClick={() => setPracticeMode('conversation')}
+                  onClick={handleGenerateConversation}
                   className="w-full"
                   size="lg"
+                  disabled={isGeneratingResponses}
                 >
-                  Practice Full Conversation
+                  <Users className="h-5 w-5 mr-2" />
+                  {isGeneratingResponses ? 'Preparing conversation...' : 'Practice Full Conversation'}
                 </Button>
+                {isGeneratingResponses && (
+                  <p className="text-xs text-muted-foreground text-center mt-2">
+                    Generating realistic responses for a natural conversation...
+                  </p>
+                )}
               </div>
             </div>
           ) : practiceMode === 'single-phrase' && selectedPhraseIndex !== null ? (
@@ -318,7 +361,7 @@ export const ConversationPracticeModal = ({
           ) : practiceMode === 'conversation' ? (
             <ConversationReview
               phrases={situation.phrases}
-              serverResponses={situation.serverResponses}
+              serverResponses={serverResponses}
               cityId={situation.cityId}
               recognition={recognition}
               onComplete={handleConversationReviewComplete}
