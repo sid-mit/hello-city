@@ -48,7 +48,14 @@ export const UnifiedHeader = () => {
               ) : (
                 <motion.div
                   key="animation"
-                  className="absolute inset-0 w-full h-full"
+                  className="absolute z-50"
+                  style={{ 
+                    width: '200px', 
+                    height: '200px',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
+                  }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
