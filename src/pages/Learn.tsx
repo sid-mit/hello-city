@@ -24,7 +24,7 @@ const badgeIcons: Record<string, string> = {
   'night-owl': nightOwlIcon,
 };
 
-const Discover = () => {
+const Learn = () => {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('Recent');
   const { guestName, favoritedSituations, badges, toggleFavorite, isSituationFavorited, practiceHistory, setActiveTab } = useAppStore();
@@ -215,4 +215,4 @@ const Discover = () => {
   );
 };
 
-export default Discover;
+export default Learn;

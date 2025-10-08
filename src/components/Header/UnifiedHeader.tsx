@@ -8,10 +8,10 @@ import logo from '@/assets/logo-2.svg';
 import animationUrl from '@/assets/Animation_for_Time-Tracking.lottie?url';
 const tabs = [{
   id: 'explore' as TabType,
-  label: 'Map'
+  label: 'Explore'
 }, {
   id: 'learn' as TabType,
-  label: 'Discover'
+  label: 'Learn'
 }];
 export const UnifiedHeader = () => {
   const {
@@ -100,9 +100,9 @@ export const UnifiedHeader = () => {
                 if (tab.id === 'explore') {
                   navigate('/home');
                 } else if (tab.id === 'learn') {
-                  navigate('/discover');
+                  navigate('/learn');
                 }
-              }} 
+              }}
               className="relative flex-1 flex items-center justify-center transition-colors duration-200 z-10"
             >
               <span className="text-base font-semibold transition-colors duration-200 font-gilroy" style={{
@@ -155,12 +155,12 @@ export const UnifiedHeader = () => {
                 }`}
                 style={{ color: '#404040' }}
               >
-                Map
+                Explore
               </button>
               <button 
                 onClick={() => {
                   setActiveTab('learn');
-                  navigate('/discover');
+                  navigate('/learn');
                   setMobileMenuOpen(false);
                 }} 
                 className={`w-full text-left py-3 px-4 rounded-lg text-base font-semibold transition-colors hover:bg-[#D2E0FF]/30 ${
@@ -168,7 +168,7 @@ export const UnifiedHeader = () => {
                 }`}
                 style={{ color: '#404040' }}
               >
-                Discover
+                Learn
               </button>
               <button 
                 onClick={() => {
