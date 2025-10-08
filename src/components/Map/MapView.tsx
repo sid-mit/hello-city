@@ -86,6 +86,7 @@ export const MapView = () => {
       center: [30, 20],
       zoom: 0.5,
       pitch: 20,
+      scrollZoom: true, // Enable cursor-centered zoom
     });
 
     map.current.on('style.load', () => {
@@ -160,7 +161,7 @@ export const MapView = () => {
       const hasOverlap = (pos1: any, pos2: any): boolean => {
         const dx = Math.abs(pos1.x - pos2.x);
         const dy = Math.abs(pos1.y - pos2.y);
-        const minDist = (pos1.width * 1.5); // Require 1.5x icon width separation
+        const minDist = (pos1.width * 2.5); // Require 2.5x icon width separation for more space
         return dx < minDist && dy < minDist;
       };
       
@@ -169,7 +170,7 @@ export const MapView = () => {
         originalLngLat: [number, number],
         attempt = 0
       ): [number, number] => {
-        if (attempt > 30) return originalLngLat; // Increased attempts
+        if (attempt > 50) return originalLngLat; // More attempts to find good positions
         
         const testPoint = map.current!.project(originalLngLat);
         const iconSize = 104; // w-26 = 104px
@@ -198,7 +199,7 @@ export const MapView = () => {
         }
         
         // More aggressive spiral pattern: larger steps
-        const spiralRadius = 0.008 * (Math.floor(attempt / 8) + 1); // Increased from 0.005
+        const spiralRadius = 0.015 * (Math.floor(attempt / 8) + 1); // Increased spacing
         const spiralAngle = (attempt % 8) * (Math.PI / 4);
         
         const newLng = originalLngLat[0] + spiralRadius * Math.cos(spiralAngle);
