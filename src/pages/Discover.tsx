@@ -4,6 +4,19 @@ import { Heart } from 'lucide-react';
 import { useState } from 'react';
 import { useAppStore } from '@/stores/appStore';
 import { useNavigate } from 'react-router-dom';
+import firstStepsIcon from '@/assets/badges/first-steps.png';
+import practiceMasterIcon from '@/assets/badges/practice-master.png';
+import perfectScoreIcon from '@/assets/badges/perfect-score.png';
+import polyglotIcon from '@/assets/badges/polyglot.png';
+import dedicatedIcon from '@/assets/badges/dedicated.png';
+
+const badgeIcons: Record<string, string> = {
+  'first-steps': firstStepsIcon,
+  'practice-master': practiceMasterIcon,
+  'perfect-score': perfectScoreIcon,
+  'polyglot': polyglotIcon,
+  'dedicated': dedicatedIcon,
+};
 
 const Discover = () => {
   const navigate = useNavigate();
@@ -77,7 +90,13 @@ const Discover = () => {
                     : 'bg-muted/20 border-muted-foreground/10'
                 } flex flex-col items-center text-center`}
               >
-                <div className="text-4xl mb-3">{badge.emoji}</div>
+                <div className="mb-3 flex items-center justify-center h-16">
+                  {badgeIcons[badge.id] ? (
+                    <img src={badgeIcons[badge.id]} alt={badge.title} className="w-16 h-16 object-contain" />
+                  ) : (
+                    <span className="text-4xl">{badge.emoji}</span>
+                  )}
+                </div>
                 <h3 className="text-base font-bold text-foreground mb-1">{badge.title}</h3>
                 <p className="text-sm font-medium text-muted-foreground">{badge.description}</p>
               </motion.div>
