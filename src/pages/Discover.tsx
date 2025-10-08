@@ -25,7 +25,7 @@ const badgeIcons: Record<string, string> = {
 const Discover = () => {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('Recent');
-  const { guestName, favoritedSituations, badges, toggleFavorite, isSituationFavorited, practiceHistory } = useAppStore();
+  const { guestName, favoritedSituations, badges, toggleFavorite, isSituationFavorited, practiceHistory, setActiveTab } = useAppStore();
 
   const filters = ['Recent', 'By City', 'Most Practice', 'Alphabetical'];
 
@@ -143,7 +143,10 @@ const Discover = () => {
                 Explore the map and tap the heart icon to save situations you want to practice
               </p>
               <button
-                onClick={() => navigate('/home')}
+                onClick={() => {
+                  setActiveTab('explore');
+                  navigate('/home');
+                }}
                 className="px-8 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
               >
                 Explore Map
