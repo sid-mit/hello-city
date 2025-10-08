@@ -51,7 +51,7 @@ export const MapView = () => {
     if (map.current) {
       map.current.flyTo({
         center: [0, 20],
-        zoom: 2,
+        zoom: 1.5,
         duration: 2000,
       });
     }
@@ -73,7 +73,7 @@ export const MapView = () => {
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',
       center: [0, 20],
-      zoom: 2,
+      zoom: 1.5,
     });
 
     return () => {
