@@ -50,8 +50,8 @@ export const UnifiedHeader = () => {
                   key="animation"
                   className="absolute z-50"
                   style={{ 
-                    width: '200px', 
-                    height: '200px',
+                    width: '160px', 
+                    height: '160px',
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)'
