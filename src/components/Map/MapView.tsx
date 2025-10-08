@@ -10,7 +10,6 @@ import { CitySelector } from '../CitySelector/CitySelector';
 import { Button } from '../ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { createRoot } from 'react-dom/client';
-import { toast } from '@/hooks/use-toast';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYW5pbnlhZyIsImEiOiJjbWdmNHF6MHUwNG9oMmtuMGhubWRlaWJ3In0.7cdKmRPJHIj-j-HzFojggA';
@@ -21,6 +20,7 @@ export const MapView = () => {
   const { selectedCity, selectedCategory, genderPreference, selectCity, selectCategory } = useAppStore();
   const [showCitySelector, setShowCitySelector] = useState(false);
   const [isLaunching, setIsLaunching] = useState(true);
+  const [comingSoonCity, setComingSoonCity] = useState<string | null>(null);
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
@@ -33,12 +33,10 @@ export const MapView = () => {
   });
 
   const handleCityClick = useCallback((city: any) => {
-    // Show coming soon toast for Paris and Mexico City
+    // Show coming soon popup for Paris and Mexico City
     if (city.id === 'paris' || city.id === 'mexico-city') {
-      toast({
-        title: "Coming soon!",
-        description: `${city.name} phrases will be available soon.`,
-      });
+      setComingSoonCity(city.id);
+      setTimeout(() => setComingSoonCity(null), 2000);
       return;
     }
 
@@ -137,14 +135,29 @@ export const MapView = () => {
       // Show city markers
       cities.forEach((city) => {
         const el = document.createElement('div');
+        el.className = 'relative';
         const root = createRoot(el);
         
         root.render(
-          <CityMarker
-            city={city}
-            onClick={() => handleCityClick(city)}
-            isSelected={false}
-          />
+          <>
+            <CityMarker
+              city={city}
+              onClick={() => handleCityClick(city)}
+              isSelected={false}
+            />
+            {comingSoonCity === city.id && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 pointer-events-none"
+              >
+                <div className="glass rounded-lg px-3 py-2 whitespace-nowrap shadow-large">
+                  <p className="font-semibold text-sm">Coming Soon!</p>
+                </div>
+              </motion.div>
+            )}
+          </>
         );
 
         const marker = new mapboxgl.Marker(el)
@@ -187,7 +200,7 @@ export const MapView = () => {
         });
       }
     }
-  }, [selectedCity, cityData, isCityDataLoading, handleCityClick, handleCategoryClick]);
+  }, [selectedCity, cityData, isCityDataLoading, handleCityClick, handleCategoryClick, comingSoonCity]);
 
   return (
     <motion.div
