@@ -1,10 +1,10 @@
 import { useAppStore, TabType } from '@/stores/appStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Lottie from 'lottie-react';
 import logo from '@/assets/logo-2.svg';
-import animationData from '@/assets/Animation_for_Time-Tracking.lottie';
+import animationUrl from '@/assets/Animation_for_Time-Tracking.lottie?url';
 const tabs = [{
   id: 'explore' as TabType,
   label: 'Map'
@@ -20,6 +20,14 @@ export const UnifiedHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showAnimation, setShowAnimation] = useState(false);
+  const [animationData, setAnimationData] = useState<any>(null);
+
+  useEffect(() => {
+    fetch(animationUrl)
+      .then(response => response.json())
+      .then(data => setAnimationData(data))
+      .catch(error => console.error('Failed to load animation:', error));
+  }, []);
   return <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#D2E0FF]">
       <div className="container mx-auto px-10 py-4 flex items-center">
         {/* Branding */}
@@ -36,7 +44,7 @@ export const UnifiedHeader = () => {
           </div>
           
           <AnimatePresence>
-            {showAnimation && (
+            {showAnimation && animationData && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
