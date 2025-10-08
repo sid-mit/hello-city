@@ -260,6 +260,9 @@ export const ConversationPracticeModal = ({
               ) : (
                 <span className="text-4xl">{situation.emoji}</span>
               )}
+            </div>
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-5xl">{situation.emoji}</span>
               <h2 className="text-xl font-bold text-primary">{situation.title}</h2>
             </div>
             <div className="absolute right-0 top-0 flex items-center gap-2">
@@ -290,11 +293,11 @@ export const ConversationPracticeModal = ({
             <div className="space-y-4">
               {/* Individual Phrases Section */}
               <div className="space-y-1.5">
-                <h3 className="text-base font-semibold text-foreground">Practice Individual Phrases</h3>
+                <h3 className="text-lg font-semibold text-foreground">Practice Individual Phrases</h3>
                 <p className="text-sm text-muted-foreground">
                   Master each phrase one at a time
                 </p>
-                <div className="space-y-2">
+                <div className="space-y-2 pt-4">
                   {situation.phrases.map((phrase, index) => (
                     <button
                       key={index}
@@ -331,7 +334,8 @@ export const ConversationPracticeModal = ({
                 <p className="text-sm text-muted-foreground">
                   Practice the entire conversation flow with realistic responses
                 </p>
-                <Button
+                <div className="pt-4">
+                  <Button
                   onClick={handleGenerateConversation}
                   variant="default"
                   className="w-full"
@@ -346,7 +350,8 @@ export const ConversationPracticeModal = ({
                   ) : (
                     "Practice Full Conversation"
                   )}
-                </Button>
+                  </Button>
+                </div>
               </div>
             </div>
           ) : practiceMode === 'single-phrase' && selectedPhraseIndex !== null ? (
