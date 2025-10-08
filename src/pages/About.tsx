@@ -85,7 +85,7 @@ const About = () => {
       >
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-            Hello from HelloCity
+            Hello from <span className="text-primary">HelloCity</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground">
             A small word can open the world.
@@ -94,7 +94,7 @@ const About = () => {
       </motion.section>
 
       {/* What is HelloCity Section */}
-      <section className="py-16 px-6 bg-secondary/30">
+      <section className="py-20 px-6 bg-secondary/20">
         <div className="max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -103,7 +103,7 @@ const About = () => {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-h2 mb-6 text-center text-foreground">
-              What is HelloCity?
+              What is <span className="text-primary">HelloCity</span>?
             </h2>
             <div className="space-y-4 text-body text-muted-foreground leading-relaxed">
               <p>
@@ -121,7 +121,7 @@ const About = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16 px-6">
+      <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -144,11 +144,13 @@ const About = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="text-center"
                   >
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Icon className="w-8 h-8 text-primary" />
+                    <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/5 flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Icon className="w-8 h-8 text-primary" />
+                      </div>
                     </div>
-                    <div className="text-4xl font-bold mb-3 text-primary/40">{index + 1}</div>
-                    <h3 className="text-h3 mb-2 text-foreground">{step.title}</h3>
+                    <div className="text-6xl font-bold mb-4 text-primary">{index + 1}</div>
+                    <h3 className="text-h3 mb-3 text-foreground">{step.title}</h3>
                     <p className="text-body-sm text-muted-foreground leading-relaxed">{step.description}</p>
                   </motion.div>
                 );
@@ -159,7 +161,7 @@ const About = () => {
       </section>
 
       {/* Why HelloCity Section */}
-      <section className="py-16 px-6 bg-secondary/30">
+      <section className="py-20 px-6 bg-secondary/20">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -168,7 +170,7 @@ const About = () => {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-h2 mb-12 text-center text-foreground">
-              Why HelloCity?
+              Why <span className="text-primary">HelloCity</span>?
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               {features.map((feature, index) => {
@@ -180,15 +182,15 @@ const About = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="flex gap-4"
+                    className="flex gap-6"
                   >
                     <div className="flex-shrink-0">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Icon className="w-6 h-6 text-primary" />
+                      <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
+                        <Icon className="w-8 h-8 text-primary" />
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-h3 mb-2 text-foreground">{feature.title}</h3>
+                      <h3 className="text-h3 mb-3 text-foreground">{feature.title}</h3>
                       <p className="text-body-sm text-muted-foreground leading-relaxed">{feature.description}</p>
                     </div>
                   </motion.div>
@@ -200,7 +202,7 @@ const About = () => {
       </section>
 
       {/* Meet the Team Section */}
-      <section className="py-16 px-6">
+      <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -227,16 +229,16 @@ const About = () => {
                   <img 
                     src={member.image} 
                     alt={`${member.name} - ${member.city}`}
-                    className="w-32 h-32 rounded-full object-cover mx-auto mb-4 ring-2 ring-primary/10 group-hover:ring-primary/30 transition-all"
+                    className="w-48 h-48 rounded-full object-cover mx-auto mb-6 ring-4 ring-primary/10 group-hover:ring-primary/30 transition-all"
                   />
-                  <div className="text-2xl font-semibold text-primary mb-2">{member.greeting}</div>
-                  <h3 className="text-h3 text-foreground mb-1">{member.name}</h3>
-                  <p className="text-body-sm text-muted-foreground mb-3">{member.city}</p>
+                  <div className="text-3xl font-bold text-primary mb-3">{member.greeting}</div>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">{member.name}</h3>
+                  <p className="text-base text-muted-foreground mb-4">{member.city}</p>
                   <a
                     href={member.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-sm"
+                    className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-sm font-medium"
                   >
                     <Linkedin size={18} />
                     <span>LinkedIn</span>
@@ -249,7 +251,7 @@ const About = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="py-16 px-6 bg-secondary/30">
+      <section className="py-20 px-6 bg-secondary/20">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
