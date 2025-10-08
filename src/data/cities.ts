@@ -7,7 +7,7 @@ export const cities: City[] = [
     country: 'South Korea',
     language: 'Korean',
     coordinates: { lat: 37.5665, lng: 126.9780 },
-    emoji: '🇰🇷',
+    emoji: '/flags/south-korea.png',
     available: true,
   },
   {
@@ -16,7 +16,7 @@ export const cities: City[] = [
     country: 'China',
     language: 'Mandarin',
     coordinates: { lat: 39.9042, lng: 116.4074 },
-    emoji: '🇨🇳',
+    emoji: '/flags/china.png',
     available: true,
   },
   {
@@ -25,7 +25,7 @@ export const cities: City[] = [
     country: 'India',
     language: 'Hindi',
     coordinates: { lat: 28.6139, lng: 77.2090 },
-    emoji: '🇮🇳',
+    emoji: '/flags/india.png',
     available: true,
   },
   {
@@ -34,7 +34,7 @@ export const cities: City[] = [
     country: 'France',
     language: 'French',
     coordinates: { lat: 48.8566, lng: 2.3522 },
-    emoji: '🇫🇷',
+    emoji: '/flags/france.png',
     available: false,
   },
   {
@@ -43,7 +43,7 @@ export const cities: City[] = [
     country: 'Mexico',
     language: 'Spanish',
     coordinates: { lat: 19.4326, lng: -99.1332 },
-    emoji: '🇲🇽',
+    emoji: '/flags/mexico.png',
     available: false,
   },
 ];

@@ -46,7 +46,11 @@ export const CityMarker = ({ city, onClick, isSelected }: CityMarkerProps) => {
           borderColor: isSelected ? 'hsl(var(--primary-blue))' : undefined,
         }}
       >
-        <span className="text-xl leading-none" style={{ fontSize: '1.25rem' }}>{city.emoji}</span>
+        <img 
+          src={city.emoji} 
+          alt={`${city.name} flag`} 
+          className="w-7 h-7 object-contain"
+        />
       </div>
 
       {/* Tooltip */}
