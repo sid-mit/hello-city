@@ -172,7 +172,7 @@ export const SinglePhrasePractice = ({
               disabled={isRecording || isAnalyzing}
             >
               <Volume2 className="mr-2 h-5 w-5" />
-              Listen Again
+              Listen
             </Button>
 
             <Button

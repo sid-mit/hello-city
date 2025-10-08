@@ -201,7 +201,7 @@ export const SyllableBreakdown = ({
                         onClick={() => onPlaySyllable(analysis.syllable)}
                       >
                         <Volume2 className="w-4 h-4 mr-2" />
-                        Listen Again (Slow)
+                        Listen (Slow)
                       </Button>
                     )}
                   </motion.div>
