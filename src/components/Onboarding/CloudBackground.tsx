@@ -6,7 +6,7 @@ export const CloudBackground = () => {
       {/* Cloud 1 - Bottom Left */}
       <motion.svg
         className="absolute"
-        style={{ left: '5%', bottom: '5%', width: '578px', height: '273px' }}
+        style={{ left: '8%', bottom: '8%', width: '578px', height: '273px' }}
         animate={{ x: [0, -10, 0], y: [0, -15, 0] }}
         transition={{ duration: 18, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
         viewBox="0 0 578 273"
@@ -24,7 +24,7 @@ export const CloudBackground = () => {
       {/* Cloud 2 - Middle Right */}
       <motion.svg
         className="absolute"
-        style={{ right: '5%', top: '45%', width: '584px', height: '278px' }}
+        style={{ right: '8%', top: '45%', width: '584px', height: '278px' }}
         animate={{ x: [0, 15, 0], y: [0, 20, 0] }}
         transition={{ duration: 20, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
         viewBox="0 0 584 278"
@@ -42,7 +42,7 @@ export const CloudBackground = () => {
       {/* Cloud 3 - Middle Center */}
       <motion.svg
         className="absolute"
-        style={{ left: '25%', top: '55%', width: '445px', height: '238px' }}
+        style={{ left: '30%', top: '55%', width: '445px', height: '238px' }}
         animate={{ x: [0, -12, 0], y: [0, 18, 0] }}
         transition={{ duration: 16, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
         viewBox="0 0 445 238"

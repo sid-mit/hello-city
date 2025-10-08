@@ -173,10 +173,10 @@ export default function Onboarding() {
                 setHasCompletedOnboarding(true);
                 navigate('/home');
               }}
-              className="absolute bottom-8 right-8 transition-all hover:underline"
-              style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
+              className="absolute bottom-8 left-8 transition-all hover:underline"
+              style={{ color: '#6B7280', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
             >
-              Skip Onboarding
+              → Skip Onboarding
             </button>
           )}
         </motion.div>
