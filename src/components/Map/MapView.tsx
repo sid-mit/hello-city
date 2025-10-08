@@ -154,26 +154,88 @@ export const MapView = () => {
     } else if (cityData && !isCityDataLoading) {
       // Show category markers from database
       const bounds = new mapboxgl.LngLatBounds();
+      const placedPositions: Array<{ x: number; y: number; width: number; height: number }> = [];
+      const iconSize = 80; // w-20 h-20 in pixels
+      const minDistance = iconSize * 1.1; // 10% spacing
+      
+      // Helper function to check if two positions overlap
+      const hasOverlap = (pos1: { x: number; y: number }, pos2: { x: number; y: number }) => {
+        const distance = Math.sqrt(Math.pow(pos1.x - pos2.x, 2) + Math.pow(pos1.y - pos2.y, 2));
+        return distance < minDistance;
+      };
+      
+      // Helper function to find non-overlapping position
+      const findNonOverlappingPosition = (originalLngLat: [number, number]) => {
+        if (!map.current) return originalLngLat;
+        
+        const centerPoint = map.current.project(originalLngLat);
+        let bestLngLat = originalLngLat;
+        let bestDistance = Infinity;
+        
+        // Try positions in a spiral pattern around the original location
+        for (let angle = 0; angle < 360; angle += 30) {
+          for (let radius = minDistance; radius < minDistance * 3; radius += minDistance / 2) {
+            const testX = centerPoint.x + Math.cos((angle * Math.PI) / 180) * radius;
+            const testY = centerPoint.y + Math.sin((angle * Math.PI) / 180) * radius;
+            const testPos = { x: testX, y: testY };
+            
+            const hasCollision = placedPositions.some(placed => hasOverlap(testPos, placed));
+            
+            if (!hasCollision) {
+              const testLngLat = map.current!.unproject([testX, testY]);
+              return [testLngLat.lng, testLngLat.lat] as [number, number];
+            }
+            
+            // Track closest available position
+            if (!hasCollision && radius < bestDistance) {
+              bestDistance = radius;
+              const testLngLat = map.current!.unproject([testX, testY]);
+              bestLngLat = [testLngLat.lng, testLngLat.lat] as [number, number];
+            }
+          }
+        }
+        
+        return bestLngLat;
+      };
       
       cityData.categories.forEach((category) => {
+        const originalLngLat: [number, number] = [category.mapPosition[1], category.mapPosition[0]];
+        
+        // Check if position needs adjustment
+        const centerPoint = map.current!.project(originalLngLat);
+        const hasCollision = placedPositions.some(placed => 
+          hasOverlap({ x: centerPoint.x, y: centerPoint.y }, placed)
+        );
+        
+        const finalLngLat = hasCollision ? findNonOverlappingPosition(originalLngLat) : originalLngLat;
+        const finalPoint = map.current!.project(finalLngLat);
+        
+        // Record this position
+        placedPositions.push({
+          x: finalPoint.x,
+          y: finalPoint.y,
+          width: iconSize,
+          height: iconSize
+        });
+        
         const el = document.createElement('div');
-        el.className = 'cursor-pointer transform transition-all hover:scale-110';
+        el.className = 'cursor-pointer transform transition-all hover:scale-110 relative';
+        el.style.zIndex = '1000';
         
         // Use custom icon image if available, otherwise use emoji
         const iconContent = category.iconImage 
-          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-16 h-16 object-contain drop-shadow-lg" />`
-          : `<span class="text-5xl drop-shadow-lg">${category.emoji}</span>`;
+          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-20 h-20 object-contain drop-shadow-2xl" />`
+          : `<span class="text-6xl drop-shadow-2xl">${category.emoji}</span>`;
         
         el.innerHTML = iconContent;
         el.onclick = () => handleCategoryClick(category.id);
 
-        const lngLat: [number, number] = [category.mapPosition[1], category.mapPosition[0]];
         const marker = new mapboxgl.Marker(el)
-          .setLngLat(lngLat)
+          .setLngLat(finalLngLat)
           .addTo(map.current!);
 
         markersRef.current.push(marker);
-        bounds.extend(lngLat);
+        bounds.extend(finalLngLat);
       });
 
       // Fit map to show all markers with padding
