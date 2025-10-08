@@ -24,8 +24,6 @@ interface SinglePhrasePracticeProps {
   recognition: any;
   onBack: () => void;
   onNext?: () => void;
-  situationIcon?: string;
-  situationTitle?: string;
 }
 
 type Step = "record" | "result";
@@ -38,8 +36,6 @@ export const SinglePhrasePractice = ({
   recognition,
   onBack,
   onNext,
-  situationIcon,
-  situationTitle,
 }: SinglePhrasePracticeProps) => {
   const { genderPreference, setGenderPreference } = useAppStore();
   const [step, setStep] = useState<Step>("record");
@@ -134,15 +130,7 @@ export const SinglePhrasePractice = ({
   return (
     <div className="space-y-6 py-4">
       {/* Header */}
-      <div className="flex items-center justify-between px-2">
-        <div className="flex items-center gap-3 flex-1 justify-center">
-          {situationIcon && (
-            <img src={situationIcon} alt="" className="w-8 h-8" />
-          )}
-          {situationTitle && (
-            <h3 className="text-lg font-semibold">{situationTitle}</h3>
-          )}
-        </div>
+      <div className="flex items-center justify-end px-2 pb-4">
         <span className="text-sm font-medium text-muted-foreground">
           {phraseIndex + 1}/{totalPhrases}
         </span>
