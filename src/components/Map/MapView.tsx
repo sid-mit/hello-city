@@ -173,7 +173,7 @@ export const MapView = () => {
         if (attempt > 20) return originalLngLat; // Give up after 20 attempts
         
         const testPoint = map.current!.project(originalLngLat);
-        const iconSize = 80; // w-20 = 80px
+        const iconSize = 104; // w-26 = 104px
         
         const testPos = {
           x: testPoint.x,
@@ -206,10 +206,10 @@ export const MapView = () => {
         el.style.zIndex = '1000'; // Ensure icons are above top bar
         
         // Use custom icon image if available, otherwise use emoji
-        // Increased size by 30%: w-16->w-20 (64px->80px), text-5xl->text-6xl
+        // Increased size by 30% again: w-20->w-26 (80px->104px), text-6xl->text-7xl
         const iconContent = category.iconImage 
-          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-20 h-20 object-contain drop-shadow-2xl" />`
-          : `<span class="text-6xl drop-shadow-2xl">${category.emoji}</span>`;
+          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-26 h-26 object-contain drop-shadow-2xl" />`
+          : `<span class="text-7xl drop-shadow-2xl">${category.emoji}</span>`;
         
         el.innerHTML = iconContent;
         el.onclick = () => handleCategoryClick(category.id);
@@ -233,8 +233,8 @@ export const MapView = () => {
         const topBarHeight = topBarRef.current?.offsetHeight || 0;
         const topPadding = topBarHeight + 100; // Increased from topBarHeight + 24
         map.current.fitBounds(bounds, {
-          padding: { top: topPadding, bottom: 120, left: 120, right: 120 }, // Increased padding
-          maxZoom: 13,
+          padding: { top: topPadding, bottom: 140, left: 140, right: 140 }, // Increased padding
+          maxZoom: 15,
           duration: 1500,
         });
       }

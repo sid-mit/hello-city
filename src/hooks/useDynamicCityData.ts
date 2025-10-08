@@ -40,9 +40,9 @@ function generateRandomPositions(cityId: string, baseLat: number, baseLng: numbe
   for (let i = 0; i < 10; i++) {
     const [row, col] = shuffledCells[i];
     
-    // Wider radius range for better spread (0.03 to 0.12 = ~3km to 12km)
-    const minRadius = 0.03;
-    const maxRadius = 0.12;
+    // Wider radius range for better spread (0.15 to 0.25 = ~15km to 25km)
+    const minRadius = 0.15;
+    const maxRadius = 0.25;
     const baseRadius = minRadius + (maxRadius - minRadius) * 0.5;
     
     // Calculate grid-based position
