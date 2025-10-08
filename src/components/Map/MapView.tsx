@@ -82,7 +82,7 @@ export const MapView = () => {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',
-      projection: 'mercator',
+      projection: 'globe',
       center: [30, 20],
       zoom: 0.5,
       pitch: 20,
@@ -154,83 +154,30 @@ export const MapView = () => {
     } else if (cityData && !isCityDataLoading) {
       // Show category markers from database
       const bounds = new mapboxgl.LngLatBounds();
-      const placedPositions: Array<{ x: number; y: number; size: number }> = [];
-      const iconSize = 72; // 72px = w-18 h-18
-      
-      // Helper to check overlap percentage between two boxes
-      const calculateOverlap = (box1: { x: number; y: number; size: number }, box2: { x: number; y: number; size: number }) => {
-        const x1Min = box1.x - box1.size / 2;
-        const x1Max = box1.x + box1.size / 2;
-        const y1Min = box1.y - box1.size / 2;
-        const y1Max = box1.y + box1.size / 2;
-        
-        const x2Min = box2.x - box2.size / 2;
-        const x2Max = box2.x + box2.size / 2;
-        const y2Min = box2.y - box2.size / 2;
-        const y2Max = box2.y + box2.size / 2;
-        
-        const xOverlap = Math.max(0, Math.min(x1Max, x2Max) - Math.max(x1Min, x2Min));
-        const yOverlap = Math.max(0, Math.min(y1Max, y2Max) - Math.max(y1Min, y2Min));
-        const overlapArea = xOverlap * yOverlap;
-        const box1Area = box1.size * box1.size;
-        
-        return (overlapArea / box1Area) * 100;
-      };
-      
-      // Helper to adjust position if overlap exceeds 10%
-      const adjustForOverlap = (lng: number, lat: number): [number, number] => {
-        if (!map.current) return [lng, lat];
-        
-        const point = map.current.project([lng, lat]);
-        let adjustedPoint = { x: point.x, y: point.y, size: iconSize };
-        let attempts = 0;
-        const maxAttempts = 20;
-        
-        while (attempts < maxAttempts) {
-          let hasOverlap = false;
-          
-          for (const placed of placedPositions) {
-            const overlap = calculateOverlap(adjustedPoint, placed);
-            if (overlap > 10) {
-              hasOverlap = true;
-              // Nudge in a spiral pattern
-              const angle = (attempts * 137.5) * (Math.PI / 180); // Golden angle
-              const distance = 10 + (attempts * 5);
-              adjustedPoint.x = point.x + Math.cos(angle) * distance;
-              adjustedPoint.y = point.y + Math.sin(angle) * distance;
-              break;
-            }
-          }
-          
-          if (!hasOverlap) break;
-          attempts++;
-        }
-        
-        placedPositions.push(adjustedPoint);
-        return map.current.unproject([adjustedPoint.x, adjustedPoint.y]).toArray() as [number, number];
-      };
       
       cityData.categories.forEach((category) => {
         const el = document.createElement('div');
-        el.className = 'cursor-pointer transition-transform hover:scale-110';
+        el.className = 'cursor-pointer transform transition-all hover:scale-110';
         
         // Use custom icon image if available, otherwise use emoji
         const iconContent = category.iconImage 
-          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-18 h-18 object-contain drop-shadow-lg" />`
-          : `<span class="text-4xl drop-shadow-lg">${category.emoji}</span>`;
+          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-10 h-10 object-contain" />`
+          : `<span class="text-2xl">${category.emoji}</span>`;
         
-        el.innerHTML = iconContent;
+        el.innerHTML = `
+          <div class="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-lg border-2 border-primary">
+            ${iconContent}
+          </div>
+        `;
         el.onclick = () => handleCategoryClick(category.id);
 
-        const originalLngLat: [number, number] = [category.mapPosition[1], category.mapPosition[0]];
-        const adjustedLngLat = adjustForOverlap(originalLngLat[0], originalLngLat[1]);
-        
+        const lngLat: [number, number] = [category.mapPosition[1], category.mapPosition[0]];
         const marker = new mapboxgl.Marker(el)
-          .setLngLat(adjustedLngLat)
+          .setLngLat(lngLat)
           .addTo(map.current!);
 
         markersRef.current.push(marker);
-        bounds.extend(adjustedLngLat);
+        bounds.extend(lngLat);
       });
 
       // Fit map to show all markers with padding
