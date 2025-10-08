@@ -23,35 +23,46 @@ export const UnifiedHeader = () => {
   return <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#D2E0FF]">
       <div className="container mx-auto px-10 py-4 flex items-center">
         {/* Branding */}
-        <div className="flex items-center gap-2 relative">
+        <div className="flex items-center gap-2">
           <div
-            className="cursor-pointer"
+            className="cursor-pointer relative"
+            style={{ width: '258px', height: '75px' }}
             onClick={() => {
               navigate('/home');
               setShowAnimation(true);
-              setTimeout(() => setShowAnimation(false), 3000);
+              setTimeout(() => setShowAnimation(false), 2500);
             }}
           >
-            <img src={logo} alt="HelloCity Logo" className="h-10" />
-          </div>
-          
-          <AnimatePresence>
-            {showAnimation && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                className="absolute left-0 top-0 z-50 pointer-events-none"
-                style={{ width: '200px', height: '200px' }}
-              >
-                <DotLottieReact
-                  src={animationUrl}
-                  loop={false}
-                  autoplay={true}
+            <AnimatePresence mode="wait">
+              {!showAnimation ? (
+                <motion.img
+                  key="logo"
+                  src={logo}
+                  alt="HelloCity Logo"
+                  className="absolute inset-0 w-full h-full object-contain"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
                 />
-              </motion.div>
-            )}
-          </AnimatePresence>
+              ) : (
+                <motion.div
+                  key="animation"
+                  className="absolute inset-0 w-full h-full"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <DotLottieReact
+                    src={animationUrl}
+                    loop={false}
+                    autoplay={true}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Right Side Navigation Group */}
