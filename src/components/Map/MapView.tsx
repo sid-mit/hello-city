@@ -217,9 +217,9 @@ export const MapView = () => {
         el.className = 'cursor-pointer transform transition-all hover:scale-110';
         
         // Use custom icon image if available, otherwise use emoji
-        // Reduced icon size to w-18 h-18 (72px) for better proportion
+        // PNG icons are smaller (w-14) to match emoji visual size (emojis have built-in padding)
         const iconContent = category.iconImage 
-          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-18 h-18 object-contain drop-shadow-2xl" />`
+          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-14 h-14 object-contain drop-shadow-2xl" />`
           : `<span class="text-6xl drop-shadow-2xl">${category.emoji}</span>`;
         
         el.innerHTML = iconContent;
