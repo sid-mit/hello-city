@@ -50,7 +50,7 @@ export const MapView = () => {
     // Fly back to world view
     if (map.current) {
       map.current.flyTo({
-        center: [0, 20],
+        center: [0, -5],
         zoom: 1.5,
         duration: 2000,
       });
@@ -72,7 +72,7 @@ export const MapView = () => {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',
-      center: [0, 20],
+      center: [0, -5],
       zoom: 1.5,
     });
 
