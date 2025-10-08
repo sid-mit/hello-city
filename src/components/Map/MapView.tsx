@@ -25,7 +25,6 @@ export const MapView = () => {
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const topBarRef = useRef<HTMLDivElement>(null);
-  const lastBoundsRef = useRef<mapboxgl.LngLatBounds | null>(null);
 
   // Fetch dynamic city data from database
   const { data: cityData, isLoading: isCityDataLoading } = useDynamicCityData({
@@ -44,13 +43,12 @@ export const MapView = () => {
     selectCity(city);
     setShowCitySelector(false);
     
-    // Flatten the map and prepare for category markers
+    // Initial fly to city (will be adjusted once markers load)
     if (map.current) {
       map.current.flyTo({
         center: [city.coordinates.lng, city.coordinates.lat],
-        zoom: 12,
-        pitch: 0,
-        duration: 1500,
+        zoom: 11,
+        duration: 2000,
       });
     }
   }, [selectCity]);
@@ -118,29 +116,12 @@ export const MapView = () => {
       }, 300);
     });
 
-    // Handle window resize to refit bounds with correct padding
-    const handleResize = () => {
-      if (map.current && lastBoundsRef.current && selectedCity) {
-        const rect = topBarRef.current?.getBoundingClientRect();
-        const topPadding = rect ? Math.max(120, Math.ceil(rect.bottom) + 16) : 140;
-        
-        map.current.fitBounds(lastBoundsRef.current, {
-          padding: { top: topPadding, bottom: 100, left: 100, right: 100 },
-          maxZoom: 13,
-          duration: 0,
-        });
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
     return () => {
-      window.removeEventListener('resize', handleResize);
       markersRef.current.forEach(marker => marker.remove());
       markersRef.current = [];
       map.current?.remove();
     };
-  }, [selectedCity]);
+  }, []);
 
   // Update markers based on selected city
   useEffect(() => {
@@ -195,10 +176,8 @@ export const MapView = () => {
 
       // Fit map to show all markers with padding
       if (!bounds.isEmpty()) {
-        lastBoundsRef.current = bounds;
-        const rect = topBarRef.current?.getBoundingClientRect();
-        const topPadding = rect ? Math.max(120, Math.ceil(rect.bottom) + 16) : 140;
-        
+        const topBarHeight = topBarRef.current?.offsetHeight || 0;
+        const topPadding = Math.max(100, topBarHeight + 24);
         map.current.fitBounds(bounds, {
           padding: { top: topPadding, bottom: 100, left: 100, right: 100 },
           maxZoom: 13,
