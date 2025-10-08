@@ -10,6 +10,7 @@ import { CitySelector } from '../CitySelector/CitySelector';
 import { Button } from '../ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { createRoot } from 'react-dom/client';
+import { toast } from '@/hooks/use-toast';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYW5pbnlhZyIsImEiOiJjbWdmNHF6MHUwNG9oMmtuMGhubWRlaWJ3In0.7cdKmRPJHIj-j-HzFojggA';
@@ -32,6 +33,15 @@ export const MapView = () => {
   });
 
   const handleCityClick = useCallback((city: any) => {
+    // Show coming soon toast for Paris and Mexico City
+    if (city.id === 'paris' || city.id === 'mexico-city') {
+      toast({
+        title: "Coming soon!",
+        description: `${city.name} phrases will be available soon.`,
+      });
+      return;
+    }
+
     selectCity(city);
     setShowCitySelector(false);
     
