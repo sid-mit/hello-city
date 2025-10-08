@@ -265,6 +265,40 @@ export const BEIJING_CATEGORY_OVERRIDES: Record<string, Partial<CategoryMetadata
   },
 };
 
+// India-specific category overrides with custom icons
+export const INDIA_CATEGORY_OVERRIDES: Record<string, Partial<CategoryMetadata>> = {
+  cafe: {
+    iconImage: '/icons/india/cafe.png',
+  },
+  restaurant: {
+    iconImage: '/icons/india/restaurant.png',
+  },
+  metro: {
+    iconImage: '/icons/india/metro.png',
+  },
+  auto: {
+    iconImage: '/icons/india/auto.png',
+  },
+  shopping: {
+    iconImage: '/icons/india/shopping.png',
+  },
+  hotel: {
+    iconImage: '/icons/india/hotel.png',
+  },
+  bar: {
+    iconImage: '/icons/india/bar.png',
+  },
+  museum: {
+    iconImage: '/icons/india/museum.png',
+  },
+  police: {
+    iconImage: '/icons/india/police.png',
+  },
+  pharmacy: {
+    iconImage: '/icons/india/pharmacy.png',
+  },
+};
+
 // Helper to get category metadata with city-specific overrides
 export function getCategoryMetadata(spotType: string, cityId?: string): CategoryMetadata {
   const baseMetadata = CATEGORY_METADATA[spotType] || {
@@ -279,6 +313,11 @@ export function getCategoryMetadata(spotType: string, cityId?: string): Category
   // Apply Beijing-specific overrides
   if (cityId === 'beijing' && BEIJING_CATEGORY_OVERRIDES[spotType]) {
     return { ...baseMetadata, ...BEIJING_CATEGORY_OVERRIDES[spotType] };
+  }
+
+  // Apply India-specific overrides
+  if (cityId === 'new-delhi' && INDIA_CATEGORY_OVERRIDES[spotType]) {
+    return { ...baseMetadata, ...INDIA_CATEGORY_OVERRIDES[spotType] };
   }
 
   return baseMetadata;
