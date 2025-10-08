@@ -177,7 +177,7 @@ export const MapView = () => {
         if (attempt > 50) return originalLngLat; // More attempts to find good positions
         
         const testPoint = map.current!.project(originalLngLat);
-        const iconSize = (selectedCity?.id === 'beijing' || selectedCity?.id === 'new-delhi') ? 62 : 72; // Per-city icon size to match visual padding
+        const iconSize = (selectedCity?.id === 'beijing' || selectedCity?.id === 'new-delhi') ? 68 : 79; // Per-city icon size (10% larger)
         const topBarHeight = topBarRef.current?.offsetHeight || 80;
         
         const testPos = {
@@ -217,9 +217,9 @@ export const MapView = () => {
         el.className = 'cursor-pointer transform transition-all hover:scale-110';
         
         // Use custom icon image if available, otherwise use emoji
-        // Compact PNG cities (Beijing/Delhi) use ~62px to match Seoul's padded PNGs; others use ~72px
+        // PNG icons increased by 10%: Beijing/Delhi use 68px, others use 79px
         const isCompactCity = selectedCity?.id === 'beijing' || selectedCity?.id === 'new-delhi';
-        const pngSizeClass = isCompactCity ? 'w-[62px] h-[62px]' : 'w-[72px] h-[72px]';
+        const pngSizeClass = isCompactCity ? 'w-[68px] h-[68px]' : 'w-[79px] h-[79px]';
         const iconContent = category.iconImage 
           ? `<img src="${category.iconImage}" alt="${category.title}" class="${pngSizeClass} object-contain drop-shadow-2xl" />`
           : `<span class="text-6xl drop-shadow-2xl">${category.emoji}</span>`;
