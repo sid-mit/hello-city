@@ -7,6 +7,7 @@ import polyglotIcon from '@/assets/badges/polyglot.png';
 import dedicatedIcon from '@/assets/badges/dedicated.png';
 import collectorIcon from '@/assets/badges/collector.png';
 import earlyBirdIcon from '@/assets/badges/early-bird.png';
+import nightOwlIcon from '@/assets/badges/night-owl.png';
 
 export interface Badge {
   id: string;
@@ -24,6 +25,7 @@ const badgeIcons: Record<string, string> = {
   'dedicated': dedicatedIcon,
   'collector': collectorIcon,
   'early-bird': earlyBirdIcon,
+  'night-owl': nightOwlIcon,
 };
 
 export const BadgeSystem = () => {
