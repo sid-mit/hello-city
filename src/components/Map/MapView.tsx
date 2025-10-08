@@ -47,7 +47,7 @@ export const MapView = () => {
     if (map.current) {
       map.current.flyTo({
         center: [city.coordinates.lng, city.coordinates.lat],
-        zoom: 11,
+        zoom: 17, // Street-level view
         duration: 2000,
       });
     }
@@ -210,7 +210,6 @@ export const MapView = () => {
       cityData.categories.forEach((category) => {
         const el = document.createElement('div');
         el.className = 'cursor-pointer transform transition-all hover:scale-110';
-        el.style.zIndex = '1000'; // Ensure icons are above top bar
         
         // Use custom icon image if available, otherwise use emoji
         // Increased size by 30% again: w-20->w-26 (80px->104px), text-6xl->text-7xl
@@ -241,7 +240,7 @@ export const MapView = () => {
         const topPadding = topBarHeight + 100; // Increased from topBarHeight + 24
         map.current.fitBounds(bounds, {
           padding: { top: topPadding, bottom: 140, left: 140, right: 140 },
-          maxZoom: 16, // Increased zoom for closer view
+          maxZoom: 18, // Street-level zoom
           duration: 1500,
         });
       }
