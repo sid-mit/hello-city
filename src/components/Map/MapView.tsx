@@ -23,6 +23,7 @@ export const MapView = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
+  const topBarRef = useRef<HTMLDivElement>(null);
 
   // Fetch dynamic city data from database
   const { data: cityData, isLoading: isCityDataLoading } = useDynamicCityData({
@@ -167,8 +168,10 @@ export const MapView = () => {
 
       // Fit map to show all markers with padding
       if (!bounds.isEmpty()) {
+        const topBarHeight = topBarRef.current?.offsetHeight || 0;
+        const topPadding = Math.max(100, topBarHeight + 24);
         map.current.fitBounds(bounds, {
-          padding: { top: 100, bottom: 100, left: 100, right: 100 },
+          padding: { top: topPadding, bottom: 100, left: 100, right: 100 },
           maxZoom: 13,
           duration: 1500,
         });
@@ -191,7 +194,7 @@ export const MapView = () => {
     >
       {/* Back/City Info Bar (below header) */}
       {selectedCity && (
-        <div className="absolute top-20 left-0 right-0 z-10 glass border-b border-border/50">
+        <div ref={topBarRef} className="absolute top-20 left-0 right-0 z-10 glass border-b border-border/50">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <Button
               variant="ghost"
