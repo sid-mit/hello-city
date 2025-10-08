@@ -59,10 +59,10 @@ export const ChatBubble = ({
         className={cn(
           "relative rounded-2xl p-4 max-w-[75%] transition-all",
           isUser
-            ? "bg-blue-50 border-2 border-blue-200 rounded-tr-sm"
-            : "bg-muted border-2 border-border rounded-tl-sm",
+            ? "bg-primary/10 border-2 border-primary/30 rounded-tr-sm"
+            : "bg-muted/80 border-2 border-border rounded-tl-sm",
           isActive && isUser && !score && "ring-2 ring-primary shadow-lg",
-          isRecording && "ring-2 ring-blue-400 animate-pulse",
+          isRecording && "ring-2 ring-primary/50 animate-pulse",
           isPast && "opacity-70",
           isFuture && "opacity-40 grayscale"
         )}
@@ -74,10 +74,10 @@ export const ChatBubble = ({
           </div>
         )}
         
-        <div className={cn("space-y-1 pr-8", isFuture && "blur-[1px]")}>
-          <p className="text-lg md:text-xl font-bold">{phrase.romanization}</p>
-          <p className="text-sm text-muted-foreground">"{phrase.english}"</p>
-          <p className="text-xs text-muted-foreground">{phrase.native}</p>
+        <div className={cn("space-y-1.5 pr-8", isFuture && "blur-[1px]")}>
+          <p className="text-[17px] md:text-lg font-semibold leading-tight">{phrase.romanization}</p>
+          <p className="text-[13px] text-muted-foreground">"{phrase.english}"</p>
+          <p className="text-[11px] text-muted-foreground/70">{phrase.native}</p>
         </div>
 
         {/* Speaker Button - Top right */}
@@ -88,13 +88,13 @@ export const ChatBubble = ({
                 onClick={onPlayAudio}
                 disabled={isFuture}
                 className={cn(
-                  "absolute top-3 right-3 p-2 rounded-full transition-colors",
+                  "absolute top-2.5 right-2.5 p-1.5 rounded-full transition-colors",
                   "hover:bg-background/50",
                   isFuture && "opacity-30 cursor-not-allowed"
                 )}
                 aria-label="Play audio"
               >
-                <Volume2 className="w-5 h-5 text-muted-foreground" />
+                <Volume2 className="w-4 h-4 text-muted-foreground" />
               </button>
             </TooltipTrigger>
             <TooltipContent>
@@ -112,9 +112,10 @@ export const ChatBubble = ({
                   onClick={onRecord}
                   disabled={isRecording || isAnalyzing || isFuture}
                   className={cn(
-                    "absolute bottom-3 right-3 p-2 rounded-full transition-colors",
+                    "absolute bottom-2.5 right-2.5 p-2.5 rounded-full transition-all",
                     "bg-primary text-primary-foreground hover:bg-primary/90",
-                    "disabled:opacity-50 disabled:cursor-not-allowed"
+                    "disabled:opacity-50 disabled:cursor-not-allowed shadow-md",
+                    isRecording && "scale-110"
                   )}
                   aria-label="Record audio"
                 >
@@ -134,7 +135,7 @@ export const ChatBubble = ({
 
         {/* Score Badge with Actions - After recording */}
         {isUser && score !== undefined && (
-          <div className="mt-3 pt-3 border-t border-blue-300 space-y-2">
+          <div className="mt-3 pt-3 border-t border-primary/20 space-y-2">
             <ScoreBadge score={score} />
             <div className="flex gap-2">
               {onRetry && (

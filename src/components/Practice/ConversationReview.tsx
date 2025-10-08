@@ -191,39 +191,16 @@ export const ConversationReview = ({
   });
 
   return (
-    <div ref={scrollRef} className="space-y-6">
-      <div className="py-4 border-b">
-        <div className="flex items-center gap-4">
-          {onBack && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onBack}
-              className="gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </Button>
-          )}
-          <div className="flex-1 text-center">
-            <h3 className="text-lg font-semibold">Full Conversation Practice</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              Practice the complete conversation flow
-            </p>
-          </div>
-          {onBack && <div className="w-20" />}
-        </div>
-      </div>
-
+    <div ref={scrollRef} className="space-y-4">
       {phraseScores.length === 0 && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="px-2 pb-2"
         >
-          <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 flex items-start gap-2">
-            <span className="text-lg">💡</span>
-            <p className="text-sm text-foreground">
+          <div className="bg-secondary/30 border border-primary/20 rounded-xl p-4 flex items-start gap-3">
+            <span className="text-xl">💡</span>
+            <p className="text-[15px] text-foreground leading-relaxed">
               <strong>Tip:</strong> Listen to each phrase first by clicking the speaker icon 🔊
             </p>
           </div>
