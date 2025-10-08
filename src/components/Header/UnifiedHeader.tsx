@@ -77,8 +77,8 @@ export const UnifiedHeader = () => {
 
         {/* Right Side Navigation Group */}
         <div className="ml-auto flex items-center gap-4 md:gap-[50px]">
-          {/* Navigation Toggle */}
-          <div className="relative rounded-full p-1 flex gap-1 w-[120px] sm:w-[150px] md:w-[183px] h-[34px]" style={{
+          {/* Navigation Toggle - Hidden on mobile, visible on desktop */}
+          <div className="hidden md:flex relative rounded-full p-1 gap-1 w-[183px] h-[34px]" style={{
           backgroundColor: '#D2E0FF'
         }}>
             <motion.div layoutId="activeHeaderToggle" className="absolute top-1 bottom-1 bg-white rounded-full shadow-sm" style={{
@@ -143,7 +143,33 @@ export const UnifiedHeader = () => {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden border-t border-[#D2E0FF] bg-white/95 backdrop-blur-md"
           >
-            <div className="container mx-auto px-4 py-4">
+            <div className="container mx-auto px-4 py-4 space-y-2">
+              <button 
+                onClick={() => {
+                  setActiveTab('explore');
+                  navigate('/home');
+                  setMobileMenuOpen(false);
+                }} 
+                className={`w-full text-left py-3 px-4 rounded-lg text-base font-semibold transition-colors hover:bg-[#D2E0FF]/30 ${
+                  activeTab === 'explore' ? 'bg-[#D2E0FF]/50' : ''
+                }`}
+                style={{ color: '#404040' }}
+              >
+                Map
+              </button>
+              <button 
+                onClick={() => {
+                  setActiveTab('learn');
+                  navigate('/discover');
+                  setMobileMenuOpen(false);
+                }} 
+                className={`w-full text-left py-3 px-4 rounded-lg text-base font-semibold transition-colors hover:bg-[#D2E0FF]/30 ${
+                  activeTab === 'learn' ? 'bg-[#D2E0FF]/50' : ''
+                }`}
+                style={{ color: '#404040' }}
+              >
+                Discover
+              </button>
               <button 
                 onClick={() => {
                   navigate('/about');
