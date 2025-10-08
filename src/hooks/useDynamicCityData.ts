@@ -18,9 +18,9 @@ function generateRandomPositions(cityId: string, baseLat: number, baseLng: numbe
   const positions: [number, number][] = [];
   
   for (let i = 0; i < 10; i++) {
-    // Random radius between 0.015 and 0.045 (~1.5km to 4.5km)
-    const minRadius = 0.015;
-    const maxRadius = 0.045;
+    // Random radius between 0.02 and 0.12 (~2km to 12km)
+    const minRadius = 0.02;
+    const maxRadius = 0.12;
     const radius = minRadius + seededRandom(cityId, i * 2) * (maxRadius - minRadius);
     
     // Random angle (0 to 2π)
@@ -31,8 +31,8 @@ function generateRandomPositions(cityId: string, baseLat: number, baseLng: numbe
     const offsetLng = radius * Math.sin(angle);
     
     // Add micro-variations for natural look
-    const microVariationLat = (seededRandom(cityId, i * 3) - 0.5) * 0.005;
-    const microVariationLng = (seededRandom(cityId, i * 3 + 1) - 0.5) * 0.005;
+    const microVariationLat = (seededRandom(cityId, i * 3) - 0.5) * 0.01;
+    const microVariationLng = (seededRandom(cityId, i * 3 + 1) - 0.5) * 0.01;
     
     positions.push([
       baseLat + offsetLat + microVariationLat,
