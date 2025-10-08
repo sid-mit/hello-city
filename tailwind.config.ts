@@ -19,6 +19,15 @@ export default {
         architects: ['Architects Daughter', 'cursive'],
         sans: ['Gilroy', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
+      spacing: {
+        'xs': '8px',
+        'sm': '12px',
+        'md': '16px',
+        'lg': '24px',
+        'xl': '32px',
+        '2xl': '48px',
+        '3xl': '64px',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -60,10 +69,16 @@ export default {
         'gradient-surface': 'var(--gradient-surface)',
       },
       boxShadow: {
-        'soft': 'var(--shadow-soft)',
-        'medium': 'var(--shadow-medium)',
-        'large': 'var(--shadow-large)',
+        'xs': 'var(--shadow-xs)',
+        'sm': 'var(--shadow-sm)',
+        'md': 'var(--shadow-md)',
+        'lg': 'var(--shadow-lg)',
+        'xl': 'var(--shadow-xl)',
         'glow': 'var(--shadow-glow)',
+        // Legacy support
+        'soft': 'var(--shadow-sm)',
+        'medium': 'var(--shadow-md)',
+        'large': 'var(--shadow-lg)',
       },
       borderRadius: {
         lg: "var(--radius)",

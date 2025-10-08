@@ -21,7 +21,8 @@ export const CityMarker = ({ city, onClick, isSelected }: CityMarkerProps) => {
       {/* Pulse effect when selected */}
       {isSelected && (
         <motion.div
-          className="absolute inset-0 rounded-full bg-primary/20"
+          className="absolute inset-0 rounded-full"
+          style={{ background: 'hsl(var(--primary-blue) / 0.2)' }}
           animate={{
             scale: [1, 1.5, 1],
             opacity: [0.5, 0, 0.5],
@@ -38,9 +39,12 @@ export const CityMarker = ({ city, onClick, isSelected }: CityMarkerProps) => {
       <div
         className={`relative w-12 h-12 rounded-full glass border-2 flex items-center justify-center transition-all ${
           isSelected
-            ? 'border-primary shadow-[0_0_20px_rgba(102,126,234,0.5)]'
-            : 'border-border/50 hover:border-primary/50'
+            ? 'shadow-[0_0_20px_rgba(65,124,255,0.5)]'
+            : 'border-border/50'
         }`}
+        style={{
+          borderColor: isSelected ? 'hsl(var(--primary-blue))' : undefined,
+        }}
       >
         <span className="text-2xl">{city.emoji}</span>
       </div>

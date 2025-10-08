@@ -207,8 +207,8 @@ export default function Onboarding() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
-                className="w-[160px] sm:w-[180px] whitespace-nowrap px-12 py-1.5 border-2 border-[#2A64EC] bg-transparent rounded-full transition-all hover:bg-[#2A64EC]/5"
-                style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
+                className="px-20 py-3 border-2 border-[#417CFF] bg-transparent rounded-full transition-all hover:bg-[#D2E0FF]/30"
+                style={{ color: '#417CFF', fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
               >
                 Back
               </motion.button>
@@ -218,8 +218,8 @@ export default function Onboarding() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
-              className="w-[160px] sm:w-[180px] whitespace-nowrap px-12 py-1.5 border-2 border-transparent bg-[#BDD1FF] rounded-full transition-all hover:bg-[#BDD1FF]/80"
-              style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
+              className="px-20 py-3 bg-[#D2E0FF] rounded-full transition-all hover:bg-[#D2E0FF]/80"
+              style={{ color: '#417CFF', fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
             >
               {isFirstSlide ? 'Continue' : isLastSlide ? 'Get Started' : 'Next'}
             </motion.button>

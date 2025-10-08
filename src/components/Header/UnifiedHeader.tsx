@@ -59,18 +59,11 @@ export const UnifiedHeader = () => {
           </div>
 
           {/* Right Navigation Links */}
-          <nav className="hidden md:flex items-center font-gilroy" style={{
-          gap: '50px'
-        }}>
+          <nav className="hidden md:flex items-center font-gilroy">
             <button onClick={() => navigate('/about')} className="text-base font-semibold transition-colors hover:opacity-80" style={{
             color: '#404040'
           }}>
               About Us
-            </button>
-            <button className="text-base font-semibold transition-colors hover:opacity-80" style={{
-            color: '#404040'
-          }}>
-              Login
             </button>
           </nav>
         </div>
