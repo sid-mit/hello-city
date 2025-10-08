@@ -131,15 +131,13 @@ export const SinglePhrasePractice = ({
     <div className="space-y-6 py-4">
       {/* Header */}
       <div className="flex items-center justify-between px-2 pb-4">
-        <Button
-          variant="ghost"
-          size="sm"
+        <button
           onClick={onBack}
-          className="gap-2"
+          className="text-foreground hover:text-muted-foreground transition-colors"
+          aria-label="Go back"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </Button>
+          <ArrowLeft className="h-6 w-6" />
+        </button>
         <span className="text-sm font-medium text-muted-foreground">
           {phraseIndex + 1}/{totalPhrases}
         </span>

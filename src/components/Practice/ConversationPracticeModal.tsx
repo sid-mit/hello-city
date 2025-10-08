@@ -432,16 +432,14 @@ export const ConversationPracticeModal = ({
           ) : !isComplete ? (
             <>
               {/* Back Button */}
-              <div className="flex items-center px-2 pb-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
+              <div className="flex items-center px-2 pb-4">
+                <button
                   onClick={() => setPracticeMode('selection')}
-                  className="gap-2"
+                  className="text-foreground hover:text-muted-foreground transition-colors"
+                  aria-label="Go back"
                 >
-                  <ArrowLeft className="h-4 w-4" />
-                  Back
-                </Button>
+                  <ArrowLeft className="h-6 w-6" />
+                </button>
               </div>
 
               {/* Collapsible Past Steps */}
