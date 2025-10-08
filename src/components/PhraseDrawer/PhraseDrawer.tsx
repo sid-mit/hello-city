@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -17,21 +17,8 @@ interface PhraseDrawerProps {
 export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, categoryDescription, categoryIconImage, situations, onClose }: PhraseDrawerProps) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [showScrollHint, setShowScrollHint] = useState(true);
-
-  useEffect(() => {
-    const hasSeenHint = localStorage.getItem('hasSeenScrollHint');
-    if (hasSeenHint) {
-      setShowScrollHint(false);
-    }
-  }, []);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (showScrollHint) {
-      setShowScrollHint(false);
-      localStorage.setItem('hasSeenScrollHint', 'true');
-    }
-
     const container = e.currentTarget;
     const cardWidth = 280 + 16; // card width + gap
     const scrollPosition = container.scrollLeft;
@@ -135,18 +122,6 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
                 background: 'linear-gradient(to left, #FFFFFF, transparent)',
               }}
             />
-          )}
-
-          {/* Scroll Hint */}
-          {showScrollHint && situations.length > 1 && (
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0 }}
-              className="absolute right-8 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-medium pointer-events-none"
-            >
-              Swipe for more →
-            </motion.div>
           )}
         </div>
       </motion.div>
