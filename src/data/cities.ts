@@ -6,7 +6,7 @@ export const cities: City[] = [
     name: 'Seoul',
     country: 'South Korea',
     language: 'Korean',
-    coordinates: { lat: 37.5665, lng: 126.9780 },
+    coordinates: { lat: 37.5665, lng: 130.5 },
     emoji: '/flags/south-korea.png',
     available: true,
   },
