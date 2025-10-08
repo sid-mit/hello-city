@@ -19,6 +19,7 @@ mapboxgl.accessToken = MAPBOX_TOKEN;
 export const MapView = () => {
   const { selectedCity, selectedCategory, genderPreference, selectCity, selectCategory } = useAppStore();
   const [showCitySelector, setShowCitySelector] = useState(false);
+  const [isLaunching, setIsLaunching] = useState(true);
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
@@ -68,15 +69,67 @@ export const MapView = () => {
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    // Initialize map
+    // Initialize map with globe view for launch animation
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',
+      projection: 'globe',
       center: [90, 20],
-      zoom: 1.5,
+      zoom: 0.3,
+      pitch: 30,
     });
 
+    // Add fog and atmosphere for 3D globe effect
+    map.current.on('style.load', () => {
+      if (!map.current) return;
+      
+      map.current.setFog({
+        color: 'rgb(255, 255, 255)',
+        'high-color': 'rgb(200, 210, 235)',
+        'horizon-blend': 0.15,
+        'space-color': 'rgb(230, 240, 255)',
+        'star-intensity': 0.3,
+      });
+
+      // Start the launch animation sequence
+      setTimeout(() => {
+        if (!map.current) return;
+        
+        // Smooth zoom and rotation into default view
+        map.current.flyTo({
+          center: [90, 20],
+          zoom: 1.5,
+          pitch: 0,
+          duration: 2500,
+          essential: true,
+          easing: (t: number) => {
+            // Custom easing for smooth Apple-like animation
+            return t < 0.5 
+              ? 4 * t * t * t 
+              : 1 - Math.pow(-2 * t + 2, 3) / 2;
+          }
+        });
+
+        // End launch state after animation
+        setTimeout(() => setIsLaunching(false), 3000);
+      }, 500);
+    });
+
+    // Gentle globe rotation during launch
+    let rotationAnimation: number;
+    const rotateGlobe = () => {
+      if (!map.current || !isLaunching) return;
+      
+      const center = map.current.getCenter();
+      center.lng += 0.15;
+      map.current.setCenter(center);
+      rotationAnimation = requestAnimationFrame(rotateGlobe);
+    };
+    
+    rotationAnimation = requestAnimationFrame(rotateGlobe);
+
     return () => {
+      cancelAnimationFrame(rotationAnimation);
       markersRef.current.forEach(marker => marker.remove());
       markersRef.current = [];
       map.current?.remove();
@@ -134,9 +187,15 @@ export const MapView = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ 
+        opacity: 1,
+        scale: 1,
+      }}
+      transition={{ 
+        duration: 0.8,
+        ease: [0.34, 1.56, 0.64, 1],
+      }}
       className="relative w-full h-screen"
     >
       {/* Back/City Info Bar (below header) */}
