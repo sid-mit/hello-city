@@ -47,7 +47,7 @@ export default function Onboarding() {
   const isLastSlide = currentSlide === slides.length - 1;
 
   return (
-    <div className="w-full h-screen overflow-hidden relative bg-gradient-to-b from-white to-[#F5F8FF] flex items-center justify-center px-4">
+    <div className="w-full h-screen overflow-hidden relative bg-gradient-to-b from-white to-[#F5F8FF] grid place-items-center px-4">
       {/* Cloud background graphics */}
       <CloudBackground />
       
@@ -146,26 +146,26 @@ export default function Onboarding() {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
           transition={{ duration: 0.3 }}
-          className="w-full max-w-4xl flex flex-col items-center justify-center text-center relative z-10"
+          className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center relative z-10"
         >
           <h1 
-            className="mb-6 px-4 md:px-6 lg:px-8"
+            className="mb-6 mx-auto px-4 md:px-6 lg:px-8"
             style={{ color: '#404040', fontSize: 'clamp(32px, 5vw, 48px)', fontFamily: 'Gilroy', fontWeight: 700, letterSpacing: '0.8px' }}
           >
             {slides[currentSlide].title}
           </h1>
           <p 
-            className="mb-12 max-w-2xl px-4 md:px-6 lg:px-8"
+            className="mb-12 max-w-2xl mx-auto px-4 md:px-6 lg:px-8"
             style={{ color: '#404040', fontSize: 'clamp(14px, 2vw, 18px)', fontFamily: 'Gilroy', fontWeight: 500 }}
           >
             {slides[currentSlide].description}
           </p>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center gap-4">
             {!isFirstSlide && (
               <button
                 onClick={handleBack}
