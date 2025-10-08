@@ -29,7 +29,7 @@ interface PracticeResult {
 }
 
 export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
-  const { updatePracticeHistory, unlockBadge, updateStreak, practiceHistory, badges } = useAppStore();
+  const { updatePracticeHistory, updateStreak, checkAndUnlockAchievements, practiceHistory, badges } = useAppStore();
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [practiceState, setPracticeState] = useState<PracticeState>('ready');
   const [results, setResults] = useState<PracticeResult[]>([]);
@@ -104,15 +104,11 @@ export const PracticeModal = ({ situation, onClose }: PracticeModalProps) => {
           }));
           updatePracticeHistory(situation.id, finalScore, currentPhrase.native, syllableData);
           updateStreak();
+          checkAndUnlockAchievements();
           
-          // Check for badges
-          if (finalScore === 100 && !badges.find(b => b.id === 'perfect-score')?.unlocked) {
-            unlockBadge('perfect-score');
+          // Show confetti for perfect score
+          if (finalScore === 100) {
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-          }
-          
-          if (Object.keys(practiceHistory).length === 0 && !badges.find(b => b.id === 'first-steps')?.unlocked) {
-            unlockBadge('first-steps');
           }
           
           setPracticeState('feedback');

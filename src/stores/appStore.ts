@@ -59,6 +59,7 @@ export interface PracticeHistory {
     lastPracticed: string;
     phraseScores: { [phraseId: string]: number };
     syllableHistory: { [syllableKey: string]: SyllableHistory };
+    practiceTimestamps: string[]; // Track all practice times for time-based achievements
   };
 }
 
@@ -106,6 +107,7 @@ interface AppState {
   getMasteredSyllables: () => Array<{ syllable: string; data: SyllableHistory }>;
   unlockBadge: (badgeId: string) => void;
   updateStreak: () => void;
+  checkAndUnlockAchievements: () => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -177,12 +179,14 @@ export const useAppStore = create<AppState>()(
       setHasShownFavoriteModal: (shown) => set({ hasShownFavoriteModal: shown }),
       updatePracticeHistory: (situationId, score, phraseId, syllableData) =>
         set((state) => {
+          const now = new Date().toISOString();
           const existing = state.practiceHistory[situationId] || {
             attempts: 0,
             bestScore: 0,
-            lastPracticed: new Date().toISOString(),
+            lastPracticed: now,
             phraseScores: {},
             syllableHistory: {},
+            practiceTimestamps: [],
           };
           
           // Update syllable history if provided
@@ -224,12 +228,13 @@ export const useAppStore = create<AppState>()(
               [situationId]: {
                 attempts: existing.attempts + 1,
                 bestScore: Math.max(existing.bestScore, score),
-                lastPracticed: new Date().toISOString(),
+                lastPracticed: now,
                 phraseScores: {
                   ...existing.phraseScores,
                   [phraseId]: score,
                 },
                 syllableHistory: updatedSyllableHistory,
+                practiceTimestamps: [...existing.practiceTimestamps, now],
               },
             },
           };
@@ -330,6 +335,79 @@ export const useAppStore = create<AppState>()(
             practiceStreak: newStreak,
             lastPracticeDate: today,
           };
+        }),
+      checkAndUnlockAchievements: () =>
+        set((state) => {
+          const newBadges = [...state.badges];
+          const unlockBadge = (id: string) => {
+            const badge = newBadges.find(b => b.id === id);
+            if (badge && !badge.unlocked) {
+              badge.unlocked = true;
+            }
+          };
+
+          // Check first-steps: Complete first practice
+          const totalPractices = Object.values(state.practiceHistory).reduce(
+            (sum, h) => sum + h.attempts, 0
+          );
+          if (totalPractices >= 1) {
+            unlockBadge('first-steps');
+          }
+
+          // Check practice-master: 50+ practice sessions
+          if (totalPractices >= 50) {
+            unlockBadge('practice-master');
+          }
+
+          // Check perfect-score: Get 100% on any phrase
+          const hasPerfectScore = Object.values(state.practiceHistory).some(
+            h => Object.values(h.phraseScores).some(score => score === 100)
+          );
+          if (hasPerfectScore) {
+            unlockBadge('perfect-score');
+          }
+
+          // Check collector: Save 10 situations
+          if (state.favoritedSituations.length >= 10) {
+            unlockBadge('collector');
+          }
+
+          // Check polyglot: Practice in 3 different cities
+          const citiesPracticed = new Set(
+            state.favoritedSituations
+              .filter(s => state.practiceHistory[s.id]?.attempts > 0)
+              .map(s => s.cityName)
+          );
+          if (citiesPracticed.size >= 3) {
+            unlockBadge('polyglot');
+          }
+
+          // Check dedicated: 7-day streak
+          if (state.practiceStreak >= 7) {
+            unlockBadge('dedicated');
+          }
+
+          // Check time-based achievements: early-bird and night-owl
+          const allTimestamps = Object.values(state.practiceHistory)
+            .flatMap(h => h.practiceTimestamps || []);
+          
+          const hasEarlyPractice = allTimestamps.some(timestamp => {
+            const hour = new Date(timestamp).getHours();
+            return hour < 8;
+          });
+          if (hasEarlyPractice) {
+            unlockBadge('early-bird');
+          }
+
+          const hasLatePractice = allTimestamps.some(timestamp => {
+            const hour = new Date(timestamp).getHours();
+            return hour >= 22;
+          });
+          if (hasLatePractice) {
+            unlockBadge('night-owl');
+          }
+
+          return { badges: newBadges };
         }),
     }),
     {

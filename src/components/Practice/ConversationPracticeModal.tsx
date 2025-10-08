@@ -37,7 +37,7 @@ export const ConversationPracticeModal = ({
   situation,
   onClose,
 }: ConversationPracticeModalProps) => {
-  const { updatePracticeHistory, updateStreak, unlockBadge, genderPreference: globalGenderPreference, setGenderPreference } = useAppStore();
+  const { updatePracticeHistory, updateStreak, checkAndUnlockAchievements, genderPreference: globalGenderPreference, setGenderPreference } = useAppStore();
   
   // Local gender state for this practice session - doesn't trigger map refetch
   const [localGender, setLocalGender] = useState<GenderVariant>(globalGenderPreference);
@@ -142,6 +142,8 @@ export const ConversationPracticeModal = ({
               currentPhrase.native,
               syllableAnalyses.map((a) => ({ syllable: a.syllable, score: a.score }))
             );
+            updateStreak();
+            checkAndUnlockAchievements();
 
             updateStreak();
 
@@ -159,8 +161,6 @@ export const ConversationPracticeModal = ({
               setIsRecording(false);
               if (currentStep < conversationFlow.length - 1) {
                 setCurrentStep((prev) => prev + 1);
-              } else {
-                unlockBadge('first-steps');
               }
             }, 2000);
           }, 500);
@@ -285,7 +285,6 @@ export const ConversationPracticeModal = ({
 
   const handleConversationReviewComplete = (scores: number[]) => {
     setConversationReviewScores(scores);
-    unlockBadge('first-steps');
   };
 
   return (
