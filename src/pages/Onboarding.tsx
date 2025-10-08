@@ -162,9 +162,23 @@ export default function Onboarding() {
               className="px-12 py-3 bg-[#BDD1FF] rounded-full transition-all hover:bg-[#BDD1FF]/80"
               style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
             >
-              {isFirstSlide ? 'Continue →' : isLastSlide ? 'Get Started →' : 'Next'}
+              {isFirstSlide ? 'Continue' : isLastSlide ? 'Get Started' : 'Next'}
             </button>
           </div>
+
+          {/* Skip Onboarding button - only show on second slide */}
+          {currentSlide === 1 && (
+            <button
+              onClick={() => {
+                setHasCompletedOnboarding(true);
+                navigate('/home');
+              }}
+              className="absolute bottom-8 right-8 transition-all hover:underline"
+              style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
+            >
+              Skip Onboarding
+            </button>
+          )}
         </motion.div>
       </AnimatePresence>
     </div>
