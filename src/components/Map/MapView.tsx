@@ -82,7 +82,7 @@ export const MapView = () => {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',
-      projection: 'globe',
+      projection: 'mercator',
       center: [30, 20],
       zoom: 0.5,
       pitch: 20,
