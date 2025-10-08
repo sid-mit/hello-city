@@ -363,7 +363,7 @@ export const ConversationPracticeModal = ({
                 <p className="text-sm text-muted-foreground">
                   Master each phrase one at a time
                 </p>
-                <div className="space-y-3 pt-4">
+                <div className="space-y-2 pt-4">
                   {genderedPhrases.map((phrase, index) => (
                     <button
                       key={index}
@@ -371,19 +371,14 @@ export const ConversationPracticeModal = ({
                         setSelectedPhraseIndex(index);
                         setPracticeMode('single-phrase');
                       }}
-                      className="w-full text-left p-5 sm:p-6 rounded-2xl border-2 border-border hover:border-primary/50 bg-card transition-all hover:shadow-md active:scale-[0.98]"
+                      className="w-full text-left p-3 sm:p-4 rounded-xl border-2 border-border hover:border-primary/50 bg-card transition-all"
                     >
-                      <div className="space-y-2">
-                        <p className="text-base sm:text-lg font-semibold text-foreground leading-relaxed">
-                          {phrase.romanization}
-                        </p>
-                        <p className="text-sm sm:text-base text-muted-foreground">
-                          "{phrase.english}"
-                        </p>
-                        <p className="text-xs sm:text-sm text-muted-foreground/60">
-                          {phrase.native}
-                        </p>
-                      </div>
+                      <p className="font-medium text-foreground">
+                        {phrase.romanization}
+                      </p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        "{phrase.english}"
+                      </p>
                     </button>
                   ))}
                 </div>
