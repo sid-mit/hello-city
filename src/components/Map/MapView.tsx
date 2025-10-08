@@ -244,8 +244,8 @@ export const MapView = () => {
         const pngSizeClass = isCompactCity ? 'w-[140px] h-[140px]' : 'w-[160px] h-[160px]';
         const isImage = Boolean(category.iconImage);
         const iconContent = isImage
-          ? `<img src="${category.iconImage}" alt="${category.title}" class="${pngSizeClass} object-contain drop-shadow-2xl" />`
-          : `<span class="text-6xl drop-shadow-2xl">${category.emoji}</span>`;
+          ? `<img src="${category.iconImage}" alt="${category.title}" class="${pngSizeClass} object-contain" />`
+          : `<span class="text-6xl">${category.emoji}</span>`;
         
         // Wrap content so we never modify the root element transform (Mapbox uses it for positioning)
         el.innerHTML = `
