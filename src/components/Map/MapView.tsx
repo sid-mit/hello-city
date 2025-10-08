@@ -13,7 +13,6 @@ import { createRoot } from 'react-dom/client';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYW5pbnlhZyIsImEiOiJjbWdmNHF6MHUwNG9oMmtuMGhubWRlaWJ3In0.7cdKmRPJHIj-j-HzFojggA';
-const CITY_ZOOM = 13.5; // City overview level showing multiple districts
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
@@ -44,11 +43,11 @@ export const MapView = () => {
     selectCity(city);
     setShowCitySelector(false);
     
-    // Initial fly to city at city overview level
+    // Initial fly to city (will be adjusted once markers load)
     if (map.current) {
       map.current.flyTo({
         center: [city.coordinates.lng, city.coordinates.lat],
-        zoom: CITY_ZOOM,
+        zoom: 17, // Street-level view
         duration: 2000,
       });
     }
@@ -58,12 +57,10 @@ export const MapView = () => {
     selectCity(null);
     selectCategory(null);
     
-    // Reset zoom constraints and fly back to world view
+    // Fly back to world view
     if (map.current) {
-      map.current.setMinZoom(0);
-      map.current.setMaxZoom(22);
       map.current.flyTo({
-        center: [90, 20],
+      center: [90, 20],
         zoom: 1.5,
         duration: 2000,
       });
@@ -240,18 +237,10 @@ export const MapView = () => {
       // Fit map to show all markers with increased padding for larger icons
       if (!bounds.isEmpty()) {
         const topBarHeight = topBarRef.current?.offsetHeight || 0;
-        const topPadding = topBarHeight + 100;
-        
-        // Set zoom constraints for city view
-        map.current.setMinZoom(12);
-        map.current.setMaxZoom(16);
-        
-        // Calculate center and use fixed city zoom instead of fitBounds zoom
-        const center = bounds.getCenter();
-        map.current.easeTo({
-          center: [center.lng, center.lat],
-          zoom: CITY_ZOOM,
+        const topPadding = topBarHeight + 100; // Increased from topBarHeight + 24
+        map.current.fitBounds(bounds, {
           padding: { top: topPadding, bottom: 140, left: 140, right: 140 },
+          maxZoom: 18, // Street-level zoom
           duration: 1500,
         });
       }
@@ -412,13 +401,6 @@ export const MapView = () => {
               This city doesn't have any phrases yet. Import phrases via the Admin panel.
             </p>
           </div>
-        </div>
-      )}
-
-      {/* Debug zoom readout */}
-      {selectedCity && map.current && (
-        <div className="absolute bottom-4 right-4 z-50 glass rounded-lg px-3 py-1.5 text-xs font-mono">
-          Zoom: {map.current.getZoom().toFixed(1)}
         </div>
       )}
     </motion.div>
