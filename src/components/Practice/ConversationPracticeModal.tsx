@@ -402,6 +402,8 @@ export const ConversationPracticeModal = ({
               totalPhrases={genderedPhrases.length}
               cityId={situation.cityId}
               recognition={recognition}
+              situationIcon={situation.categoryIconImage}
+              situationTitle={situation.title}
               onBack={() => {
                 setSelectedPhraseIndex(null);
                 setPracticeMode('selection');

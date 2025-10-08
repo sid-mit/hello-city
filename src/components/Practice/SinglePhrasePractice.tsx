@@ -24,6 +24,8 @@ interface SinglePhrasePracticeProps {
   recognition: any;
   onBack: () => void;
   onNext?: () => void;
+  situationIcon?: string;
+  situationTitle?: string;
 }
 
 type Step = "record" | "result";
@@ -36,6 +38,8 @@ export const SinglePhrasePractice = ({
   recognition,
   onBack,
   onNext,
+  situationIcon,
+  situationTitle,
 }: SinglePhrasePracticeProps) => {
   const { genderPreference, setGenderPreference } = useAppStore();
   const [step, setStep] = useState<Step>("record");
@@ -130,13 +134,17 @@ export const SinglePhrasePractice = ({
   return (
     <div className="space-y-6 py-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <Button variant="ghost" size="sm" onClick={onBack}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
+      <div className="flex items-center justify-between px-2">
+        <div className="flex items-center gap-3 flex-1 justify-center">
+          {situationIcon && (
+            <img src={situationIcon} alt="" className="w-8 h-8" />
+          )}
+          {situationTitle && (
+            <h3 className="text-lg font-semibold">{situationTitle}</h3>
+          )}
+        </div>
         <span className="text-sm font-medium text-muted-foreground">
-          Phrase {phraseIndex + 1}/{totalPhrases}
+          {phraseIndex + 1}/{totalPhrases}
         </span>
       </div>
 
@@ -149,27 +157,22 @@ export const SinglePhrasePractice = ({
             exit={{ opacity: 0, y: -20 }}
             className="space-y-6"
           >
-            <div className="text-center py-8 space-y-4">
-              <h3 className="text-sm font-medium text-muted-foreground uppercase">
-                Practice Your Pronunciation
-              </h3>
-              <div className="space-y-3">
-                <p className="text-3xl font-bold text-foreground">
-                  {phrase.romanization}
-                </p>
-                <p className="text-xl text-muted-foreground">
-                  "{phrase.english}"
-                </p>
-                <p className="text-base text-muted-foreground">{phrase.native}</p>
-              </div>
+            <div className="text-center py-6 space-y-2">
+              <p className="text-4xl font-bold text-foreground">
+                {phrase.romanization}
+              </p>
+              <p className="text-xl text-muted-foreground">
+                {phrase.romanization}
+              </p>
+              <p className="text-sm text-muted-foreground">{phrase.native}</p>
             </div>
 
             <Button
               onClick={handleListen}
               variant="outline"
               size="lg"
-              className="w-full h-12"
-              disabled={isRecording || isAnalyzing}
+              className="w-full h-14"
+              disabled={isRecording || isAnalyzing || isPlaying}
             >
               <Volume2 className="mr-2 h-5 w-5" />
               Listen
