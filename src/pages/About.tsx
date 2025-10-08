@@ -278,7 +278,7 @@ const About = () => {
               To make travel more human. Helping people connect across cultures through small, meaningful words. Language isn't just communication. It's care, respect, and curiosity in motion.
             </p>
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/home')}
               className="px-32 py-3 bg-[#D2E0FF] text-primary text-lg font-semibold rounded-full hover:bg-[#D2E0FF]/80 transition-colors"
             >
               Ready to Explore?
