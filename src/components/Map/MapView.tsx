@@ -95,12 +95,6 @@ export const MapView = () => {
       pitch: 20,
     });
 
-    // Track zoom level for debugging
-    setZoomLevel(Number(map.current!.getZoom().toFixed(1)));
-    map.current.on('zoom', () => {
-      setZoomLevel(Number(map.current!.getZoom().toFixed(1)));
-    });
-
     map.current.on('style.load', () => {
       if (!map.current) return;
 
@@ -125,6 +119,16 @@ export const MapView = () => {
 
         setTimeout(() => {
           setIsLaunching(false);
+          
+          // Set up zoom tracking after map is fully loaded
+          if (map.current) {
+            setZoomLevel(Number(map.current.getZoom().toFixed(1)));
+            map.current.on('zoom', () => {
+              if (map.current) {
+                setZoomLevel(Number(map.current.getZoom().toFixed(1)));
+              }
+            });
+          }
         }, 2500);
       }, 300);
     });
