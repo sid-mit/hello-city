@@ -44,12 +44,13 @@ export const MapView = () => {
     selectCity(city);
     setShowCitySelector(false);
     
-    // Initial fly to city (will be adjusted once markers load)
+    // Flatten the map and prepare for category markers
     if (map.current) {
       map.current.flyTo({
         center: [city.coordinates.lng, city.coordinates.lat],
-        zoom: 11,
-        duration: 2000,
+        zoom: 12,
+        pitch: 0,
+        duration: 1500,
       });
     }
   }, [selectCity]);
