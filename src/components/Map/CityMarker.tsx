@@ -37,7 +37,7 @@ export const CityMarker = ({ city, onClick, isSelected }: CityMarkerProps) => {
       
       {/* Marker circle */}
       <div
-        className={`relative w-12 h-12 rounded-full glass border-2 flex items-center justify-center transition-all ${
+        className={`relative w-11 h-11 rounded-full glass border-2 flex items-center justify-center transition-all ${
           isSelected
             ? 'shadow-[0_0_20px_rgba(65,124,255,0.5)]'
             : 'border-border/50'
@@ -46,7 +46,7 @@ export const CityMarker = ({ city, onClick, isSelected }: CityMarkerProps) => {
           borderColor: isSelected ? 'hsl(var(--primary-blue))' : undefined,
         }}
       >
-        <span className="text-2xl">{city.emoji}</span>
+        <span className="text-xl leading-none" style={{ fontSize: '1.25rem' }}>{city.emoji}</span>
       </div>
 
       {/* Tooltip */}
