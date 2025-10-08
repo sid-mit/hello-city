@@ -289,7 +289,7 @@ export const ConversationPracticeModal = ({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-full mx-4 sm:max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+      <DialogContent className="max-w-[calc(100%-2rem)] mx-auto sm:max-w-2xl max-h-[90vh] overflow-y-auto p-0">
         <div className="sticky top-0 z-10 bg-background border-b px-4 py-3 sm:px-6 sm:py-4">
           <div className="relative flex justify-between items-center mb-3">
             {/* Left side - Back button or empty space */}
@@ -371,14 +371,19 @@ export const ConversationPracticeModal = ({
                         setSelectedPhraseIndex(index);
                         setPracticeMode('single-phrase');
                       }}
-                      className="w-full text-left p-3 sm:p-4 rounded-xl border-2 border-border hover:border-primary/50 bg-card transition-all"
+                      className="w-full text-left p-5 sm:p-6 rounded-2xl border-2 border-border hover:border-primary/50 bg-card transition-all hover:shadow-md active:scale-[0.98]"
                     >
-                      <p className="font-medium text-foreground">
-                        {phrase.romanization}
-                      </p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        "{phrase.english}"
-                      </p>
+                      <div className="space-y-2">
+                        <p className="text-base sm:text-lg font-semibold text-foreground leading-relaxed">
+                          {phrase.romanization}
+                        </p>
+                        <p className="text-sm sm:text-base text-muted-foreground">
+                          "{phrase.english}"
+                        </p>
+                        <p className="text-xs sm:text-sm text-muted-foreground/60">
+                          {phrase.native}
+                        </p>
+                      </div>
                     </button>
                   ))}
                 </div>
