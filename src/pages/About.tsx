@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Target, Mic, Globe, Navigation, Trophy, Linkedin } from 'lucide-react';
+import { MapPin, Target, Mic, Globe, Navigation, Trophy, Linkedin, Heart, Coffee } from 'lucide-react';
 import { UnifiedHeader } from '@/components/Header/UnifiedHeader';
 import logo from '@/assets/logo.svg';
 
@@ -281,7 +281,7 @@ const About = () => {
               onClick={() => navigate('/')}
               className="px-32 py-3 bg-[#D2E0FF] text-primary text-lg font-semibold rounded-full hover:bg-[#D2E0FF]/80 transition-colors"
             >
-              Ready to Explore
+              Ready to Explore?
             </button>
           </motion.div>
         </div>
@@ -289,8 +289,8 @@ const About = () => {
 
       {/* Footer */}
       <footer className="py-8 px-6 text-center border-t">
-        <p className="text-xs font-medium text-foreground">
-          Built with care by the HelloCity team
+        <p className="text-xs font-medium text-foreground flex items-center justify-center gap-2">
+          Built with <Heart className="w-4 h-4 text-primary" /> and a lot of <Coffee className="w-4 h-4 text-primary" />
         </p>
       </footer>
     </div>
