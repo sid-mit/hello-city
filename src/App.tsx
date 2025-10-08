@@ -9,6 +9,7 @@ import Onboarding from "./pages/Onboarding";
 import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
+import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 import PitchIndex from "./pages/pitch/PitchIndex";
 import Slide1 from "./pages/pitch/Slide1";
@@ -45,6 +46,7 @@ const App = () => {
           <Route path="/" element={<Landing />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/home" element={<Index />} />
+          <Route path="/discover" element={<Discover />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/about" element={<About />} />
           <Route path="/pitch" element={<PitchIndex />} />

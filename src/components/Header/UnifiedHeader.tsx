@@ -98,8 +98,10 @@ export const UnifiedHeader = () => {
               key={tab.id} 
               onClick={() => {
                 setActiveTab(tab.id);
-                if (location.pathname !== '/home') {
+                if (tab.id === 'explore') {
                   navigate('/home');
+                } else if (tab.id === 'learn') {
+                  navigate('/discover');
                 }
               }} 
               className="relative flex-1 flex items-center justify-center transition-colors duration-200 z-10"
