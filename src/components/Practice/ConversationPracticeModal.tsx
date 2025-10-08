@@ -279,13 +279,10 @@ export const ConversationPracticeModal = ({
 
         <div className="p-6 space-y-6">
           {practiceMode === 'selection' ? (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Individual Phrases Section */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">📝</span>
-                  <h3 className="text-lg font-semibold">Practice Individual Phrases</h3>
-                </div>
+              <div className="space-y-3">
+                <h3 className="text-base font-semibold text-foreground">Practice Individual Phrases</h3>
                 <p className="text-sm text-muted-foreground">
                   Master each phrase one at a time
                 </p>
@@ -297,9 +294,9 @@ export const ConversationPracticeModal = ({
                         setSelectedPhraseIndex(index);
                         setPracticeMode('single-phrase');
                       }}
-                      className="w-full text-left p-4 rounded-lg border border-border hover:border-primary/50 hover:bg-accent/50 transition-all group"
+                      className="w-full text-left p-4 rounded-xl border-2 border-border hover:border-primary/50 bg-card transition-all"
                     >
-                      <p className="font-medium text-foreground group-hover:text-primary transition-colors">
+                      <p className="font-medium text-foreground">
                         {phrase.romanization}
                       </p>
                       <p className="text-sm text-muted-foreground mt-1">
@@ -311,16 +308,14 @@ export const ConversationPracticeModal = ({
               </div>
 
               {/* Full Conversation Section */}
-              <div className="border-t pt-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-2xl">💬</span>
-                  <h3 className="text-lg font-semibold">Feeling Confident?</h3>
-                </div>
-                <p className="text-sm text-muted-foreground mb-4">
+              <div className="pt-4 space-y-3">
+                <h3 className="text-base font-semibold text-foreground">Feeling Confident?</h3>
+                <p className="text-sm text-muted-foreground">
                   Practice the entire conversation flow with realistic responses
                 </p>
                 <Button
                   onClick={handleGenerateConversation}
+                  variant="default"
                   className="w-full"
                   size="lg"
                   disabled={isGeneratingResponses}
@@ -331,10 +326,7 @@ export const ConversationPracticeModal = ({
                       Generating Conversation
                     </>
                   ) : (
-                    <>
-                      <Users className="h-5 w-5 mr-2" />
-                      Practice Full Conversation
-                    </>
+                    "Practice Full Conversation"
                   )}
                 </Button>
               </div>
