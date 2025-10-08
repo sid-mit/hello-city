@@ -108,7 +108,7 @@ export interface CityDataStructure {
  */
 export function useDynamicCityData({ cityId, genderPreference }: DynamicCityDataParams) {
   return useQuery({
-    queryKey: ['dynamic-city-data', cityId, genderPreference],
+    queryKey: ['dynamic-city-data', cityId],
     queryFn: async (): Promise<CityDataStructure | null> => {
       const { data: phrases, error } = await supabase
         .from('phrases')

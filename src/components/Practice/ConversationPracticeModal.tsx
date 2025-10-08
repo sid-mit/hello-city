@@ -35,7 +35,10 @@ export const ConversationPracticeModal = ({
   situation,
   onClose,
 }: ConversationPracticeModalProps) => {
-  const { updatePracticeHistory, updateStreak, unlockBadge, genderPreference, setGenderPreference } = useAppStore();
+  const { updatePracticeHistory, updateStreak, unlockBadge, genderPreference: globalGenderPreference, setGenderPreference } = useAppStore();
+  
+  // Local gender state for this practice session - doesn't trigger map refetch
+  const [localGender, setLocalGender] = useState(globalGenderPreference);
   
   // Auto-generate conversation flow if none exists
   const conversationFlow = situation.conversationFlow || situation.phrases.map((phrase, index) => ([
@@ -198,7 +201,7 @@ export const ConversationPracticeModal = ({
             romanization: phrase.romanization,
             english: phrase.english
           })),
-          genderPreference: genderPreference
+          genderPreference: localGender
         }
       });
 
@@ -272,8 +275,11 @@ export const ConversationPracticeModal = ({
                       "mexico-city": "es-ES",
                     }[situation.cityId] || "en-US") as LanguageCode
                   }
-                  currentGender={genderPreference}
-                  onGenderChange={setGenderPreference}
+                  currentGender={localGender}
+                  onGenderChange={(newGender) => {
+                    setLocalGender(newGender);
+                    setGenderPreference(newGender);
+                  }}
                 />
               )}
               <Button variant="ghost" size="icon" onClick={onClose}>
