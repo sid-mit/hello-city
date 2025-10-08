@@ -96,7 +96,9 @@ const About = () => {
       </motion.section>
 
       {/* What is HelloCity Section */}
-      <section className="py-16 px-6 bg-secondary/20">
+      <section className="relative py-16 px-6 bg-secondary/20">
+        <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background to-transparent pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
         <div className="max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -161,7 +163,9 @@ const About = () => {
       </section>
 
       {/* Why HelloCity Section */}
-      <section className="py-20 px-6 bg-secondary/20">
+      <section className="relative py-20 px-6 bg-secondary/20">
+        <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background to-transparent pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -259,7 +263,8 @@ const About = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="py-20 px-6 bg-secondary/20">
+      <section className="relative py-20 px-6 bg-secondary/20">
+        <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background to-transparent pointer-events-none"></div>
         <div className="max-w-3xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
