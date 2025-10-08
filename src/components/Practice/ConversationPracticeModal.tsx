@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { X, Users, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
-import { useAppStore } from "@/stores/appStore";
+import { useAppStore, type GenderVariant } from "@/stores/appStore";
 import { analyzeSyllables, calculateOverallScore } from "@/utils/syllableAnalysis";
 import { generateNaturalSpeech } from "@/utils/voiceManager";
+import { getGenderedVariant } from "@/utils/genderVariantHelper";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 import { CollapsiblePastSteps } from "./CollapsiblePastSteps";
 import { CurrentStepCard } from "./CurrentStepCard";
@@ -19,7 +22,6 @@ import { SinglePhrasePractice } from "./SinglePhrasePractice";
 import { SituationData } from "@/components/Cards/SituationCard";
 import { GenderSelector, type LanguageCode } from "./GenderSelector";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 interface ConversationPracticeModalProps {
   situation: SituationData;
@@ -38,10 +40,48 @@ export const ConversationPracticeModal = ({
   const { updatePracticeHistory, updateStreak, unlockBadge, genderPreference: globalGenderPreference, setGenderPreference } = useAppStore();
   
   // Local gender state for this practice session - doesn't trigger map refetch
-  const [localGender, setLocalGender] = useState(globalGenderPreference);
+  const [localGender, setLocalGender] = useState<GenderVariant>(globalGenderPreference);
+
+  // Fetch raw phrases from database to apply gender selection dynamically
+  const { data: rawPhrases } = useQuery({
+    queryKey: ['situation-phrases', situation.id],
+    queryFn: async () => {
+      // Extract spot_type and sub_scenario from the first phrase's metadata
+      // We need to query based on the situation's phrases to get the raw data
+      const { data, error } = await supabase
+        .from('phrases')
+        .select('*')
+        .eq('city', situation.cityId);
+      
+      if (error) throw error;
+      return data || [];
+    },
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  });
+
+  // Apply gender selection to phrases dynamically based on local gender
+  const genderedPhrases = useMemo(() => {
+    if (!rawPhrases) return situation.phrases;
+    
+    // Match raw phrases to situation phrases by content
+    return situation.phrases.map(phrase => {
+      const rawPhrase = rawPhrases.find(
+        rp => rp.translation_en === phrase.english
+      );
+      
+      if (!rawPhrase) return phrase;
+      
+      const { native, romanization } = getGenderedVariant(rawPhrase, localGender);
+      return {
+        ...phrase,
+        native,
+        romanization,
+      };
+    });
+  }, [rawPhrases, situation.phrases, localGender]);
   
   // Auto-generate conversation flow if none exists
-  const conversationFlow = situation.conversationFlow || situation.phrases.map((phrase, index) => ([
+  const conversationFlow = situation.conversationFlow || genderedPhrases.map((phrase, index) => ([
     { step: index * 2 + 1, speaker: 'you' as const, phraseIndex: index },
     { step: index * 2 + 2, speaker: 'other' as const, action: 'Responds appropriately' }
   ])).flat();
@@ -82,7 +122,7 @@ export const ConversationPracticeModal = ({
         const currentFlow = conversationFlow[currentStep];
         
         if (currentFlow.phraseIndex !== undefined) {
-          const currentPhrase = situation.phrases[currentFlow.phraseIndex];
+          const currentPhrase = genderedPhrases[currentFlow.phraseIndex];
           
           setIsAnalyzing(true);
 
@@ -167,7 +207,7 @@ export const ConversationPracticeModal = ({
 
   const handleListen = async (phraseIndex: number) => {
     try {
-      const phrase = situation.phrases[phraseIndex];
+      const phrase = genderedPhrases[phraseIndex];
       if (!phrase) return;
       await generateNaturalSpeech(phrase.native, situation.cityId);
     } catch (error) {
@@ -196,7 +236,7 @@ export const ConversationPracticeModal = ({
           city: situation.cityId,
           spotType: 'general', // Generic spot type since not in SituationData
           subScenario: situation.title,
-          phrases: situation.phrases.map(phrase => ({
+          phrases: genderedPhrases.map(phrase => ({
             native: phrase.native,
             romanization: phrase.romanization,
             english: phrase.english
@@ -237,7 +277,7 @@ export const ConversationPracticeModal = ({
       : null;
   const nextPhrase =
     nextFlow && nextFlow.speaker === "you" && nextFlow.phraseIndex !== undefined
-      ? situation.phrases[nextFlow.phraseIndex].native
+      ? genderedPhrases[nextFlow.phraseIndex].native
       : null;
   const remainingSteps = totalSteps - completedSteps;
   
@@ -299,7 +339,7 @@ export const ConversationPracticeModal = ({
                   Master each phrase one at a time
                 </p>
                 <div className="space-y-2 pt-4">
-                  {situation.phrases.map((phrase, index) => (
+                  {genderedPhrases.map((phrase, index) => (
                     <button
                       key={index}
                       onClick={() => {
@@ -357,9 +397,9 @@ export const ConversationPracticeModal = ({
             </div>
           ) : practiceMode === 'single-phrase' && selectedPhraseIndex !== null ? (
             <SinglePhrasePractice
-              phrase={situation.phrases[selectedPhraseIndex]}
+              phrase={genderedPhrases[selectedPhraseIndex]}
               phraseIndex={selectedPhraseIndex}
-              totalPhrases={situation.phrases.length}
+              totalPhrases={genderedPhrases.length}
               cityId={situation.cityId}
               recognition={recognition}
               onBack={() => {
@@ -367,14 +407,14 @@ export const ConversationPracticeModal = ({
                 setPracticeMode('selection');
               }}
               onNext={
-                selectedPhraseIndex < situation.phrases.length - 1
+                selectedPhraseIndex < genderedPhrases.length - 1
                   ? () => setSelectedPhraseIndex(selectedPhraseIndex + 1)
                   : undefined
               }
             />
           ) : practiceMode === 'conversation' ? (
             <ConversationReview
-              phrases={situation.phrases}
+              phrases={genderedPhrases}
               serverResponses={serverResponses}
               cityId={situation.cityId}
               recognition={recognition}
@@ -383,7 +423,7 @@ export const ConversationPracticeModal = ({
             />
           ) : showConversationReview ? (
             <ConversationReview
-              phrases={situation.phrases}
+              phrases={genderedPhrases}
               serverResponses={situation.serverResponses}
               cityId={situation.cityId}
               recognition={recognition}
@@ -394,7 +434,7 @@ export const ConversationPracticeModal = ({
               {/* Collapsible Past Steps */}
               <CollapsiblePastSteps
                 results={stepResults}
-                phrases={situation.phrases}
+                phrases={genderedPhrases}
                 userSteps={userSteps}
               />
 
@@ -426,7 +466,7 @@ export const ConversationPracticeModal = ({
               {currentFlow.speaker === "you" && currentFlow.phraseIndex !== undefined && (
                 <>
                   <CurrentStepCard
-                    phrase={situation.phrases[currentFlow.phraseIndex]}
+                    phrase={genderedPhrases[currentFlow.phraseIndex]}
                     onListen={() => handleListen(currentFlow.phraseIndex!)}
                   />
 
