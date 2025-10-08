@@ -57,7 +57,7 @@ const Discover = () => {
     <div className="min-h-screen bg-background">
       <UnifiedHeader />
       
-      <div className="pt-24 pb-16 px-6 max-w-6xl mx-auto">
+      <div className="pt-20 md:pt-24 pb-12 md:pb-16 px-4 md:px-6 max-w-6xl mx-auto">
         {/* Greeting Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -80,8 +80,8 @@ const Discover = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="mb-16"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-6">Your Achievements</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <h2 className="text-xl md:text-2xl font-bold text-foreground mb-6">Your Achievements</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {badges.map((badge, index) => (
               <motion.div
                 key={badge.id}
@@ -124,10 +124,10 @@ const Discover = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <h2 className="text-2xl font-bold text-foreground mb-6">Your Likes</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-foreground mb-6">Your Likes</h2>
           
           {/* Filter Tabs */}
-          <div className="flex gap-2 mb-6 flex-wrap">
+          <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
             {filters.map((filter) => (
               <button
                 key={filter}
@@ -157,13 +157,13 @@ const Discover = () => {
                   setActiveTab('explore');
                   navigate('/home');
                 }}
-                className="px-8 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
+                className="px-6 md:px-8 py-3 rounded-full bg-primary text-primary-foreground text-sm md:text-base font-semibold hover:bg-primary/90 transition-colors"
               >
                 Explore Map
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {sortedSituations.map((situation, index) => {
                 const isFavorited = isSituationFavorited(situation.id);
                 const practiceCount = practiceHistory[situation.id]?.attempts || 0;

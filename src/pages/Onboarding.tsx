@@ -207,8 +207,8 @@ export default function Onboarding() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
-                className="px-20 py-3 border-2 border-[#417CFF] bg-transparent rounded-full transition-all hover:bg-[#D2E0FF]/30"
-                style={{ color: '#417CFF', fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
+                className="px-8 md:px-20 py-3 border-2 border-[#417CFF] bg-transparent rounded-full transition-all hover:bg-[#D2E0FF]/30 text-base md:text-lg"
+                style={{ color: '#417CFF', fontFamily: 'Outfit', fontWeight: 600 }}
               >
                 Back
               </motion.button>
@@ -218,8 +218,8 @@ export default function Onboarding() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
-              className="px-20 py-3 bg-[#D2E0FF] rounded-full transition-all hover:bg-[#D2E0FF]/80"
-              style={{ color: '#417CFF', fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
+              className="px-8 md:px-20 py-3 bg-[#D2E0FF] rounded-full transition-all hover:bg-[#D2E0FF]/80 text-base md:text-lg"
+              style={{ color: '#417CFF', fontFamily: 'Outfit', fontWeight: 600 }}
             >
               {isFirstSlide ? 'Continue' : isLastSlide ? 'Get Started' : 'Next'}
             </motion.button>
@@ -239,8 +239,8 @@ export default function Onboarding() {
           }}
           whileHover={{ scale: 1.02, x: 4 }}
           whileTap={{ scale: 0.98 }}
-          className="absolute bottom-8 right-8 transition-all hover:underline z-20"
-          style={{ color: '#6B7280', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
+          className="absolute bottom-4 md:bottom-8 right-4 md:right-8 transition-all hover:underline z-20 text-sm md:text-base"
+          style={{ color: '#6B7280', fontFamily: 'Outfit', fontWeight: 600 }}
         >
           Skip Onboarding →
         </motion.button>

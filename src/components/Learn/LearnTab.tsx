@@ -80,7 +80,7 @@ export const LearnTab = () => {
   }
 
   return (
-    <div className="w-full h-full overflow-y-auto pt-20 px-6 pb-20">
+    <div className="w-full h-full overflow-y-auto pt-16 md:pt-20 px-4 md:px-6 pb-16 md:pb-20">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -90,10 +90,10 @@ export const LearnTab = () => {
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold mb-1">
+              <h1 className="text-2xl md:text-3xl font-bold mb-1">
                 👋 Hello, {guestName || 'Guest'}!
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-sm md:text-base text-muted-foreground">
                 📚 {favoritedSituations.length} situations saved
               </p>
             </div>
@@ -120,15 +120,15 @@ export const LearnTab = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="all" className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="byCity">By City</TabsTrigger>
-              <TabsTrigger value="recent">Recent</TabsTrigger>
+          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 md:gap-0 mb-4">
+            <TabsList className="w-full md:w-auto">
+              <TabsTrigger value="all" className="flex-1 md:flex-initial">All</TabsTrigger>
+              <TabsTrigger value="byCity" className="flex-1 md:flex-initial">By City</TabsTrigger>
+              <TabsTrigger value="recent" className="flex-1 md:flex-initial">Recent</TabsTrigger>
             </TabsList>
 
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-full md:w-40">
                 <SortAsc className="w-4 h-4 mr-2" />
                 <SelectValue />
               </SelectTrigger>

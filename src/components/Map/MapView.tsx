@@ -325,8 +325,8 @@ export const MapView = () => {
     >
       {/* Back/City Info Bar (below header) */}
       {selectedCity && (
-        <div ref={topBarRef} className="absolute top-20 left-0 right-0 z-10 glass border-b border-border/50">
-          <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div ref={topBarRef} className="absolute top-16 md:top-20 left-0 right-0 z-10 glass border-b border-border/50">
+          <div className="container mx-auto px-3 md:px-4 py-2 md:py-3 flex items-center justify-between">
             <Button
               variant="ghost"
               size="sm"
@@ -340,10 +340,10 @@ export const MapView = () => {
               <img 
                 src={selectedCity.emoji} 
                 alt={`${selectedCity.name} flag`}
-                className="w-12 h-12 object-contain"
+                className="w-8 h-8 md:w-12 md:h-12 object-contain"
               />
               <div>
-                <h2 className="text-lg font-bold">{selectedCity.name}</h2>
+                <h2 className="text-base md:text-lg font-bold">{selectedCity.name}</h2>
                 <p className="text-xs text-muted-foreground">
                   Learn {selectedCity.language}
                 </p>
@@ -394,18 +394,18 @@ export const MapView = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="absolute inset-x-0 bottom-12 z-30 pointer-events-none"
+          className="absolute inset-x-0 bottom-6 md:bottom-12 z-30 pointer-events-none"
         >
-          <div className="mx-auto w-full max-w-md px-4 flex flex-col items-center gap-6 text-center pointer-events-auto">
+          <div className="mx-auto w-full max-w-md px-4 flex flex-col items-center gap-4 md:gap-6 text-center pointer-events-auto">
             {/* Instructional Text */}
-            <p className="text-base font-medium font-gilroy" style={{ color: '#404040' }}>
+            <p className="text-sm md:text-base font-medium font-gilroy" style={{ color: '#404040' }}>
               Tap a city to explore local phrases
             </p>
             
             {/* Choose City Button */}
             <button
               onClick={() => setShowCitySelector(true)}
-              className="px-20 py-3 rounded-[30px] hover:opacity-90 transition-all font-outfit text-lg font-semibold"
+              className="px-8 md:px-20 py-3 rounded-[30px] hover:opacity-90 transition-all font-outfit text-base md:text-lg font-semibold"
               style={{ backgroundColor: '#D2E0FF', color: '#417CFF' }}
             >
               Choose City

@@ -81,7 +81,7 @@ const About = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="pt-40 pb-16 px-6 text-center"
+        className="pt-24 md:pt-40 pb-12 md:pb-16 px-4 md:px-6 text-center"
       >
         <div className="max-w-3xl mx-auto flex flex-col items-center gap-6">
           <h1 className="text-5xl font-bold tracking-wide flex items-center gap-3 flex-wrap justify-center">
@@ -95,7 +95,7 @@ const About = () => {
       </motion.section>
 
       {/* What is HelloCity Section */}
-      <section className="relative py-16 px-6 bg-secondary/20">
+      <section className="relative py-12 md:py-16 px-4 md:px-6 bg-secondary/20">
         <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background to-transparent pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
         <div className="max-w-3xl mx-auto">
@@ -124,7 +124,7 @@ const About = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 px-6">
+      <section className="py-12 md:py-20 px-4 md:px-6">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -135,7 +135,7 @@ const About = () => {
             <h2 className="text-2xl font-bold text-center text-foreground mb-10 tracking-wide">
               How It Works
             </h2>
-            <div className="grid md:grid-cols-3 gap-32">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-32">
               {steps.map((step, index) => {
                 const Icon = step.icon;
                 return (
@@ -162,7 +162,7 @@ const About = () => {
       </section>
 
       {/* Why HelloCity Section */}
-      <section className="relative py-20 px-6 bg-secondary/20">
+      <section className="relative py-12 md:py-20 px-4 md:px-6 bg-secondary/20">
         <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background to-transparent pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
         <div className="max-w-5xl mx-auto">
@@ -175,7 +175,7 @@ const About = () => {
             <h2 className="text-2xl font-bold text-center text-foreground mb-10 tracking-wide">
               Why HelloCity?
             </h2>
-            <div className="grid md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
               {features.map((feature, index) => {
                 const Icon = feature.icon;
                 return (
@@ -210,7 +210,7 @@ const About = () => {
       </section>
 
       {/* Meet the Team Section */}
-      <section className="py-20 px-6">
+      <section className="py-12 md:py-20 px-4 md:px-6">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -224,7 +224,7 @@ const About = () => {
             <p className="text-base font-medium text-foreground leading-relaxed mb-16 text-center max-w-3xl mx-auto">
               Hello City is built by a small team of three designers who believe that technology can bring people closer, not apart. We come from different cities (New Delhi, Seoul, and Beijing) united by one shared curiosity: how a few simple words can open a whole new dimension of travel.
             </p>
-            <div className="flex justify-center items-center gap-44">
+            <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 lg:gap-44">
               {team.map((member, index) => (
                 <motion.div
                   key={member.name}
@@ -262,7 +262,7 @@ const About = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="relative py-20 px-6 bg-secondary/20">
+      <section className="relative py-12 md:py-20 px-4 md:px-6 bg-secondary/20">
         <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-background to-transparent pointer-events-none"></div>
         <div className="max-w-3xl mx-auto text-center">
           <motion.div
@@ -279,7 +279,7 @@ const About = () => {
             </p>
             <button
               onClick={() => navigate('/home')}
-              className="px-32 py-3 bg-[#D2E0FF] text-primary text-lg font-semibold rounded-full hover:bg-[#D2E0FF]/80 transition-colors"
+              className="px-8 md:px-32 py-3 bg-[#D2E0FF] text-primary text-base md:text-lg font-semibold rounded-full hover:bg-[#D2E0FF]/80 transition-colors"
             >
               Ready to Explore?
             </button>
