@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Headphones, Target, Mic, Globe, Navigation, Trophy, Brain, ArrowLeft, Home } from 'lucide-react';
+import { MapPin, Headphones, Target, Mic, Globe, Navigation, Trophy, Brain } from 'lucide-react';
+import { UnifiedHeader } from '@/components/Header/UnifiedHeader';
 
 const About = () => {
   const navigate = useNavigate();
@@ -79,30 +80,8 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/')}
-            className="gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to App
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/')}
-            className="gap-2"
-          >
-            <Home className="w-4 h-4" />
-            Home
-          </Button>
-        </div>
-      </header>
-
+      <UnifiedHeader />
+      
       {/* Hero Section */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
