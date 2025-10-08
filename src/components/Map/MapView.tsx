@@ -236,7 +236,7 @@ export const MapView = () => {
       
       cityData.categories.forEach((category) => {
         const el = document.createElement('div');
-        el.className = 'cursor-pointer transition-all';
+        el.className = 'cursor-pointer';
         
         // Use custom icon image if available, otherwise use emoji
         // PNG icons increased by 10%: Beijing/Delhi use 68px, others use 79px
@@ -254,6 +254,7 @@ export const MapView = () => {
             --hover-scale: 1;
             transform: scale(calc(var(--zoom-scale) * var(--hover-scale)));
             transform-origin: center bottom;
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             will-change: transform;
           ">
             ${iconContent}
