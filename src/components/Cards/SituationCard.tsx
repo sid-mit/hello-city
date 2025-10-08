@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Star } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/stores/appStore';
 import { toast } from 'sonner';
@@ -65,30 +65,22 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
     setShowPracticeModal(true);
   };
 
-  // Calculate difficulty based on phrase count
-  const getDifficulty = () => {
-    const count = situation.phrases.length;
-    if (count <= 3) return 'Essential';
-    if (count <= 5) return 'Important';
-    return 'Advanced';
-  };
 
   return (
     <>
       <div 
-        className="bg-white rounded-2xl flex flex-col transition-transform active:scale-[0.99]" 
+        className="bg-white rounded-3xl flex flex-col transition-transform active:scale-[0.99] border-2" 
         style={{ 
           width: '280px', 
           minWidth: '280px',
           padding: '20px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+          borderColor: '#B8C5FF',
         }}
       >
-        {/* Header Row: Emoji + Title + Star */}
+        {/* Header Row: Title + Heart */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <span className="text-[28px] leading-none">{situation.emoji}</span>
-            <h3 className="text-[17px] font-semibold leading-tight" style={{ color: '#1a1a1a' }}>
+            <h3 className="text-[19px] font-bold leading-tight" style={{ color: '#1a1a1a' }}>
               {situation.title}
             </h3>
           </div>
@@ -96,10 +88,10 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
             onClick={handleFavoriteClick}
             className="shrink-0 w-[44px] h-[44px] flex items-center justify-center -mr-2 transition-transform active:scale-95"
           >
-            <Star
+            <Heart
               className={`w-6 h-6 transition-colors ${
                 isFavorited
-                  ? 'fill-[#fbbf24] text-[#fbbf24]'
+                  ? 'fill-[#ff6b6b] text-[#ff6b6b]'
                   : 'text-[#d1d5db]'
               }`}
               strokeWidth={2}
@@ -112,29 +104,29 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
           {situation.description}
         </p>
 
-        {/* Phrase Count with Difficulty */}
+        {/* Phrase Count */}
         <div className="mb-4">
           <span className="text-[13px]" style={{ color: '#9ca3af' }}>
-            💬 {situation.phrases.length} phrases • {getDifficulty()}
+            {situation.phrases.length} phrases
           </span>
         </div>
 
         {/* Practice Button */}
         <Button
           onClick={handlePracticeClick}
-          className="w-full h-[44px] rounded-[10px] text-[15px] font-medium transition-all active:scale-[0.98]"
+          className="w-full h-[44px] rounded-lg text-[15px] font-medium transition-all active:scale-[0.98]"
           style={{ 
-            backgroundColor: '#f3f4f6',
-            color: '#1a1a1a',
+            backgroundColor: '#C5D0FF',
+            color: '#5B7BFF',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#e5e7eb';
+            e.currentTarget.style.backgroundColor = '#B8C5FF';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#f3f4f6';
+            e.currentTarget.style.backgroundColor = '#C5D0FF';
           }}
         >
-          🎤 Practice Now
+          Practice
         </Button>
       </div>
 
