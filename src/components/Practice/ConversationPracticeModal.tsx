@@ -262,7 +262,13 @@ export const ConversationPracticeModal = ({
               )}
             </div>
             <div className="flex items-center justify-center gap-3">
-              <span className="text-5xl">{situation.emoji}</span>
+              {situation.categoryIconImage ? (
+                <img
+                  src={situation.categoryIconImage}
+                  alt={situation.title}
+                  className="w-14 h-14 object-contain"
+                />
+              ) : null}
               <h2 className="text-xl font-bold text-primary">{situation.title}</h2>
             </div>
             <div className="absolute right-0 top-0 flex items-center gap-2">
