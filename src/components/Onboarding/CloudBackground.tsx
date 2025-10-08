@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 export const CloudBackground = () => {
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
       {/* Cloud 1 - Bottom Left */}
       <motion.svg
         className="absolute"

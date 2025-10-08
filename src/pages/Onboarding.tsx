@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '@/stores/appStore';
@@ -27,6 +27,11 @@ export default function Onboarding() {
   const navigate = useNavigate();
   const { setHasCompletedOnboarding } = useAppStore();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
@@ -47,12 +52,12 @@ export default function Onboarding() {
   const isLastSlide = currentSlide === slides.length - 1;
 
   return (
-    <div className="w-full h-screen overflow-hidden relative bg-gradient-to-b from-white to-[#F5F8FF] grid place-items-center px-4">
+    <div className="w-full min-h-[100svh] overflow-hidden relative bg-gradient-to-b from-white to-[#F5F8FF] grid place-items-center px-4">
       {/* Cloud background graphics */}
-      <CloudBackground />
+      {mounted && <CloudBackground />}
       
       {/* Floating greetings in background */}
-      <motion.div
+      {mounted && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '3vw', top: '70vh' }}
         animate={{ x: [0, -15, 0], y: [0, -20, 0] }}
@@ -61,8 +66,8 @@ export default function Onboarding() {
         <span style={{ color: '#E0EBFF', fontSize: 'clamp(40px, 5vw, 64px)', fontFamily: 'Outfit', fontWeight: 600 }}>
           你好
         </span>
-      </motion.div>
-      <motion.div
+      </motion.div>}
+      {mounted && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '18vw', top: '88vh' }}
         animate={{ x: [0, 10, 0], y: [0, 15, 0] }}
@@ -71,8 +76,8 @@ export default function Onboarding() {
         <span style={{ color: '#E6EEFF', fontSize: 'clamp(20px, 2.5vw, 32px)', fontFamily: 'Outfit', fontWeight: 600 }}>
           こんにちは
         </span>
-      </motion.div>
-      <motion.div
+      </motion.div>}
+      {mounted && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '32vw', top: '28vh' }}
         animate={{ x: [0, -8, 0], y: [0, 12, 0] }}
@@ -81,8 +86,8 @@ export default function Onboarding() {
         <span style={{ color: '#EEF4FF', fontSize: 'clamp(16px, 2vw, 24px)', fontFamily: 'Outfit', fontWeight: 600 }}>
           হ্যালো
         </span>
-      </motion.div>
-      <motion.div
+      </motion.div>}
+      {mounted && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '36vw', top: '72vh' }}
         animate={{ x: [0, 12, 0], y: [0, -10, 0] }}
@@ -91,8 +96,8 @@ export default function Onboarding() {
         <span style={{ color: '#E9F1FF', fontSize: 'clamp(16px, 2vw, 24px)', fontFamily: 'Outfit', fontWeight: 600 }}>
           வணக்கம்
         </span>
-      </motion.div>
-      <motion.div
+      </motion.div>}
+      {mounted && <motion.div
         className="absolute pointer-events-none"
         style={{ right: '4vw', top: '15vh' }}
         animate={{ x: [0, 18, 0], y: [0, -25, 0] }}
@@ -101,8 +106,8 @@ export default function Onboarding() {
         <span style={{ color: '#EDF3FF', fontSize: 'clamp(56px, 7vw, 96px)', fontFamily: 'Outfit', fontWeight: 600 }}>
           Namaste
         </span>
-      </motion.div>
-      <motion.div
+      </motion.div>}
+      {mounted && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '12vw', top: '40vh' }}
         animate={{ x: [0, -12, 0], y: [0, 15, 0] }}
@@ -111,8 +116,8 @@ export default function Onboarding() {
         <span style={{ color: '#E1EBFF', fontSize: 'clamp(28px, 3.5vw, 40px)', fontFamily: 'Outfit', fontWeight: 600 }}>
           Bonjour
         </span>
-      </motion.div>
-      <motion.div
+      </motion.div>}
+      {mounted && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '-4vw', top: '12vh' }}
         animate={{ x: [0, 15, 0], y: [0, -18, 0] }}
@@ -121,8 +126,8 @@ export default function Onboarding() {
         <span style={{ color: '#F1F6FF', fontSize: 'clamp(40px, 5vw, 64px)', fontFamily: 'Outfit', fontWeight: 600 }}>
           Kamusta
         </span>
-      </motion.div>
-      <motion.div
+      </motion.div>}
+      {mounted && <motion.div
         className="absolute pointer-events-none"
         style={{ right: '4vw', bottom: '20vh' }}
         animate={{ x: [0, -10, 0], y: [0, 12, 0] }}
@@ -131,8 +136,8 @@ export default function Onboarding() {
         <span style={{ color: '#DDE8FF', fontSize: 'clamp(24px, 3vw, 36px)', fontFamily: 'Outfit', fontWeight: 600 }}>
           안녕하세요
         </span>
-      </motion.div>
-      <motion.div
+      </motion.div>}
+      {mounted && <motion.div
         className="absolute pointer-events-none"
         style={{ right: '3.5vw', top: '63vh' }}
         animate={{ x: [0, 20, 0], y: [0, -15, 0] }}
@@ -141,15 +146,15 @@ export default function Onboarding() {
         <span style={{ color: '#ECF2FF', fontSize: 'clamp(40px, 5vw, 64px)', fontFamily: 'Outfit', fontWeight: 600 }}>
           Hujambo
         </span>
-      </motion.div>
+      </motion.div>}
 
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={currentSlide}
-          initial={{ opacity: 0, scale: 0.98 }}
+          initial={false}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.3 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
           className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center relative z-10"
         >
           <h1 
