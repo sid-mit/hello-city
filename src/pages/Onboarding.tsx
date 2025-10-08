@@ -151,16 +151,16 @@ export default function Onboarding() {
             {!isFirstSlide && (
               <button
                 onClick={handleBack}
-                className="px-7 py-2.5 border-2 border-[#2A64EC] bg-transparent rounded-full transition-all hover:bg-[#2A64EC]/5"
-                style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
+                className="px-6 py-2 border-2 border-[#2A64EC] bg-transparent rounded-full transition-all hover:bg-[#2A64EC]/5"
+                style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
               >
                 Back
               </button>
             )}
             <button 
               onClick={handleNext} 
-              className="px-7 py-2.5 bg-[#BDD1FF] rounded-full transition-all hover:bg-[#BDD1FF]/80"
-              style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
+              className="px-6 py-2 bg-[#BDD1FF] rounded-full transition-all hover:bg-[#BDD1FF]/80"
+              style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
             >
               {isFirstSlide ? 'Continue' : isLastSlide ? 'Get Started' : 'Next'}
             </button>
@@ -168,17 +168,17 @@ export default function Onboarding() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Skip Onboarding button - only show on second slide - positioned outside centered content */}
-      {currentSlide === 1 && (
+      {/* Skip Onboarding button - show on all slides after first */}
+      {currentSlide >= 1 && (
         <button
           onClick={() => {
             setHasCompletedOnboarding(true);
             navigate('/home');
           }}
-          className="absolute bottom-8 left-8 transition-all hover:underline z-20"
+          className="absolute bottom-8 right-8 transition-all hover:underline z-20"
           style={{ color: '#6B7280', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
         >
-          → Skip Onboarding
+          Skip Onboarding →
         </button>
       )}
     </div>
