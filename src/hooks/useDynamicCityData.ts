@@ -59,6 +59,7 @@ export interface CityDataStructure {
     color: string;
     description: string;
     mapPosition: [number, number];
+    iconImage?: string;
     situations: Array<{
       id: string;
       title: string;
@@ -159,7 +160,7 @@ export function useDynamicCityData({ cityId, genderPreference }: DynamicCityData
 
       // Transform into CityDataStructure with random positions
       const categories = categoriesToUse.map(([spotType, situationMap], index) => {
-        const categoryMeta = getCategoryMetadata(spotType);
+        const categoryMeta = getCategoryMetadata(spotType, cityId);
 
         const situations = Array.from(situationMap.entries()).map(([subScenario, phraseList]) => {
           const situationMeta = getSituationMetadata(subScenario);
@@ -180,6 +181,7 @@ export function useDynamicCityData({ cityId, genderPreference }: DynamicCityData
           color: categoryMeta.color,
           description: categoryMeta.description,
           mapPosition: randomPositions[index], // Use random position
+          iconImage: categoryMeta.iconImage,
           situations,
         };
       });

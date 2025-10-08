@@ -158,9 +158,15 @@ export const MapView = () => {
       cityData.categories.forEach((category) => {
         const el = document.createElement('div');
         el.className = 'cursor-pointer transform transition-all hover:scale-110';
+        
+        // Use custom icon image if available, otherwise use emoji
+        const iconContent = category.iconImage 
+          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-10 h-10 object-contain" />`
+          : `<span class="text-2xl">${category.emoji}</span>`;
+        
         el.innerHTML = `
           <div class="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-lg border-2 border-primary">
-            <span class="text-2xl">${category.emoji}</span>
+            ${iconContent}
           </div>
         `;
         el.onclick = () => handleCategoryClick(category.id);
@@ -315,6 +321,7 @@ export const MapView = () => {
             categoryEmoji={category.emoji}
             categoryColor={category.color}
             categoryDescription={category.description}
+            categoryIconImage={category.iconImage}
             situations={enrichedSituations}
             onClose={handleCloseDrawer}
           />

@@ -9,11 +9,12 @@ interface PhraseDrawerProps {
   categoryEmoji: string;
   categoryColor?: string;
   categoryDescription?: string;
+  categoryIconImage?: string;
   situations: SituationData[];
   onClose: () => void;
 }
 
-export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, categoryDescription, situations, onClose }: PhraseDrawerProps) => {
+export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, categoryDescription, categoryIconImage, situations, onClose }: PhraseDrawerProps) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(true);
@@ -77,7 +78,11 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
         {/* Category Header */}
         <div className="px-5 pt-6 pb-4 border-b border-border">
           <div className="flex items-center gap-3 mb-2">
-            <span className="text-[28px] leading-none">{categoryEmoji}</span>
+            {categoryIconImage ? (
+              <img src={categoryIconImage} alt={categoryTitle} className="w-9 h-9 object-contain" />
+            ) : (
+              <span className="text-[28px] leading-none">{categoryEmoji}</span>
+            )}
             <h2 className="text-[20px] font-semibold text-foreground">
               {categoryTitle}
             </h2>

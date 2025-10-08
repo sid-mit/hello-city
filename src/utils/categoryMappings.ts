@@ -7,6 +7,7 @@ export interface CategoryMetadata {
   color: string;
   description: string;
   mapPosition: [number, number]; // [lat, lng]
+  iconImage?: string; // Optional custom icon image path
 }
 
 export interface SituationMetadata {
@@ -227,9 +228,46 @@ export const SITUATION_METADATA: Record<string, SituationMetadata> = {
   },
 };
 
-// Helper to get category metadata or create default
-export function getCategoryMetadata(spotType: string): CategoryMetadata {
-  return CATEGORY_METADATA[spotType] || {
+// Beijing-specific category overrides with custom icons
+export const BEIJING_CATEGORY_OVERRIDES: Record<string, Partial<CategoryMetadata>> = {
+  cafe: {
+    iconImage: '/icons/beijing/cafe.png',
+  },
+  restaurant: {
+    iconImage: '/icons/beijing/restaurant.png',
+  },
+  subway: {
+    iconImage: '/icons/beijing/subway.png',
+  },
+  metro: {
+    iconImage: '/icons/beijing/subway.png',
+  },
+  taxi: {
+    iconImage: '/icons/beijing/taxi.png',
+  },
+  shopping: {
+    iconImage: '/icons/beijing/shopping.png',
+  },
+  hotel: {
+    iconImage: '/icons/beijing/hotel.png',
+  },
+  bar: {
+    iconImage: '/icons/beijing/bar.png',
+  },
+  museum: {
+    iconImage: '/icons/beijing/museum.png',
+  },
+  police: {
+    iconImage: '/icons/beijing/police.png',
+  },
+  pharmacy: {
+    iconImage: '/icons/beijing/pharmacy.png',
+  },
+};
+
+// Helper to get category metadata with city-specific overrides
+export function getCategoryMetadata(spotType: string, cityId?: string): CategoryMetadata {
+  const baseMetadata = CATEGORY_METADATA[spotType] || {
     id: spotType,
     emoji: '📍',
     title: spotType.charAt(0).toUpperCase() + spotType.slice(1),
@@ -237,6 +275,13 @@ export function getCategoryMetadata(spotType: string): CategoryMetadata {
     description: 'Custom category',
     mapPosition: [48.8566, 2.3522],
   };
+
+  // Apply Beijing-specific overrides
+  if (cityId === 'beijing' && BEIJING_CATEGORY_OVERRIDES[spotType]) {
+    return { ...baseMetadata, ...BEIJING_CATEGORY_OVERRIDES[spotType] };
+  }
+
+  return baseMetadata;
 }
 
 // Helper to get situation metadata or create default
