@@ -69,67 +69,48 @@ export const MapView = () => {
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    // Initialize map with globe view for launch animation
+    // Initialize map with zoomed out view for launch animation
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',
       projection: 'globe',
-      center: [90, 20],
-      zoom: 0.3,
-      pitch: 30,
+      center: [30, 20],
+      zoom: 0.5,
+      pitch: 20,
     });
 
-    // Add fog and atmosphere for 3D globe effect
     map.current.on('style.load', () => {
       if (!map.current) return;
-      
-      map.current.setFog({
-        color: 'rgb(255, 255, 255)',
-        'high-color': 'rgb(200, 210, 235)',
-        'horizon-blend': 0.15,
-        'space-color': 'rgb(230, 240, 255)',
-        'star-intensity': 0.3,
-      });
 
-      // Start the launch animation sequence
+      // Start the launch animation sequence after a brief moment
       setTimeout(() => {
         if (!map.current) return;
         
-        // Smooth zoom and rotation into default view
+        // Smooth zoom into default view with rotation
         map.current.flyTo({
           center: [90, 20],
           zoom: 1.5,
           pitch: 0,
-          duration: 2500,
+          duration: 2200,
           essential: true,
           easing: (t: number) => {
-            // Custom easing for smooth Apple-like animation
+            // Elastic ease-out for Apple-like feel
             return t < 0.5 
               ? 4 * t * t * t 
               : 1 - Math.pow(-2 * t + 2, 3) / 2;
           }
         });
 
-        // End launch state after animation
-        setTimeout(() => setIsLaunching(false), 3000);
-      }, 500);
+        // Switch back to standard projection after animation
+        setTimeout(() => {
+          if (!map.current) return;
+          map.current.setProjection('mercator');
+          setIsLaunching(false);
+        }, 2500);
+      }, 300);
     });
 
-    // Gentle globe rotation during launch
-    let rotationAnimation: number;
-    const rotateGlobe = () => {
-      if (!map.current || !isLaunching) return;
-      
-      const center = map.current.getCenter();
-      center.lng += 0.15;
-      map.current.setCenter(center);
-      rotationAnimation = requestAnimationFrame(rotateGlobe);
-    };
-    
-    rotationAnimation = requestAnimationFrame(rotateGlobe);
-
     return () => {
-      cancelAnimationFrame(rotationAnimation);
       markersRef.current.forEach(marker => marker.remove());
       markersRef.current = [];
       map.current?.remove();
