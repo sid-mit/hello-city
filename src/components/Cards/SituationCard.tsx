@@ -69,18 +69,17 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
   return (
     <>
       <div 
-        className="bg-white rounded-3xl flex flex-col transition-transform active:scale-[0.99] border-2" 
+        className="bg-card rounded-3xl flex flex-col transition-transform active:scale-[0.99] border-2 border-primary/20 shadow-sm" 
         style={{ 
           width: '280px', 
           minWidth: '280px',
           padding: '20px',
-          borderColor: '#B8C5FF',
         }}
       >
         {/* Header Row: Title + Heart */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <h3 className="text-[19px] font-bold leading-tight" style={{ color: '#1a1a1a' }}>
+            <h3 className="text-[19px] font-bold leading-tight text-foreground">
               {situation.title}
             </h3>
           </div>
@@ -91,8 +90,8 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
             <Heart
               className={`w-6 h-6 transition-colors ${
                 isFavorited
-                  ? 'fill-[#ff6b6b] text-[#ff6b6b]'
-                  : 'text-[#d1d5db]'
+                  ? 'fill-destructive text-destructive'
+                  : 'text-muted-foreground/40'
               }`}
               strokeWidth={2}
             />
@@ -100,13 +99,13 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
         </div>
 
         {/* Description (optional, can be removed if redundant) */}
-        <p className="text-[14px] leading-[1.5] mb-3 line-clamp-2" style={{ color: '#6b7280' }}>
+        <p className="text-[14px] leading-[1.5] mb-3 line-clamp-2 text-muted-foreground">
           {situation.description}
         </p>
 
         {/* Phrase Count */}
         <div className="mb-4">
-          <span className="text-[13px]" style={{ color: '#9ca3af' }}>
+          <span className="text-[13px] text-muted-foreground">
             {situation.phrases.length} phrases
           </span>
         </div>
@@ -114,17 +113,8 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
         {/* Practice Button */}
         <Button
           onClick={handlePracticeClick}
-          className="w-full h-[44px] rounded-lg text-[15px] font-medium transition-all active:scale-[0.98]"
-          style={{ 
-            backgroundColor: '#C5D0FF',
-            color: '#5B7BFF',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#B8C5FF';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#C5D0FF';
-          }}
+          variant="default"
+          className="w-full h-[44px] text-[15px]"
         >
           Practice
         </Button>
