@@ -4,7 +4,7 @@ import { useAppStore } from '@/stores/appStore';
 import { SituationCard } from '@/components/Cards/SituationCard';
 import { StreakCounter } from '@/components/Gamification/StreakCounter';
 import { BadgeSystem } from '@/components/Gamification/BadgeSystem';
-import { ProblemSyllablesDashboard } from '@/components/Learn/ProblemSyllablesDashboard';
+
 import { motion } from 'framer-motion';
 import { Trophy, SortAsc } from 'lucide-react';
 import {
@@ -61,11 +61,11 @@ export const LearnTab = () => {
           <div className="text-6xl mb-4">📚</div>
           
           <h2 className="text-2xl font-bold text-foreground">
-            No saved phrases yet
+            Start Building Your Collection!
           </h2>
           
           <p className="text-muted-foreground text-base">
-            Tap ⭐ on any situation card to save it for practice
+            Save situations with ⭐ to track your progress and unlock achievements as you practice
           </p>
           
           <Button
@@ -117,8 +117,6 @@ export const LearnTab = () => {
           <BadgeSystem />
         </motion.div>
 
-        {/* Problem Syllables Dashboard */}
-        <ProblemSyllablesDashboard />
 
         {/* Tabs */}
         <Tabs defaultValue="all" className="mb-6">

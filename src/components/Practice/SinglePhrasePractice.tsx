@@ -135,16 +135,9 @@ export const SinglePhrasePractice = ({
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
         </Button>
-        <div className="flex items-center gap-3">
-          <GenderSelector
-            langCode={langCode}
-            currentGender={genderPreference}
-            onGenderChange={setGenderPreference}
-          />
-          <span className="text-sm font-medium text-muted-foreground">
-            Phrase {phraseIndex + 1}/{totalPhrases}
-          </span>
-        </div>
+        <span className="text-sm font-medium text-muted-foreground">
+          Phrase {phraseIndex + 1}/{totalPhrases}
+        </span>
       </div>
 
       <AnimatePresence mode="wait">
