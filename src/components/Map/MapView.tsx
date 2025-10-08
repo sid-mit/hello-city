@@ -127,8 +127,8 @@ export const MapView = () => {
 
       const zoom = map.current.getZoom();
       // Smooth scale curve to keep icons readable and grow slightly with zoom (like Google Maps pins)
-      // Clamp between 0.9 and 1.6
-      const scaleFactor = Math.max(0.9, Math.min(1.6, 1 + (zoom - 12) * 0.08));
+      // Clamp between 0.8 and 1.4 for stability
+      const scaleFactor = Math.max(0.8, Math.min(1.4, 1 + (zoom - 13) * 0.06));
 
       markersRef.current.forEach(marker => {
         const root = marker.getElement();
@@ -199,7 +199,7 @@ export const MapView = () => {
         if (attempt > 50) return originalLngLat; // More attempts to find good positions
         
         const testPoint = map.current!.project(originalLngLat);
-        const iconSize = (selectedCity?.id === 'beijing' || selectedCity?.id === 'new-delhi') ? 68 : 79; // Per-city icon size (10% larger)
+        const iconSize = (selectedCity?.id === 'beijing' || selectedCity?.id === 'new-delhi') ? 90 : 105; // Larger base icon sizes
         const topBarHeight = topBarRef.current?.offsetHeight || 80;
         
         const testPos = {
@@ -239,9 +239,9 @@ export const MapView = () => {
         el.className = 'cursor-pointer';
         
         // Use custom icon image if available, otherwise use emoji
-        // PNG icons increased by 10%: Beijing/Delhi use 68px, others use 79px
+        // Larger base icon sizes for better visibility: Beijing/Delhi use 90px, others use 105px
         const isCompactCity = selectedCity?.id === 'beijing' || selectedCity?.id === 'new-delhi';
-        const pngSizeClass = isCompactCity ? 'w-[68px] h-[68px]' : 'w-[79px] h-[79px]';
+        const pngSizeClass = isCompactCity ? 'w-[90px] h-[90px]' : 'w-[105px] h-[105px]';
         const isImage = Boolean(category.iconImage);
         const iconContent = isImage
           ? `<img src="${category.iconImage}" alt="${category.title}" class="${pngSizeClass} object-contain drop-shadow-2xl" />`
@@ -266,7 +266,7 @@ export const MapView = () => {
         // Initialize zoom scale to current zoom
         if (contentEl && isImage && map.current) {
           const currentZoom = map.current.getZoom();
-          const initialScale = Math.max(0.9, Math.min(1.6, 1 + (currentZoom - 12) * 0.08));
+          const initialScale = Math.max(0.8, Math.min(1.4, 1 + (currentZoom - 13) * 0.06));
           contentEl.style.setProperty('--zoom-scale', initialScale.toString());
         }
         
