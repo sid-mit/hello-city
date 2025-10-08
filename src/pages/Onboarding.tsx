@@ -30,7 +30,11 @@ export default function Onboarding() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    // Delay decorative elements to ensure main content paints first
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 150);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleNext = () => {
@@ -151,7 +155,7 @@ export default function Onboarding() {
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={currentSlide}
-          initial={false}
+          initial={{ opacity: 1, scale: 1 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
