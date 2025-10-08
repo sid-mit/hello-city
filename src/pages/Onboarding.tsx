@@ -58,10 +58,10 @@ export default function Onboarding() {
   return (
     <div className="w-full min-h-[100svh] overflow-hidden relative bg-gradient-to-b from-white to-[#F5F8FF] grid place-items-center px-4">
       {/* Cloud background graphics */}
-      {mounted && <CloudBackground />}
+      {mounted && currentSlide === 0 && <CloudBackground />}
       
       {/* Floating greetings in background */}
-      {mounted && <motion.div
+      {mounted && currentSlide === 0 && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '3vw', top: '70vh' }}
         animate={{ x: [0, -15, 0], y: [0, -20, 0] }}
@@ -71,7 +71,7 @@ export default function Onboarding() {
           你好
         </span>
       </motion.div>}
-      {mounted && <motion.div
+      {mounted && currentSlide === 0 && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '18vw', top: '88vh' }}
         animate={{ x: [0, 10, 0], y: [0, 15, 0] }}
@@ -81,7 +81,7 @@ export default function Onboarding() {
           こんにちは
         </span>
       </motion.div>}
-      {mounted && <motion.div
+      {mounted && currentSlide === 0 && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '32vw', top: '28vh' }}
         animate={{ x: [0, -8, 0], y: [0, 12, 0] }}
@@ -91,7 +91,7 @@ export default function Onboarding() {
           হ্যালো
         </span>
       </motion.div>}
-      {mounted && <motion.div
+      {mounted && currentSlide === 0 && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '36vw', top: '72vh' }}
         animate={{ x: [0, 12, 0], y: [0, -10, 0] }}
@@ -101,7 +101,7 @@ export default function Onboarding() {
           வணக்கம்
         </span>
       </motion.div>}
-      {mounted && <motion.div
+      {mounted && currentSlide === 0 && <motion.div
         className="absolute pointer-events-none"
         style={{ right: '4vw', top: '15vh' }}
         animate={{ x: [0, 18, 0], y: [0, -25, 0] }}
@@ -111,7 +111,7 @@ export default function Onboarding() {
           Namaste
         </span>
       </motion.div>}
-      {mounted && <motion.div
+      {mounted && currentSlide === 0 && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '12vw', top: '40vh' }}
         animate={{ x: [0, -12, 0], y: [0, 15, 0] }}
@@ -121,7 +121,7 @@ export default function Onboarding() {
           Bonjour
         </span>
       </motion.div>}
-      {mounted && <motion.div
+      {mounted && currentSlide === 0 && <motion.div
         className="absolute pointer-events-none"
         style={{ left: '-4vw', top: '12vh' }}
         animate={{ x: [0, 15, 0], y: [0, -18, 0] }}
@@ -131,7 +131,7 @@ export default function Onboarding() {
           Kamusta
         </span>
       </motion.div>}
-      {mounted && <motion.div
+      {mounted && currentSlide === 0 && <motion.div
         className="absolute pointer-events-none"
         style={{ right: '4vw', bottom: '20vh' }}
         animate={{ x: [0, -10, 0], y: [0, 12, 0] }}
@@ -141,7 +141,7 @@ export default function Onboarding() {
           안녕하세요
         </span>
       </motion.div>}
-      {mounted && <motion.div
+      {mounted && currentSlide === 0 && <motion.div
         className="absolute pointer-events-none"
         style={{ right: '3.5vw', top: '63vh' }}
         animate={{ x: [0, 20, 0], y: [0, -15, 0] }}
