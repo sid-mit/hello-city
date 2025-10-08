@@ -101,10 +101,7 @@ export const MapView = () => {
           }
         });
 
-        // Switch back to standard projection after animation
         setTimeout(() => {
-          if (!map.current) return;
-          map.current.setProjection('mercator');
           setIsLaunching(false);
         }, 2500);
       }, 300);
