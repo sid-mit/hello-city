@@ -299,6 +299,43 @@ export const INDIA_CATEGORY_OVERRIDES: Record<string, Partial<CategoryMetadata>>
   },
 };
 
+// Seoul-specific category overrides with custom icons
+export const SEOUL_CATEGORY_OVERRIDES: Record<string, Partial<CategoryMetadata>> = {
+  cafe: {
+    iconImage: '/icons/seoul/cafe.png',
+  },
+  restaurant: {
+    iconImage: '/icons/seoul/restaurant.png',
+  },
+  subway: {
+    iconImage: '/icons/seoul/subway.png',
+  },
+  metro: {
+    iconImage: '/icons/seoul/metro.png',
+  },
+  taxi: {
+    iconImage: '/icons/seoul/taxi.png',
+  },
+  shopping: {
+    iconImage: '/icons/seoul/shopping.png',
+  },
+  hotel: {
+    iconImage: '/icons/seoul/hotel.png',
+  },
+  bar: {
+    iconImage: '/icons/seoul/bar.png',
+  },
+  museum: {
+    iconImage: '/icons/seoul/museum.png',
+  },
+  police: {
+    iconImage: '/icons/seoul/police.png',
+  },
+  pharmacy: {
+    iconImage: '/icons/seoul/pharmacy.png',
+  },
+};
+
 // Helper to get category metadata with city-specific overrides
 export function getCategoryMetadata(spotType: string, cityId?: string): CategoryMetadata {
   const baseMetadata = CATEGORY_METADATA[spotType] || {
@@ -318,6 +355,11 @@ export function getCategoryMetadata(spotType: string, cityId?: string): Category
   // Apply India-specific overrides
   if (cityId === 'new-delhi' && INDIA_CATEGORY_OVERRIDES[spotType]) {
     return { ...baseMetadata, ...INDIA_CATEGORY_OVERRIDES[spotType] };
+  }
+
+  // Apply Seoul-specific overrides
+  if (cityId === 'seoul' && SEOUL_CATEGORY_OVERRIDES[spotType]) {
+    return { ...baseMetadata, ...SEOUL_CATEGORY_OVERRIDES[spotType] };
   }
 
   return baseMetadata;
