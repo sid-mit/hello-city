@@ -135,29 +135,14 @@ export const MapView = () => {
       // Show city markers
       cities.forEach((city) => {
         const el = document.createElement('div');
-        el.className = 'relative';
         const root = createRoot(el);
         
         root.render(
-          <>
-            <CityMarker
-              city={city}
-              onClick={() => handleCityClick(city)}
-              isSelected={false}
-            />
-            {comingSoonCity === city.id && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 pointer-events-none"
-              >
-                <div className="glass rounded-lg px-3 py-2 whitespace-nowrap shadow-large">
-                  <p className="font-semibold text-sm">Coming Soon!</p>
-                </div>
-              </motion.div>
-            )}
-          </>
+          <CityMarker
+            city={city}
+            onClick={() => handleCityClick(city)}
+            isSelected={false}
+          />
         );
 
         const marker = new mapboxgl.Marker(el)
@@ -200,7 +185,7 @@ export const MapView = () => {
         });
       }
     }
-  }, [selectedCity, cityData, isCityDataLoading, handleCityClick, handleCategoryClick, comingSoonCity]);
+  }, [selectedCity, cityData, isCityDataLoading, handleCityClick, handleCategoryClick]);
 
   return (
     <motion.div
@@ -249,6 +234,32 @@ export const MapView = () => {
           background: 'linear-gradient(180deg, #FFFFFF 0%, #F5F8FF 100%)'
         }}
       />
+
+      {/* Coming Soon Popup */}
+      {comingSoonCity && (() => {
+        const city = cities.find(c => c.id === comingSoonCity);
+        if (!city || !map.current) return null;
+        
+        const point = map.current.project([city.coordinates.lng, city.coordinates.lat]);
+        
+        return (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="absolute z-50 pointer-events-none"
+            style={{
+              left: `${point.x}px`,
+              top: `${point.y - 80}px`,
+              transform: 'translateX(-50%)',
+            }}
+          >
+            <div className="glass rounded-lg px-4 py-2 whitespace-nowrap shadow-large">
+              <p className="font-semibold text-sm">Coming Soon!</p>
+            </div>
+          </motion.div>
+        );
+      })()}
 
       {/* Bottom Center: Text + Button (only when no city selected) */}
       {!selectedCity && (
