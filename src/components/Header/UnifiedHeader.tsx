@@ -26,7 +26,7 @@ export const UnifiedHeader = () => {
         <div className="flex items-center gap-2">
           <div
             className="cursor-pointer relative"
-            style={{ width: '258px', height: '75px' }}
+            style={{ height: '40px', width: '138px' }}
             onClick={() => {
               navigate('/home');
               setShowAnimation(true);
