@@ -82,13 +82,11 @@ const About = () => {
         transition={{ duration: 0.5 }}
         className="pt-24 pb-16 px-6 text-center"
       >
-        <div className="max-w-lg mx-auto flex flex-col items-center gap-6">
-          <h1 className="text-5xl font-bold text-foreground tracking-wide">
-            Hello from
+        <div className="max-w-3xl mx-auto flex flex-col items-center gap-6">
+          <h1 className="text-5xl font-bold tracking-wide">
+            <span className="text-foreground">Hello from </span>
+            <span className="text-primary">HelloCity</span>
           </h1>
-          <div className="text-5xl font-bold text-primary tracking-wide">
-            HelloCity
-          </div>
           <p className="text-xl font-medium text-foreground">
             A small word can open the world.
           </p>
