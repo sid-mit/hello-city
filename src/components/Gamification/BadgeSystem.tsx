@@ -5,6 +5,8 @@ import practiceMasterIcon from '@/assets/badges/practice-master.png';
 import perfectScoreIcon from '@/assets/badges/perfect-score.png';
 import polyglotIcon from '@/assets/badges/polyglot.png';
 import dedicatedIcon from '@/assets/badges/dedicated.png';
+import collectorIcon from '@/assets/badges/collector.png';
+import earlyBirdIcon from '@/assets/badges/early-bird.png';
 
 export interface Badge {
   id: string;
@@ -20,6 +22,8 @@ const badgeIcons: Record<string, string> = {
   'perfect-score': perfectScoreIcon,
   'polyglot': polyglotIcon,
   'dedicated': dedicatedIcon,
+  'collector': collectorIcon,
+  'early-bird': earlyBirdIcon,
 };
 
 export const BadgeSystem = () => {
