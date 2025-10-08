@@ -52,16 +52,16 @@ export const PracticeStyleSelector = ({
       {/* Individual Phrases List */}
       <div className="space-y-3">
         <p className="text-sm font-medium">Practice Individual Phrases:</p>
-        <div className="space-y-3 max-h-[400px] overflow-y-auto px-1">
+        <div className="space-y-3 max-h-[400px] overflow-y-auto px-2">
           {phrases.map((phrase, index) => (
             <motion.button
               key={index}
               onClick={() => onSelectIndividualPhrase(index)}
-              className="w-full text-left p-3 sm:p-4 rounded-xl border-2 border-border hover:border-primary/50 bg-card transition-all"
+              className="w-full text-left p-4 sm:p-5 rounded-2xl border-2 border-border hover:border-primary/50 bg-card shadow-sm transition-all"
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
             >
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-2.5">
                 <div className="shrink-0 mt-1">
                   <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
                 </div>
