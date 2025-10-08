@@ -121,23 +121,24 @@ export const MapView = () => {
       }, 300);
     });
 
-    // Add zoom event listener to scale markers proportionally
+    // Add zoom event listener to update marker content scale via CSS variables (avoid touching root transform)
     map.current.on('zoom', () => {
       if (!map.current) return;
-      
+
       const zoom = map.current.getZoom();
-      // Scale markers based on zoom level: scale up when zooming in beyond initial zoom
-      // Base zoom is ~12 for city view, scale proportionally from there
-      const baseZoom = 12;
-      const scaleFactor = zoom > baseZoom ? 1 + ((zoom - baseZoom) * 0.15) : 1;
-      
-      // Apply scale to all marker elements while preserving hover effects
+      // Smooth scale curve to keep icons readable and grow slightly with zoom (like Google Maps pins)
+      // Clamp between 0.9 and 1.6
+      const scaleFactor = Math.max(0.9, Math.min(1.6, 1 + (zoom - 12) * 0.08));
+
       markersRef.current.forEach(marker => {
-        const element = marker.getElement();
-        if (element) {
-          // Use CSS variable to allow hover:scale-110 to still work
-          element.style.setProperty('--zoom-scale', scaleFactor.toString());
-          element.style.transform = `scale(calc(var(--zoom-scale, 1)))`;
+        const root = marker.getElement();
+        if (!root) return;
+        const content = root.querySelector<HTMLDivElement>('.mb-marker-content');
+        if (!content) return;
+
+        // Only scale illustration (PNG) markers
+        if (content.dataset.markerType === 'image') {
+          content.style.setProperty('--zoom-scale', scaleFactor.toString());
         }
       });
     });
@@ -241,20 +242,39 @@ export const MapView = () => {
         // PNG icons increased by 10%: Beijing/Delhi use 68px, others use 79px
         const isCompactCity = selectedCity?.id === 'beijing' || selectedCity?.id === 'new-delhi';
         const pngSizeClass = isCompactCity ? 'w-[68px] h-[68px]' : 'w-[79px] h-[79px]';
-        const iconContent = category.iconImage 
+        const isImage = Boolean(category.iconImage);
+        const iconContent = isImage
           ? `<img src="${category.iconImage}" alt="${category.title}" class="${pngSizeClass} object-contain drop-shadow-2xl" />`
           : `<span class="text-6xl drop-shadow-2xl">${category.emoji}</span>`;
         
-        el.innerHTML = iconContent;
+        // Wrap content so we never modify the root element transform (Mapbox uses it for positioning)
+        el.innerHTML = `
+          <div class="mb-marker-content" data-marker-type="${isImage ? 'image' : 'emoji'}" style="
+            --zoom-scale: 1;
+            --hover-scale: 1;
+            transform: scale(calc(var(--zoom-scale) * var(--hover-scale)));
+            transform-origin: center bottom;
+            will-change: transform;
+          ">
+            ${iconContent}
+          </div>
+        `;
+
+        const contentEl = el.querySelector<HTMLDivElement>('.mb-marker-content');
+
+        // Initialize zoom scale to current zoom
+        if (contentEl && isImage && map.current) {
+          const currentZoom = map.current.getZoom();
+          const initialScale = Math.max(0.9, Math.min(1.6, 1 + (currentZoom - 12) * 0.08));
+          contentEl.style.setProperty('--zoom-scale', initialScale.toString());
+        }
         
-        // Add hover effect that works with zoom scaling
+        // Hover scaling via CSS variable to compose with zoom scale
         el.addEventListener('mouseenter', () => {
-          const currentScale = parseFloat(el.style.getPropertyValue('--zoom-scale') || '1');
-          el.style.transform = `scale(${currentScale * 1.1})`;
+          contentEl?.style.setProperty('--hover-scale', '1.1');
         });
         el.addEventListener('mouseleave', () => {
-          const currentScale = parseFloat(el.style.getPropertyValue('--zoom-scale') || '1');
-          el.style.transform = `scale(${currentScale})`;
+          contentEl?.style.setProperty('--hover-scale', '1');
         });
         
         el.onclick = () => handleCategoryClick(category.id);
@@ -267,7 +287,7 @@ export const MapView = () => {
         
         const marker = new mapboxgl.Marker({
           element: el,
-          anchor: 'center',
+          anchor: isImage ? 'bottom' : 'center',
         })
           .setLngLat(finalLngLat)
           .addTo(map.current!);
