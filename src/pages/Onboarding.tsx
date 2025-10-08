@@ -151,7 +151,7 @@ export default function Onboarding() {
             {!isFirstSlide && (
               <button
                 onClick={handleBack}
-                className="px-8 py-3 border-2 border-[#2A64EC] rounded-full transition-all hover:bg-[#2A64EC]/5"
+                className="px-7 py-2.5 border-2 border-[#2A64EC] bg-transparent rounded-full transition-all hover:bg-[#2A64EC]/5"
                 style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
               >
                 Back
@@ -159,28 +159,28 @@ export default function Onboarding() {
             )}
             <button 
               onClick={handleNext} 
-              className="px-12 py-3 bg-[#BDD1FF] rounded-full transition-all hover:bg-[#BDD1FF]/80"
+              className="px-7 py-2.5 bg-[#BDD1FF] rounded-full transition-all hover:bg-[#BDD1FF]/80"
               style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
             >
               {isFirstSlide ? 'Continue' : isLastSlide ? 'Get Started' : 'Next'}
             </button>
           </div>
-
-          {/* Skip Onboarding button - only show on second slide */}
-          {currentSlide === 1 && (
-            <button
-              onClick={() => {
-                setHasCompletedOnboarding(true);
-                navigate('/home');
-              }}
-              className="absolute bottom-8 left-8 transition-all hover:underline"
-              style={{ color: '#6B7280', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
-            >
-              → Skip Onboarding
-            </button>
-          )}
         </motion.div>
       </AnimatePresence>
+
+      {/* Skip Onboarding button - only show on second slide - positioned outside centered content */}
+      {currentSlide === 1 && (
+        <button
+          onClick={() => {
+            setHasCompletedOnboarding(true);
+            navigate('/home');
+          }}
+          className="absolute bottom-8 left-8 transition-all hover:underline z-20"
+          style={{ color: '#6B7280', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
+        >
+          → Skip Onboarding
+        </button>
+      )}
     </div>
   );
 }
