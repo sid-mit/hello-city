@@ -92,16 +92,6 @@ export const ConversationReview = ({
         setIsAnalyzing(false);
         setIsRecording(false);
         setWaitingForContinue(true);
-
-        // Play server response audio if exists
-        const serverResponse = serverResponses.find(
-          (sr) => sr.afterUserPhraseIndex === currentPhraseIndex
-        );
-        if (serverResponse) {
-          setTimeout(() => {
-            handlePlayServerAudio(serverResponse);
-          }, 1000);
-        }
       }, 500);
     };
 
