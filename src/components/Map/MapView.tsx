@@ -199,7 +199,7 @@ export const MapView = () => {
         if (attempt > 50) return originalLngLat; // More attempts to find good positions
         
         const testPoint = map.current!.project(originalLngLat);
-        const iconSize = (selectedCity?.id === 'beijing' || selectedCity?.id === 'new-delhi') ? 90 : 105; // Larger base icon sizes
+        const iconSize = (selectedCity?.id === 'beijing' || selectedCity?.id === 'new-delhi') ? 140 : 160; // Larger base icon sizes like Google Maps pins
         const topBarHeight = topBarRef.current?.offsetHeight || 80;
         
         const testPos = {
@@ -239,9 +239,9 @@ export const MapView = () => {
         el.className = 'cursor-pointer';
         
         // Use custom icon image if available, otherwise use emoji
-        // Larger base icon sizes for better visibility: Beijing/Delhi use 90px, others use 105px
+        // Larger base icon sizes for better visibility: Beijing/Delhi use 140px, others use 160px
         const isCompactCity = selectedCity?.id === 'beijing' || selectedCity?.id === 'new-delhi';
-        const pngSizeClass = isCompactCity ? 'w-[90px] h-[90px]' : 'w-[105px] h-[105px]';
+        const pngSizeClass = isCompactCity ? 'w-[140px] h-[140px]' : 'w-[160px] h-[160px]';
         const isImage = Boolean(category.iconImage);
         const iconContent = isImage
           ? `<img src="${category.iconImage}" alt="${category.title}" class="${pngSizeClass} object-contain drop-shadow-2xl" />`
