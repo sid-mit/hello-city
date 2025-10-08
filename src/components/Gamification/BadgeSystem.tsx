@@ -1,5 +1,10 @@
 import { motion } from 'framer-motion';
 import { useAppStore } from '@/stores/appStore';
+import firstStepsIcon from '@/assets/badges/first-steps.png';
+import practiceMasterIcon from '@/assets/badges/practice-master.png';
+import perfectScoreIcon from '@/assets/badges/perfect-score.png';
+import polyglotIcon from '@/assets/badges/polyglot.png';
+import dedicatedIcon from '@/assets/badges/dedicated.png';
 
 export interface Badge {
   id: string;
@@ -8,6 +13,14 @@ export interface Badge {
   description: string;
   unlocked: boolean;
 }
+
+const badgeIcons: Record<string, string> = {
+  'first-steps': firstStepsIcon,
+  'practice-master': practiceMasterIcon,
+  'perfect-score': perfectScoreIcon,
+  'polyglot': polyglotIcon,
+  'dedicated': dedicatedIcon,
+};
 
 export const BadgeSystem = () => {
   const { badges } = useAppStore();
@@ -26,7 +39,13 @@ export const BadgeSystem = () => {
               : 'bg-muted border-border opacity-60'
           }`}
         >
-          <div className="text-3xl mb-2 text-center">{badge.emoji}</div>
+          <div className="mb-2 flex items-center justify-center h-12">
+            {badgeIcons[badge.id] ? (
+              <img src={badgeIcons[badge.id]} alt={badge.title} className="w-12 h-12 object-contain" />
+            ) : (
+              <span className="text-3xl">{badge.emoji}</span>
+            )}
+          </div>
           <h4 className="text-xs font-semibold text-center mb-1">{badge.title}</h4>
           <p className="text-xs text-muted-foreground text-center line-clamp-2">
             {badge.description}
