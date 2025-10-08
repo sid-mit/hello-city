@@ -5,14 +5,6 @@ import { useAppStore } from '@/stores/appStore';
 
 export default function Landing() {
   const navigate = useNavigate();
-  const { hasCompletedOnboarding } = useAppStore();
-
-  useEffect(() => {
-    if (hasCompletedOnboarding) {
-      navigate('/home');
-    }
-  }, [hasCompletedOnboarding, navigate]);
-
   const handleStart = () => {
     navigate('/onboarding');
   };

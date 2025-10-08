@@ -342,7 +342,6 @@ export const useAppStore = create<AppState>()(
         badges: state.badges,
         practiceStreak: state.practiceStreak,
         lastPracticeDate: state.lastPracticeDate,
-        hasCompletedOnboarding: state.hasCompletedOnboarding,
       }),
     }
   )
