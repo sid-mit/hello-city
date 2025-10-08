@@ -47,7 +47,7 @@ export const MapView = () => {
     if (map.current) {
       map.current.flyTo({
         center: [city.coordinates.lng, city.coordinates.lat],
-        zoom: 17, // Street-level view
+        zoom: 20, // True street-level view
         duration: 2000,
       });
     }
@@ -240,7 +240,7 @@ export const MapView = () => {
         const topPadding = topBarHeight + 100; // Increased from topBarHeight + 24
         map.current.fitBounds(bounds, {
           padding: { top: topPadding, bottom: 140, left: 140, right: 140 },
-          maxZoom: 18, // Street-level zoom
+          minZoom: 19, // Force street-level view - prevent zooming out
           duration: 1500,
         });
       }
