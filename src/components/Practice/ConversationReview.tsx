@@ -48,6 +48,7 @@ export const ConversationReview = ({
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [phraseScores, setPhraseScores] = useState<PhraseScore[]>([]);
   const [waitingForContinue, setWaitingForContinue] = useState(false);
+  const [showingServerResponse, setShowingServerResponse] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLDivElement>(null);
 
@@ -139,16 +140,30 @@ export const ConversationReview = ({
     setPhraseScores((prev) => prev.filter((ps) => ps.phraseIndex !== phraseIndex));
     setCurrentPhraseIndex(phraseIndex);
     setWaitingForContinue(false);
+    setShowingServerResponse(false);
   };
 
   const handleContinue = () => {
-    setWaitingForContinue(false);
-    
-    if (currentPhraseIndex < phrases.length - 1) {
-      setCurrentPhraseIndex((prev) => prev + 1);
+    // Check if there's a server response for the current phrase
+    const hasServerResponse = serverResponses.some(
+      (sr) => sr.afterUserPhraseIndex === currentPhraseIndex
+    );
+
+    if (hasServerResponse && !showingServerResponse) {
+      // First, show the server response
+      setShowingServerResponse(true);
+      setWaitingForContinue(false);
     } else {
-      // All phrases completed
-      onComplete(phraseScores.map((ps) => ps.score));
+      // Move to next phrase or complete
+      setShowingServerResponse(false);
+      setWaitingForContinue(false);
+      
+      if (currentPhraseIndex < phrases.length - 1) {
+        setCurrentPhraseIndex((prev) => prev + 1);
+      } else {
+        // All phrases completed
+        onComplete(phraseScores.map((ps) => ps.score));
+      }
     }
   };
 
@@ -232,6 +247,7 @@ export const ConversationReview = ({
             const afterPhraseIndex = message.serverResponse.afterUserPhraseIndex;
             const afterPhraseScore = getScoreForPhrase(afterPhraseIndex);
             const isFuture = afterPhraseIndex >= currentPhraseIndex && !afterPhraseScore;
+            const isActiveServerResponse = showingServerResponse && afterPhraseIndex === currentPhraseIndex;
             
             return (
               <motion.div
@@ -239,14 +255,16 @@ export const ConversationReview = ({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4 }}
+                ref={isActiveServerResponse ? activeRef : null}
               >
                 <ChatBubble
                   speaker="other"
                   phrase={message.serverResponse}
-                  isActive={false}
-                  isPast={!isFuture}
-                  isFuture={isFuture}
+                  isActive={isActiveServerResponse}
+                  isPast={!isFuture && !isActiveServerResponse}
+                  isFuture={isFuture && !isActiveServerResponse}
                   onPlayAudio={() => handlePlayServerAudio(message.serverResponse!)}
+                  onContinue={isActiveServerResponse ? handleContinue : undefined}
                 />
               </motion.div>
             );
