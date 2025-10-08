@@ -156,13 +156,12 @@ export const MapView = () => {
       const bounds = new mapboxgl.LngLatBounds();
       const placedPositions: Array<{ x: number; y: number; width: number; height: number }> = [];
       
-      // Helper function to check overlap
-      const hasOverlap = (pos1: any, pos2: any, threshold = 0.1): boolean => {
+      // Helper function to check overlap - require 1.5x icon width separation
+      const hasOverlap = (pos1: any, pos2: any): boolean => {
         const dx = Math.abs(pos1.x - pos2.x);
         const dy = Math.abs(pos1.y - pos2.y);
-        const minDist = (pos1.width + pos2.width) / 2;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        return distance < minDist * (1 - threshold);
+        const minDist = (pos1.width * 1.5); // Require 1.5x icon width separation
+        return dx < minDist && dy < minDist;
       };
       
       // Helper function to find non-overlapping position
@@ -170,10 +169,11 @@ export const MapView = () => {
         originalLngLat: [number, number],
         attempt = 0
       ): [number, number] => {
-        if (attempt > 20) return originalLngLat; // Give up after 20 attempts
+        if (attempt > 30) return originalLngLat; // Increased attempts
         
         const testPoint = map.current!.project(originalLngLat);
         const iconSize = 104; // w-26 = 104px
+        const topBarHeight = topBarRef.current?.offsetHeight || 80;
         
         const testPos = {
           x: testPoint.x,
@@ -181,6 +181,13 @@ export const MapView = () => {
           width: iconSize,
           height: iconSize,
         };
+        
+        // Check if icon is too close to top bar
+        if (testPoint.y < topBarHeight + iconSize) {
+          // Nudge down by adjusting latitude
+          const newLat = originalLngLat[1] - 0.01;
+          return findNonOverlappingPosition([originalLngLat[0], newLat], attempt + 1);
+        }
         
         // Check if overlaps with any placed position
         const overlaps = placedPositions.some(placed => hasOverlap(testPos, placed));
@@ -190,8 +197,8 @@ export const MapView = () => {
           return originalLngLat;
         }
         
-        // Try spiral pattern: move in expanding circle
-        const spiralRadius = 0.005 * (Math.floor(attempt / 8) + 1);
+        // More aggressive spiral pattern: larger steps
+        const spiralRadius = 0.008 * (Math.floor(attempt / 8) + 1); // Increased from 0.005
         const spiralAngle = (attempt % 8) * (Math.PI / 4);
         
         const newLng = originalLngLat[0] + spiralRadius * Math.cos(spiralAngle);
@@ -233,8 +240,8 @@ export const MapView = () => {
         const topBarHeight = topBarRef.current?.offsetHeight || 0;
         const topPadding = topBarHeight + 100; // Increased from topBarHeight + 24
         map.current.fitBounds(bounds, {
-          padding: { top: topPadding, bottom: 140, left: 140, right: 140 }, // Increased padding
-          maxZoom: 15,
+          padding: { top: topPadding, bottom: 140, left: 140, right: 140 },
+          maxZoom: 16, // Increased zoom for closer view
           duration: 1500,
         });
       }
