@@ -229,7 +229,7 @@ const About = () => {
                   <img 
                     src={member.image} 
                     alt={`${member.name} - ${member.city}`}
-                    className={`${index === 0 ? 'w-56 h-56' : 'w-40 h-40'} rounded-full object-cover mx-auto mb-6 ring-4 ring-primary/10 group-hover:ring-primary/30 transition-all`}
+                    className={`${index === 0 ? 'w-56 h-56 scale-125' : 'w-40 h-40 scale-75'} rounded-full object-cover mx-auto mb-6 ring-4 ring-primary/10 group-hover:ring-primary/30 transition-all`}
                   />
                   <div className="text-3xl font-bold text-primary mb-3">{member.greeting}</div>
                   <h3 className="text-xl font-semibold text-foreground mb-2">{member.name}</h3>
