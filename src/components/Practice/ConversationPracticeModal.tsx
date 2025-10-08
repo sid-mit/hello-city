@@ -249,20 +249,20 @@ export const ConversationPracticeModal = ({
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
         <div className="sticky top-0 z-10 bg-background border-b px-6 py-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3 flex-1">
+          <div className="relative flex justify-center items-center mb-3">
+            <div className="flex flex-col items-center gap-2">
               {situation.categoryIconImage ? (
                 <img 
                   src={situation.categoryIconImage} 
                   alt={situation.title} 
-                  className="w-8 h-8 object-contain shrink-0" 
+                  className="w-14 h-14 object-contain" 
                 />
               ) : (
-                <span className="text-2xl shrink-0">{situation.emoji}</span>
+                <span className="text-4xl">{situation.emoji}</span>
               )}
-              <h2 className="text-xl font-bold flex-1 text-center -ml-10">{situation.title}</h2>
+              <h2 className="text-xl font-bold text-primary">{situation.title}</h2>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="absolute right-0 top-0 flex items-center gap-2">
               {practiceMode !== 'selection' && (
                 <GenderSelector
                   langCode={
@@ -289,12 +289,12 @@ export const ConversationPracticeModal = ({
           {practiceMode === 'selection' ? (
             <div className="space-y-4">
               {/* Individual Phrases Section */}
-              <div className="space-y-3">
+              <div className="space-y-1.5">
                 <h3 className="text-base font-semibold text-foreground">Practice Individual Phrases</h3>
                 <p className="text-sm text-muted-foreground">
                   Master each phrase one at a time
                 </p>
-                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+                <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-muted/20 [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30">
                   {situation.phrases.map((phrase, index) => (
                     <button
                       key={index}
@@ -326,7 +326,7 @@ export const ConversationPracticeModal = ({
               </div>
 
               {/* Full Conversation Section */}
-              <div className="space-y-3">
+              <div className="space-y-1.5">
                 <h3 className="text-base font-semibold text-foreground">Feeling Confident?</h3>
                 <p className="text-sm text-muted-foreground">
                   Practice the entire conversation flow with realistic responses
