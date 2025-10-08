@@ -250,9 +250,17 @@ export const ConversationPracticeModal = ({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
         <div className="sticky top-0 z-10 bg-background border-b px-6 py-4">
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">{situation.emoji}</span>
-              <h2 className="text-xl font-bold">{situation.title}</h2>
+            <div className="flex items-center gap-3 flex-1">
+              {situation.categoryIconImage ? (
+                <img 
+                  src={situation.categoryIconImage} 
+                  alt={situation.title} 
+                  className="w-8 h-8 object-contain shrink-0" 
+                />
+              ) : (
+                <span className="text-2xl shrink-0">{situation.emoji}</span>
+              )}
+              <h2 className="text-xl font-bold flex-1 text-center -ml-10">{situation.title}</h2>
             </div>
             <div className="flex items-center gap-2">
               {practiceMode !== 'selection' && (
@@ -307,8 +315,18 @@ export const ConversationPracticeModal = ({
                 </div>
               </div>
 
+              {/* Or Divider */}
+              <div className="relative py-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-background px-4 text-sm text-muted-foreground">or</span>
+                </div>
+              </div>
+
               {/* Full Conversation Section */}
-              <div className="pt-4 space-y-3">
+              <div className="space-y-3">
                 <h3 className="text-base font-semibold text-foreground">Feeling Confident?</h3>
                 <p className="text-sm text-muted-foreground">
                   Practice the entire conversation flow with realistic responses

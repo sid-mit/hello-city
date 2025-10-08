@@ -368,6 +368,7 @@ export const MapView = () => {
           cityName: selectedCity.name,
           cityEmoji: selectedCity.emoji,
           categoryColor: category.color,
+          categoryIconImage: category.iconImage,
         }));
         
         return (

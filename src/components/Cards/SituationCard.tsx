@@ -16,6 +16,7 @@ export interface SituationData {
   context: string;
   culturalTip?: string;
   categoryColor?: string;
+  categoryIconImage?: string;
   conversationFlow?: Array<{
     step: number;
     speaker: 'you' | 'other';
