@@ -16,8 +16,6 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoiYW5pbnlhZyIsImEiOiJjbWdmNHF6MHUwNG9oMmtuMGhubWR
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 
-const CITY_ZOOM = 13.5;
-
 export const MapView = () => {
   const { selectedCity, selectedCategory, genderPreference, selectCity, selectCategory } = useAppStore();
   const [showCitySelector, setShowCitySelector] = useState(false);
@@ -27,7 +25,6 @@ export const MapView = () => {
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const topBarRef = useRef<HTMLDivElement>(null);
-  const [zoomLevel, setZoomLevel] = useState<number>(0);
 
   // Fetch dynamic city data from database
   const { data: cityData, isLoading: isCityDataLoading } = useDynamicCityData({
@@ -48,12 +45,10 @@ export const MapView = () => {
     
     // Initial fly to city (will be adjusted once markers load)
     if (map.current) {
-      map.current.setMinZoom(12);
-      map.current.setMaxZoom(16);
       map.current.flyTo({
         center: [city.coordinates.lng, city.coordinates.lat],
-        zoom: CITY_ZOOM, // Consistent city-level view
-        duration: 1200,
+        zoom: 20, // True street-level view
+        duration: 2000,
       });
     }
   }, [selectCity]);
@@ -64,10 +59,8 @@ export const MapView = () => {
     
     // Fly back to world view
     if (map.current) {
-      map.current.setMinZoom(0);
-      map.current.setMaxZoom(22);
       map.current.flyTo({
-        center: [90, 20],
+      center: [90, 20],
         zoom: 1.5,
         duration: 2000,
       });
@@ -119,16 +112,6 @@ export const MapView = () => {
 
         setTimeout(() => {
           setIsLaunching(false);
-          
-          // Set up zoom tracking after map is fully loaded
-          if (map.current) {
-            setZoomLevel(Number(map.current.getZoom().toFixed(1)));
-            map.current.on('zoom', () => {
-              if (map.current) {
-                setZoomLevel(Number(map.current.getZoom().toFixed(1)));
-              }
-            });
-          }
         }, 2500);
       }, 300);
     });
@@ -255,11 +238,10 @@ export const MapView = () => {
       if (!bounds.isEmpty()) {
         const topBarHeight = topBarRef.current?.offsetHeight || 0;
         const topPadding = topBarHeight + 100; // Increased from topBarHeight + 24
-        const center = bounds.getCenter();
-        map.current.easeTo({
-          center,
-          zoom: CITY_ZOOM,
-          duration: 1000,
+        map.current.fitBounds(bounds, {
+          padding: { top: topPadding, bottom: 140, left: 140, right: 140 },
+          minZoom: 19, // Force street-level view - prevent zooming out
+          duration: 1500,
         });
       }
     }
@@ -421,10 +403,6 @@ export const MapView = () => {
           </div>
         </div>
       )}
-      {/* Zoom debug */}
-      <div className="absolute bottom-2 right-2 z-50 px-2 py-1 rounded-md glass text-xs">
-        Zoom: {zoomLevel.toFixed(1)}
-      </div>
     </motion.div>
   );
 };
