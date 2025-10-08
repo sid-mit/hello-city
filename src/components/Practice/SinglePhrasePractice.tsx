@@ -128,7 +128,7 @@ export const SinglePhrasePractice = ({
   }[cityId] || "en-US") as LanguageCode;
 
   return (
-    <div className="space-y-8 py-6">
+    <div className="space-y-6 sm:space-y-8 py-4 sm:py-6">
       <AnimatePresence mode="wait">
         {step === "record" && (
           <motion.div
@@ -138,11 +138,11 @@ export const SinglePhrasePractice = ({
             exit={{ opacity: 0, y: -20 }}
             className="space-y-8"
           >
-            <div className="text-center py-8 space-y-3">
-              <p className="text-4xl font-bold text-foreground">
+            <div className="text-center py-6 sm:py-8 space-y-3">
+              <p className="text-2xl sm:text-4xl font-bold text-foreground">
                 {phrase.romanization}
               </p>
-              <p className="text-xl text-muted-foreground">
+              <p className="text-base sm:text-xl text-muted-foreground">
                 {phrase.english}
               </p>
               <p className="text-sm text-muted-foreground">{phrase.native}</p>
@@ -152,7 +152,7 @@ export const SinglePhrasePractice = ({
               onClick={handleListen}
               variant="outline"
               size="lg"
-              className="w-full h-14"
+              className="w-full h-12 sm:h-14"
               disabled={isRecording || isAnalyzing || isPlaying}
             >
               <Volume2 className="mr-2 h-5 w-5" />
@@ -163,7 +163,7 @@ export const SinglePhrasePractice = ({
               onClick={handleRecord}
               disabled={isRecording || isAnalyzing}
               size="lg"
-              className="w-full h-20 text-lg"
+              className="w-full h-16 sm:h-20 text-base sm:text-lg"
             >
               {isAnalyzing ? (
                 <>

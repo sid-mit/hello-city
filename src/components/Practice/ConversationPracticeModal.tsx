@@ -289,8 +289,8 @@ export const ConversationPracticeModal = ({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
-        <div className="sticky top-0 z-10 bg-background border-b px-6 py-4">
+      <DialogContent className="max-w-full mx-4 sm:max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+        <div className="sticky top-0 z-10 bg-background border-b px-4 py-3 sm:px-6 sm:py-4">
           <div className="relative flex justify-between items-center mb-3">
             {/* Left side - Back button or empty space */}
             <div className="w-8">
@@ -354,7 +354,7 @@ export const ConversationPracticeModal = ({
           </div>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
           {practiceMode === 'selection' ? (
             <div className="space-y-4">
               {/* Individual Phrases Section */}
@@ -371,7 +371,7 @@ export const ConversationPracticeModal = ({
                         setSelectedPhraseIndex(index);
                         setPracticeMode('single-phrase');
                       }}
-                      className="w-full text-left p-4 rounded-xl border-2 border-border hover:border-primary/50 bg-card transition-all"
+                      className="w-full text-left p-3 sm:p-4 rounded-xl border-2 border-border hover:border-primary/50 bg-card transition-all"
                     >
                       <p className="font-medium text-foreground">
                         {phrase.romanization}

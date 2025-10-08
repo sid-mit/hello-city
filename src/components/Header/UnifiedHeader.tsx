@@ -78,7 +78,7 @@ export const UnifiedHeader = () => {
         {/* Right Side Navigation Group */}
         <div className="ml-auto flex items-center gap-4 md:gap-[50px]">
           {/* Navigation Toggle */}
-          <div className="relative rounded-full p-1 flex gap-1 w-[150px] md:w-[183px] h-[34px]" style={{
+          <div className="relative rounded-full p-1 flex gap-1 w-[120px] sm:w-[150px] md:w-[183px] h-[34px]" style={{
           backgroundColor: '#D2E0FF'
         }}>
             <motion.div layoutId="activeHeaderToggle" className="absolute top-1 bottom-1 bg-white rounded-full shadow-sm" style={{

@@ -36,7 +36,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
               transition={{ duration: 0.3 }}
               className="w-full max-w-[480px]"
             >
-              <div className="bg-background rounded-2xl py-8 px-8 shadow-xl border border-border/50 relative">
+              <div className="bg-background rounded-2xl py-6 px-4 sm:py-8 sm:px-8 shadow-xl border border-border/50 relative">
                 {/* Close Button */}
                 <Button
                   variant="ghost"
@@ -49,7 +49,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
 
                 {/* Header */}
                 <div className="flex items-center justify-center mb-6">
-                  <h2 className="text-xl font-medium text-foreground text-center font-gilroy">
+                  <h2 className="text-lg sm:text-xl font-medium text-foreground text-center font-gilroy">
                     Where do you plan to travel?
                   </h2>
                 </div>
@@ -64,7 +64,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
                         onClick={() => city.available && onCitySelect(city)}
                         disabled={!city.available}
                         className={`
-                          px-6 py-2.5 text-sm rounded-lg font-medium font-gilroy
+                          px-4 sm:px-6 py-2.5 text-sm rounded-lg font-medium font-gilroy
                           transition-all
                           ${city.available 
                             ? 'bg-primary/15 text-primary hover:bg-primary/20 cursor-pointer' 
@@ -86,9 +86,9 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
                         onClick={() => city.available && onCitySelect(city)}
                         disabled={!city.available}
                         className={`
-                          px-6 py-2.5 text-sm rounded-lg font-medium font-gilroy
+                          px-4 sm:px-6 py-2.5 text-sm rounded-lg font-medium font-gilroy
                           transition-all
-                          ${city.available 
+                          ${city.available
                             ? 'bg-primary/15 text-primary hover:bg-primary/20 cursor-pointer' 
                             : 'bg-muted/50 text-muted-foreground cursor-not-allowed'
                           }

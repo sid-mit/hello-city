@@ -94,7 +94,7 @@ export const PhraseDrawer = ({ categoryTitle, categoryEmoji, categoryColor, cate
           <div 
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="flex overflow-x-auto px-5 py-5 snap-x snap-mandatory scrollbar-hide"
+            className="flex overflow-x-auto px-3 sm:px-5 py-5 snap-x snap-mandatory scrollbar-hide"
             style={{ 
               scrollSnapType: 'x mandatory',
               WebkitOverflowScrolling: 'touch',

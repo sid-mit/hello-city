@@ -70,17 +70,15 @@ export const SituationCard = ({ situation, onFavoriteClick }: SituationCardProps
   return (
     <>
       <div 
-        className="bg-card rounded-3xl flex flex-col transition-transform active:scale-[0.99] border-2 border-primary/20 shadow-sm" 
+        className="bg-card rounded-3xl flex flex-col transition-transform active:scale-[0.99] border-2 border-primary/20 shadow-sm w-full sm:w-[280px] p-4 sm:p-5" 
         style={{ 
-          width: '280px', 
-          minWidth: '280px',
-          padding: '20px',
+          minWidth: '260px',
         }}
       >
         {/* Header Row: Title + Heart */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <h3 className="text-[19px] font-bold leading-tight text-foreground">
+            <h3 className="text-base sm:text-[19px] font-bold leading-tight text-foreground">
               {situation.title}
             </h3>
           </div>

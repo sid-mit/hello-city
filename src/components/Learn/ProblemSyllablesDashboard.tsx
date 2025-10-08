@@ -95,7 +95,7 @@ export const ProblemSyllablesDashboard = () => {
               <select
                 value={selectedLanguage}
                 onChange={(e) => setSelectedLanguage(e.target.value)}
-                className="text-xs border border-border rounded-md px-2 py-1 bg-background"
+                className="w-full sm:w-auto text-xs border border-border rounded-md px-2 py-1 bg-background"
               >
                 <option value="all">All Languages</option>
                 {languages.map(lang => (
@@ -192,7 +192,7 @@ export const ProblemSyllablesDashboard = () => {
                 <p className="text-sm text-green-600 dark:text-green-400 mb-4">
                   🎉 Great job! You've mastered these sounds with 90%+ accuracy
                 </p>
-                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                   {masteredSyllables.map(({ syllable, data }) => (
                     <motion.div
                       key={syllable}
