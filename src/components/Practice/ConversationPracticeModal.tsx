@@ -294,7 +294,7 @@ export const ConversationPracticeModal = ({
                 <p className="text-sm text-muted-foreground">
                   Master each phrase one at a time
                 </p>
-                <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-muted/20 [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30">
+                <div className="space-y-2">
                   {situation.phrases.map((phrase, index) => (
                     <button
                       key={index}
