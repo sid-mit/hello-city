@@ -178,7 +178,7 @@ export default function Onboarding() {
             {!isFirstSlide && (
               <button
                 onClick={handleBack}
-                className="min-w-[140px] px-12 py-1.5 border-2 border-[#2A64EC] bg-transparent rounded-full transition-all hover:bg-[#2A64EC]/5"
+                className="w-[160px] sm:w-[180px] whitespace-nowrap px-12 py-1.5 border-2 border-[#2A64EC] bg-transparent rounded-full transition-all hover:bg-[#2A64EC]/5"
                 style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
               >
                 Back
@@ -186,7 +186,7 @@ export default function Onboarding() {
             )}
             <button 
               onClick={handleNext} 
-              className="min-w-[140px] px-12 py-1.5 bg-[#BDD1FF] rounded-full transition-all hover:bg-[#BDD1FF]/80"
+              className="w-[160px] sm:w-[180px] whitespace-nowrap px-12 py-1.5 border-2 border-transparent bg-[#BDD1FF] rounded-full transition-all hover:bg-[#BDD1FF]/80"
               style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
             >
               {isFirstSlide ? 'Continue' : isLastSlide ? 'Get Started' : 'Next'}
