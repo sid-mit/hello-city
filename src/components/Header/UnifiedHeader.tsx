@@ -31,6 +31,7 @@ export const UnifiedHeader = () => {
             className="cursor-pointer relative"
             style={{ height: '40px', width: '138px' }}
             onClick={() => {
+              setActiveTab('explore');
               navigate('/home');
               setShowAnimation(true);
               setTimeout(() => setShowAnimation(false), 2500);
