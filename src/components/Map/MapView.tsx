@@ -45,6 +45,8 @@ export const MapView = () => {
     
     // Initial fly to city (will be adjusted once markers load)
     if (map.current) {
+      // Switch to mercator projection for city view (avoids fitBounds globe projection bug)
+      map.current.setProjection('mercator');
       map.current.flyTo({
         center: [city.coordinates.lng, city.coordinates.lat],
         zoom: 17, // Street-level view
@@ -59,6 +61,8 @@ export const MapView = () => {
     
     // Fly back to world view
     if (map.current) {
+      // Switch back to globe projection for world view
+      map.current.setProjection('globe');
       map.current.flyTo({
       center: [90, 20],
         zoom: 1.5,
