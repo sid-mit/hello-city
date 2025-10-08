@@ -166,7 +166,13 @@ export const MapView = () => {
       )}
 
       {/* Map */}
-      <div ref={mapContainer} className="w-full h-full" />
+      <div 
+        ref={mapContainer} 
+        className="w-full h-full"
+        style={{
+          background: 'linear-gradient(180deg, #FFFFFF 0%, #F5F8FF 100%)'
+        }}
+      />
 
       {/* Bottom Center: Text + Button (only when no city selected) */}
       {!selectedCity && (
