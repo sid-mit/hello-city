@@ -37,7 +37,7 @@ export const CityMarker = ({ city, onClick, isSelected }: CityMarkerProps) => {
       
       {/* Marker circle */}
       <div
-        className={`relative w-11 h-11 rounded-full glass border-2 flex items-center justify-center transition-all ${
+        className={`relative w-20 h-20 rounded-full glass border-2 flex items-center justify-center transition-all ${
           isSelected
             ? 'shadow-[0_0_20px_rgba(65,124,255,0.5)]'
             : 'border-border/50'
@@ -49,7 +49,7 @@ export const CityMarker = ({ city, onClick, isSelected }: CityMarkerProps) => {
         <img 
           src={city.emoji} 
           alt={`${city.name} flag`} 
-          className="w-7 h-7 object-contain"
+          className="w-14 h-14 object-contain"
         />
       </div>
 
