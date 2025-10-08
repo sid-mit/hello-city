@@ -10,22 +10,22 @@ const About = () => {
     {
       icon: Target,
       title: 'Connection, not perfection',
-      description: 'Even a few words can change how the world welcomes you. We make language less about performance, more about presence.'
+      description: 'A few words can change how the world welcomes you. We make language about presence, not performance.'
     },
     {
       icon: MapPin,
       title: 'Culture meets context',
-      description: 'Each phrase is tied to real places and local etiquette, so learning feels natural, not abstract.'
+      description: 'Every phrase is tied to real places and local etiquette—learning that feels natural, never abstract.'
     },
     {
       icon: Navigation,
       title: 'Learn as you go',
-      description: "No courses, no schedules—just short, on-the-spot lessons that fit the flow of your journey. Three minutes at a café, and you've already learned something new."
+      description: "No courses, no schedules. Just quick lessons that fit your journey. Three minutes at a café? You've learned something new."
     },
     {
       icon: Trophy,
       title: 'Playful by design',
-      description: 'Stickers, maps, and voice feedback turn language learning into a small daily adventure. Every interaction feels like collecting memories, not completing tasks.'
+      description: "Maps, voice feedback, and achievements turn learning into a daily adventure. You're not completing tasks—you're collecting memories."
     }
   ];
 
@@ -57,17 +57,17 @@ const About = () => {
     {
       icon: Globe,
       title: 'Choose your destination',
-      description: 'Spin the globe, pick a city, and zoom into its illustrated map.'
+      description: 'Pick a city and explore its illustrated map—every location has something to teach you.'
     },
     {
       icon: MapPin,
       title: 'Tap and learn',
-      description: 'Each location—like café, subway, or museum—reveals a few must-know phrases in various situations.'
+      description: 'Tap cafés, metros, museums, and more. Each place reveals must-know phrases for real situations.'
     },
     {
       icon: Mic,
       title: 'Practice playfully',
-      description: "Record your voice and get instant feedback. You don't need to sound perfect, just willing."
+      description: "Record your voice, get instant feedback. You don't need perfection—just courage."
     }
   ];
 
@@ -107,15 +107,15 @@ const About = () => {
             <h2 className="text-2xl font-bold text-center text-foreground mb-6 tracking-wide">
               What is HelloCity?
             </h2>
-            <div className="text-base font-medium text-foreground leading-relaxed">
+            <div className="text-base font-medium text-foreground leading-relaxed text-center">
               <p>
-                Hello City is a map-based micro-learning app that helps travelers feel more connected abroad.
+                HelloCity is a map-based micro-learning app that transforms how you connect with new places.
               </p>
               <p className="mt-4">
-                Instead of long lessons or grammar drills, Hello City teaches short, real-life expressions and cultural tips tied to the exact places you'll visit.
+                No long lessons. No grammar drills. Just short, practical phrases tied to real locations you'll actually visit—cafés, metros, museums, and more.
               </p>
               <p className="mt-4">
-                It's not about fluency. It's about confidence, curiosity, and connection.
+                We're not here to make you fluent. We're here to help you feel confident, curious, and connected.
               </p>
             </div>
           </motion.div>
@@ -239,19 +239,16 @@ const About = () => {
                     />
                   </div>
                   <div className="text-2xl font-extrabold text-primary mb-8 tracking-wide">{member.greeting}</div>
-                  <div className="flex flex-col gap-6">
-                    <div className="flex flex-col gap-2">
-                      <h3 className="text-base font-bold text-foreground tracking-wide">{member.name}</h3>
-                      <p className="text-sm font-medium text-foreground">{member.city}</p>
-                    </div>
+                  <div className="flex flex-col gap-2">
                     <a
                       href={member.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+                      className="text-base font-bold text-foreground tracking-wide hover:underline hover:text-primary transition-colors"
                     >
-                      LinkedIn
+                      {member.name}
                     </a>
+                    <p className="text-sm font-medium text-foreground">{member.city}</p>
                   </div>
                 </motion.div>
               ))}
@@ -273,7 +270,7 @@ const About = () => {
               Our Mission
             </h2>
             <p className="text-base font-medium text-foreground leading-relaxed mb-10">
-              To make travel more human by helping people connect across cultures through small, meaningful words. We believe language is more than communication. It's care, respect, and curiosity in motion.
+              To make travel more human—helping people connect across cultures through small, meaningful words. Language isn't just communication. It's care, respect, and curiosity in motion.
             </p>
             <button
               onClick={() => navigate('/')}
