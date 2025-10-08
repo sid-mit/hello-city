@@ -121,6 +121,27 @@ export const MapView = () => {
       }, 300);
     });
 
+    // Add zoom event listener to scale markers proportionally
+    map.current.on('zoom', () => {
+      if (!map.current) return;
+      
+      const zoom = map.current.getZoom();
+      // Scale markers based on zoom level: scale up when zooming in beyond initial zoom
+      // Base zoom is ~12 for city view, scale proportionally from there
+      const baseZoom = 12;
+      const scaleFactor = zoom > baseZoom ? 1 + ((zoom - baseZoom) * 0.15) : 1;
+      
+      // Apply scale to all marker elements while preserving hover effects
+      markersRef.current.forEach(marker => {
+        const element = marker.getElement();
+        if (element) {
+          // Use CSS variable to allow hover:scale-110 to still work
+          element.style.setProperty('--zoom-scale', scaleFactor.toString());
+          element.style.transform = `scale(calc(var(--zoom-scale, 1)))`;
+        }
+      });
+    });
+
     return () => {
       markersRef.current.forEach(marker => marker.remove());
       markersRef.current = [];
@@ -214,7 +235,7 @@ export const MapView = () => {
       
       cityData.categories.forEach((category) => {
         const el = document.createElement('div');
-        el.className = 'cursor-pointer transform transition-all hover:scale-110';
+        el.className = 'cursor-pointer transition-all';
         
         // Use custom icon image if available, otherwise use emoji
         // PNG icons increased by 10%: Beijing/Delhi use 68px, others use 79px
@@ -225,6 +246,17 @@ export const MapView = () => {
           : `<span class="text-6xl drop-shadow-2xl">${category.emoji}</span>`;
         
         el.innerHTML = iconContent;
+        
+        // Add hover effect that works with zoom scaling
+        el.addEventListener('mouseenter', () => {
+          const currentScale = parseFloat(el.style.getPropertyValue('--zoom-scale') || '1');
+          el.style.transform = `scale(${currentScale * 1.1})`;
+        });
+        el.addEventListener('mouseleave', () => {
+          const currentScale = parseFloat(el.style.getPropertyValue('--zoom-scale') || '1');
+          el.style.transform = `scale(${currentScale})`;
+        });
+        
         el.onclick = () => handleCategoryClick(category.id);
 
         // Original position from data
@@ -233,7 +265,10 @@ export const MapView = () => {
         // Find non-overlapping position
         const finalLngLat = findNonOverlappingPosition(originalLngLat);
         
-        const marker = new mapboxgl.Marker(el)
+        const marker = new mapboxgl.Marker({
+          element: el,
+          anchor: 'center',
+        })
           .setLngLat(finalLngLat)
           .addTo(map.current!);
 
