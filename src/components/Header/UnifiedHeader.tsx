@@ -19,7 +19,30 @@ export const UnifiedHeader = () => {
       <div className="container mx-auto px-10 py-4 flex items-center">
         {/* Branding */}
         <div className="flex items-center gap-2">
-          <img src={logo} alt="HelloCity Logo" className="w-[138px] h-10" />
+          <motion.div
+            initial={{ clipPath: "inset(0 100% 0 0)" }}
+            animate={{ clipPath: "inset(0 0% 0 0)" }}
+            transition={{
+              duration: 1.2,
+              ease: [0.43, 0.13, 0.23, 0.96],
+            }}
+            whileHover={{ scale: 1.03 }}
+            className="cursor-pointer"
+          >
+            <motion.img
+              src={logo}
+              alt="HelloCity Logo"
+              className="w-[138px] h-10"
+              animate={{
+                x: [0, 1, 0, -1, 0],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          </motion.div>
           <div>
             
             
