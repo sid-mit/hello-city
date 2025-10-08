@@ -34,11 +34,11 @@ export const MapView = () => {
     selectCity(city);
     setShowCitySelector(false);
     
-    // Fly to city
+    // Initial fly to city (will be adjusted once markers load)
     if (map.current) {
       map.current.flyTo({
         center: [city.coordinates.lng, city.coordinates.lat],
-        zoom: 12,
+        zoom: 11,
         duration: 2000,
       });
     }
@@ -144,6 +144,8 @@ export const MapView = () => {
       });
     } else if (cityData && !isCityDataLoading) {
       // Show category markers from database
+      const bounds = new mapboxgl.LngLatBounds();
+      
       cityData.categories.forEach((category) => {
         const el = document.createElement('div');
         el.className = 'cursor-pointer transform transition-all hover:scale-110';
@@ -154,12 +156,23 @@ export const MapView = () => {
         `;
         el.onclick = () => handleCategoryClick(category.id);
 
+        const lngLat: [number, number] = [category.mapPosition[1], category.mapPosition[0]];
         const marker = new mapboxgl.Marker(el)
-          .setLngLat([category.mapPosition[1], category.mapPosition[0]])
+          .setLngLat(lngLat)
           .addTo(map.current!);
 
         markersRef.current.push(marker);
+        bounds.extend(lngLat);
       });
+
+      // Fit map to show all markers with padding
+      if (!bounds.isEmpty()) {
+        map.current.fitBounds(bounds, {
+          padding: { top: 100, bottom: 100, left: 100, right: 100 },
+          maxZoom: 13,
+          duration: 1500,
+        });
+      }
     }
   }, [selectedCity, cityData, isCityDataLoading, handleCityClick, handleCategoryClick]);
 
