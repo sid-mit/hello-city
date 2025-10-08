@@ -145,12 +145,12 @@ export const SinglePhrasePractice = ({
             exit={{ opacity: 0, y: -20 }}
             className="space-y-6"
           >
-            <div className="text-center py-6 space-y-2">
+            <div className="text-center py-4 space-y-1">
               <p className="text-4xl font-bold text-foreground">
                 {phrase.romanization}
               </p>
               <p className="text-xl text-muted-foreground">
-                {phrase.romanization}
+                {phrase.english}
               </p>
               <p className="text-sm text-muted-foreground">{phrase.native}</p>
             </div>
