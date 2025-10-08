@@ -143,18 +143,46 @@ export const ConversationReview = ({
     setShowingServerResponse(false);
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     // Check if there's a server response for the current phrase
-    const hasServerResponse = serverResponses.some(
+    const serverResponse = serverResponses.find(
       (sr) => sr.afterUserPhraseIndex === currentPhraseIndex
     );
 
-    if (hasServerResponse && !showingServerResponse) {
-      // First, show the server response
+    if (serverResponse && !showingServerResponse) {
+      // First, show and auto-play the server response
       setShowingServerResponse(true);
       setWaitingForContinue(false);
+      
+      try {
+        // Auto-play the server audio
+        await generateNaturalSpeech(serverResponse.native, cityId);
+        
+        // Wait 1 second after audio finishes
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Automatically move to next phrase
+        setShowingServerResponse(false);
+        
+        if (currentPhraseIndex < phrases.length - 1) {
+          setCurrentPhraseIndex((prev) => prev + 1);
+        } else {
+          // All phrases completed
+          onComplete(phraseScores.map((ps) => ps.score));
+        }
+      } catch (error) {
+        console.error('Error playing server audio:', error);
+        // Still move forward even if audio fails
+        setShowingServerResponse(false);
+        
+        if (currentPhraseIndex < phrases.length - 1) {
+          setCurrentPhraseIndex((prev) => prev + 1);
+        } else {
+          onComplete(phraseScores.map((ps) => ps.score));
+        }
+      }
     } else {
-      // Move to next phrase or complete
+      // No server response, just move to next phrase or complete
       setShowingServerResponse(false);
       setWaitingForContinue(false);
       
@@ -165,6 +193,14 @@ export const ConversationReview = ({
         onComplete(phraseScores.map((ps) => ps.score));
       }
     }
+  };
+
+  const handleRetryPastPhrase = (phraseIndex: number) => {
+    // Clear scores for this phrase and all subsequent phrases
+    setPhraseScores((prev) => prev.filter((ps) => ps.phraseIndex < phraseIndex));
+    setCurrentPhraseIndex(phraseIndex);
+    setWaitingForContinue(false);
+    setShowingServerResponse(false);
   };
 
   // Build complete conversation with all messages visible from start
@@ -236,6 +272,7 @@ export const ConversationReview = ({
                   onRecord={isActive ? handleRecord : undefined}
                   onRetry={showActions ? () => handleRetry(message.phraseIndex!) : undefined}
                   onContinue={showActions ? handleContinue : undefined}
+                  onRetryPast={isPast ? () => handleRetryPastPhrase(message.phraseIndex!) : undefined}
                   isRecording={isRecording && isActive}
                   isAnalyzing={isAnalyzing && isActive}
                   score={score}
@@ -264,7 +301,6 @@ export const ConversationReview = ({
                   isPast={!isFuture && !isActiveServerResponse}
                   isFuture={isFuture && !isActiveServerResponse}
                   onPlayAudio={() => handlePlayServerAudio(message.serverResponse!)}
-                  onContinue={isActiveServerResponse ? handleContinue : undefined}
                 />
               </motion.div>
             );

@@ -22,6 +22,7 @@ interface ChatBubbleProps {
   onRecord?: () => void;
   onRetry?: () => void;
   onContinue?: () => void;
+  onRetryPast?: () => void;
   isRecording?: boolean;
   isAnalyzing?: boolean;
   score?: number;
@@ -37,6 +38,7 @@ export const ChatBubble = ({
   onRecord,
   onRetry,
   onContinue,
+  onRetryPast,
   isRecording = false,
   isAnalyzing = false,
   score,
@@ -136,30 +138,52 @@ export const ChatBubble = ({
         {/* Score Badge with Actions - After recording */}
         {isUser && score !== undefined && (
           <div className="mt-3 pt-3 border-t border-primary/20 space-y-2">
-            <ScoreBadge score={score} />
-            <div className="flex gap-2">
-              {onRetry && (
-                <Button
-                  onClick={onRetry}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 gap-1"
-                >
-                  <RotateCcw className="w-3 h-3" />
-                  Try Again
-                </Button>
-              )}
-              {onContinue && (
-                <Button
-                  onClick={onContinue}
-                  size="sm"
-                  className="flex-1 gap-1"
-                >
-                  Continue
-                  <ArrowRight className="w-3 h-3" />
-                </Button>
+            <div className="flex items-center gap-2">
+              <ScoreBadge score={score} />
+              {isPast && onRetryPast && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={onRetryPast}
+                        className="p-1 rounded-full hover:bg-background/50 transition-colors"
+                        aria-label="Retry from here"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5 text-muted-foreground" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Retry from here</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
             </div>
+            {(onRetry || onContinue) && (
+              <div className="flex gap-2">
+                {onRetry && (
+                  <Button
+                    onClick={onRetry}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 gap-1"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    Try Again
+                  </Button>
+                )}
+                {onContinue && (
+                  <Button
+                    onClick={onContinue}
+                    size="sm"
+                    className="flex-1 gap-1"
+                  >
+                    Continue
+                    <ArrowRight className="w-3 h-3" />
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
