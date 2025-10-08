@@ -161,14 +161,10 @@ export const MapView = () => {
         
         // Use custom icon image if available, otherwise use emoji
         const iconContent = category.iconImage 
-          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-10 h-10 object-contain" />`
-          : `<span class="text-2xl">${category.emoji}</span>`;
+          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-16 h-16 object-contain drop-shadow-lg" />`
+          : `<span class="text-5xl drop-shadow-lg">${category.emoji}</span>`;
         
-        el.innerHTML = `
-          <div class="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-lg border-2 border-primary">
-            ${iconContent}
-          </div>
-        `;
+        el.innerHTML = iconContent;
         el.onclick = () => handleCategoryClick(category.id);
 
         const lngLat: [number, number] = [category.mapPosition[1], category.mapPosition[0]];
