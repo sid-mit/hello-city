@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, Users, Loader2 } from "lucide-react";
+import { X, Users, Loader2, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { useAppStore, type GenderVariant } from "@/stores/appStore";
@@ -431,6 +431,19 @@ export const ConversationPracticeModal = ({
             />
           ) : !isComplete ? (
             <>
+              {/* Back Button */}
+              <div className="flex items-center px-2 pb-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setPracticeMode('selection')}
+                  className="gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back
+                </Button>
+              </div>
+
               {/* Collapsible Past Steps */}
               <CollapsiblePastSteps
                 results={stepResults}
