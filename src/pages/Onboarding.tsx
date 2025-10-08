@@ -155,58 +155,95 @@ export default function Onboarding() {
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={currentSlide}
-          initial={{ opacity: 1, scale: 1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -20, scale: 0.95 }}
+          transition={{ 
+            duration: 0.6,
+            ease: [0.32, 0.72, 0, 1] // Apple's signature easing curve
+          }}
           className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center relative z-10"
         >
-          <h1 
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.8,
+              delay: 0.1,
+              ease: [0.32, 0.72, 0, 1]
+            }}
             className="mb-6 mx-auto px-4 md:px-6 lg:px-8"
             style={{ color: '#404040', fontSize: 'clamp(32px, 5vw, 48px)', fontFamily: 'Gilroy', fontWeight: 700, letterSpacing: '0.8px' }}
           >
             {slides[currentSlide].title}
-          </h1>
-          <p 
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.8,
+              delay: 0.2,
+              ease: [0.32, 0.72, 0, 1]
+            }}
             className="mb-12 max-w-2xl mx-auto px-4 md:px-6 lg:px-8"
             style={{ color: '#404040', fontSize: 'clamp(14px, 2vw, 18px)', fontFamily: 'Gilroy', fontWeight: 500 }}
           >
             {slides[currentSlide].description}
-          </p>
+          </motion.p>
 
-          <div className="flex items-center justify-center gap-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.8,
+              delay: 0.3,
+              ease: [0.32, 0.72, 0, 1]
+            }}
+            className="flex items-center justify-center gap-4"
+          >
             {!isFirstSlide && (
-              <button
+              <motion.button
                 onClick={handleBack}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
                 className="w-[160px] sm:w-[180px] whitespace-nowrap px-12 py-1.5 border-2 border-[#2A64EC] bg-transparent rounded-full transition-all hover:bg-[#2A64EC]/5"
                 style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
               >
                 Back
-              </button>
+              </motion.button>
             )}
-            <button 
-              onClick={handleNext} 
+            <motion.button 
+              onClick={handleNext}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
               className="w-[160px] sm:w-[180px] whitespace-nowrap px-12 py-1.5 border-2 border-transparent bg-[#BDD1FF] rounded-full transition-all hover:bg-[#BDD1FF]/80"
               style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
             >
               {isFirstSlide ? 'Continue' : isLastSlide ? 'Get Started' : 'Next'}
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         </motion.div>
       </AnimatePresence>
 
       {/* Skip Onboarding button - show on all slides after first */}
       {currentSlide >= 1 && (
-        <button
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
           onClick={() => {
             setHasCompletedOnboarding(true);
             navigate('/home');
           }}
+          whileHover={{ scale: 1.02, x: 4 }}
+          whileTap={{ scale: 0.98 }}
           className="absolute bottom-8 right-8 transition-all hover:underline z-20"
           style={{ color: '#6B7280', fontFamily: 'Outfit', fontWeight: 600, fontSize: '16px' }}
         >
           Skip Onboarding →
-        </button>
+        </motion.button>
       )}
     </div>
   );
