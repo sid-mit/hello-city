@@ -337,7 +337,11 @@ export const MapView = () => {
               Back to World
             </Button>
             <div className="flex items-center gap-2">
-              <span className="text-2xl">{selectedCity.emoji}</span>
+              <img 
+                src={selectedCity.emoji} 
+                alt={`${selectedCity.name} flag`}
+                className="w-8 h-8 object-contain"
+              />
               <div>
                 <h2 className="text-lg font-bold">{selectedCity.name}</h2>
                 <p className="text-xs text-muted-foreground">
