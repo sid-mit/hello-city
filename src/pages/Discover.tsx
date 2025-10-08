@@ -96,7 +96,17 @@ const Discover = () => {
               >
                 <div className="mb-3 flex items-center justify-center h-16">
                   {badgeIcons[badge.id] ? (
-                    <img src={badgeIcons[badge.id]} alt={badge.title} className="w-16 h-16 object-contain" />
+                    <img 
+                      src={badgeIcons[badge.id]} 
+                      alt={badge.title} 
+                      className={`object-contain ${
+                        badge.id === 'collector' || badge.id === 'practice-master' 
+                          ? 'w-20 h-20' 
+                          : badge.id === 'polyglot'
+                          ? 'w-12 h-12'
+                          : 'w-16 h-16'
+                      }`} 
+                    />
                   ) : (
                     <span className="text-4xl">{badge.emoji}</span>
                   )}

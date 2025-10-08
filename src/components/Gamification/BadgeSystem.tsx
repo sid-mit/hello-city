@@ -45,7 +45,17 @@ export const BadgeSystem = () => {
         >
           <div className="mb-2 flex items-center justify-center h-12">
             {badgeIcons[badge.id] ? (
-              <img src={badgeIcons[badge.id]} alt={badge.title} className="w-12 h-12 object-contain" />
+              <img 
+                src={badgeIcons[badge.id]} 
+                alt={badge.title} 
+                className={`object-contain ${
+                  badge.id === 'collector' || badge.id === 'practice-master' 
+                    ? 'w-14 h-14' 
+                    : badge.id === 'polyglot'
+                    ? 'w-10 h-10'
+                    : 'w-12 h-12'
+                }`} 
+              />
             ) : (
               <span className="text-3xl">{badge.emoji}</span>
             )}
