@@ -10,71 +10,60 @@ const About = () => {
 
   const features = [
     {
-      icon: Mic,
-      title: 'Real Pronunciation Practice',
-      description: 'AI-powered speech recognition gives you instant feedback'
+      icon: Target,
+      title: 'Connection, not perfection',
+      description: 'Even a few words can change how the world welcomes you. We make language less about performance, more about presence.'
     },
     {
-      icon: Globe,
-      title: 'Multiple Languages',
-      description: 'Hindi, Mandarin, Korean, French, Spanish, and more'
+      icon: MapPin,
+      title: 'Culture meets context',
+      description: 'Each phrase is tied to real places and local etiquette, so learning feels natural, not abstract.'
     },
     {
       icon: Navigation,
-      title: 'City-Specific Context',
-      description: 'Learn the phrases locals actually use in each city'
+      title: 'Learn as you go',
+      description: "No courses, no schedules—just short, on-the-spot lessons that fit the flow of your journey. Three minutes at a café, and you've already learned something new."
     },
     {
       icon: Trophy,
-      title: 'Gamified Learning',
-      description: 'Streaks, badges, and progress tracking keep you motivated'
-    },
-    {
-      icon: Brain,
-      title: 'Smart Practice',
-      description: 'Focus on your challenging sounds with personalized recommendations'
+      title: 'Playful by design',
+      description: 'Stickers, maps, and voice feedback turn language learning into a small daily adventure. Every interaction feels like collecting memories, not completing tasks.'
     }
   ];
 
   const team = [
     {
-      name: 'Jiwon',
-      flag: '🇰🇷',
-      greeting: '안녕하세요',
-      role: 'Co-founder & Language Architect',
-      bio: "Growing up between Seoul and California, I experienced firsthand how the right phrase can turn a confusing moment into a connection. HelloCity is my way of giving travelers that confidence before they even step off the plane."
-    },
-    {
-      name: 'Yuze',
-      flag: '🇨🇳',
-      greeting: '你好',
-      role: 'Co-founder & Experience Designer',
-      bio: "I've navigated countless cities where I didn't speak the language, and I learned that you don't need fluency—you need the *right* phrases. HelloCity distills years of travel mishaps and victories into bite-sized, practical lessons."
-    },
-    {
-      name: 'Aninya',
+      name: 'New Delhi',
       flag: '🇮🇳',
-      greeting: 'नमस्ते',
-      role: 'Co-founder & Tech Lead',
-      bio: "As someone who's taught Hindi to travelers in India, I saw how traditional language apps fall short for real-world scenarios. We built HelloCity to bridge that gap—combining authentic local knowledge with smart technology."
+      greeting: 'नमस्ते'
+    },
+    {
+      name: 'Seoul',
+      flag: '🇰🇷',
+      greeting: '안녕하세요'
+    },
+    {
+      name: 'Beijing',
+      flag: '🇨🇳',
+      greeting: '你好'
     }
   ];
 
   const steps = [
     {
+      icon: Globe,
+      title: 'Choose your destination',
+      description: 'Spin the globe, pick a city, and zoom into its illustrated map.'
+    },
+    {
       icon: MapPin,
-      title: 'Explore',
-      description: 'Choose a city and pick a real-world situation (restaurant, transit, shopping, etc.)'
+      title: 'Tap and learn',
+      description: 'Each location—like café, subway, or museum—reveals a few must-know phrases in various situations.'
     },
     {
-      icon: Headphones,
-      title: 'Learn',
-      description: 'Listen to native speakers and practice phrases with syllable-by-syllable breakdowns'
-    },
-    {
-      icon: Target,
-      title: 'Master',
-      description: 'Get instant pronunciation feedback, track your progress, and unlock achievements'
+      icon: Mic,
+      title: 'Practice playfully',
+      description: "Record your voice and get instant feedback. You don't need to sound perfect, just willing."
     }
   ];
 
@@ -95,7 +84,7 @@ const About = () => {
             Hello from HelloCity!
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground font-karla">
-            Where language learning meets wanderlust
+            A small word can open the world.
           </p>
         </div>
       </motion.section>
@@ -114,10 +103,13 @@ const About = () => {
             </h2>
             <div className="space-y-4 text-base text-muted-foreground leading-relaxed font-karla">
               <p>
-                HelloCity is your passport to confident communication in any corner of the world. We believe the best way to learn a language isn't through endless grammar drills—it's by diving into real conversations you'll actually have while traveling.
+                Hello City is a map-based micro-learning app that helps travelers feel more connected abroad.
               </p>
               <p>
-                From ordering street food in Delhi to navigating the metro in Paris, we've curated authentic travel situations across 10+ cities and 8+ languages. Each phrase comes with native pronunciation, cultural context, and AI-powered feedback to help you sound like a local, not a tourist.
+                Instead of long lessons or grammar drills, Hello City teaches short, real-life expressions and cultural tips tied to the exact places you'll visit.
+              </p>
+              <p>
+                It's not about fluency. It's about confidence, curiosity, and connection.
               </p>
             </div>
           </motion.div>
@@ -208,9 +200,12 @@ const About = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-2xl md:text-3xl font-semibold mb-10 text-center text-foreground font-karla">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-center text-foreground font-karla">
               Meet the Team
             </h2>
+            <p className="text-base text-muted-foreground leading-relaxed mb-8 text-center font-karla">
+              Hello City is built by a small team of three designers who believe that technology can bring people closer, not apart. We come from different cities — New Delhi, Seoul, and Beijing — united by one shared curiosity: how a few simple words can open a whole new dimension of travel.
+            </p>
             <div className="grid md:grid-cols-3 gap-6">
               {team.map((member, index) => (
                 <motion.div
@@ -221,17 +216,13 @@ const About = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   <div className="bg-white rounded-2xl p-6 h-full" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                    <div className="text-center mb-4">
+                    <div className="text-center">
                       <div className="text-4xl mb-2">{member.flag}</div>
                       <div className="text-xl mb-1 font-karla">
                         {member.greeting}
                       </div>
                       <h3 className="text-xl font-semibold text-foreground font-karla">{member.name}</h3>
-                      <p className="text-xs text-primary font-medium mt-1 font-karla">{member.role}</p>
                     </div>
-                    <p className="text-muted-foreground text-sm leading-relaxed italic font-karla">
-                      "{member.bio}"
-                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -253,7 +244,7 @@ const About = () => {
               Our Mission
             </h2>
             <p className="text-base text-muted-foreground leading-relaxed mb-8 font-karla">
-              We're on a mission to make every traveler feel a little less foreign and a little more at home, no matter where they go. Language learning shouldn't be intimidating—it should be an adventure.
+              To make travel more human by helping people connect across cultures through small, meaningful words. We believe language is more than communication. It's care, respect, and curiosity in motion.
             </p>
             <Button
               size="lg"
