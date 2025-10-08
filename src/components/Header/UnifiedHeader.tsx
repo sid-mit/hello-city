@@ -1,6 +1,10 @@
 import { useAppStore, TabType } from '@/stores/appStore';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import Lottie from 'lottie-react';
+import logo from '@/assets/logo-2.svg';
+import animationData from '@/assets/Animation_for_Time-Tracking.lottie';
 const tabs = [{
   id: 'explore' as TabType,
   label: 'Map'
@@ -15,58 +19,39 @@ export const UnifiedHeader = () => {
   } = useAppStore();
   const navigate = useNavigate();
   const location = useLocation();
+  const [showAnimation, setShowAnimation] = useState(false);
   return <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#D2E0FF]">
       <div className="container mx-auto px-10 py-4 flex items-center">
         {/* Branding */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative">
           <div
             className="cursor-pointer"
-            onClick={() => navigate('/home')}
+            onClick={() => {
+              navigate('/home');
+              setShowAnimation(true);
+              setTimeout(() => setShowAnimation(false), 3000);
+            }}
           >
-            <svg
-              width="138"
-              height="40"
-              viewBox="0 0 138 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g clipPath="url(#clip0_1_2)">
-                <path
-                  d="M10.4167 5H5.20833C3.43945 5 2 6.43945 2 8.20833V31.7917C2 33.5605 3.43945 35 5.20833 35H10.4167V5Z"
-                  fill="#417CFF"
-                  stroke="#417CFF"
-                  strokeWidth="0.5"
-                />
-                <path
-                  d="M27.0833 5H21.875V20H27.0833V5Z"
-                  fill="#417CFF"
-                  stroke="#417CFF"
-                  strokeWidth="0.5"
-                />
-                <path
-                  d="M43.75 8.20833C43.75 6.43945 42.3105 5 40.5417 5H35.3333V20H40.5417C42.3105 20 43.75 18.5605 43.75 16.7917V8.20833Z"
-                  fill="#417CFF"
-                  stroke="#417CFF"
-                  strokeWidth="0.5"
-                />
-                <path
-                  d="M52 8.33333C52 6.49238 53.4924 5 55.3333 5H66C67.841 5 69.3333 6.49238 69.3333 8.33333V16.6667C69.3333 18.5076 67.841 20 66 20H55.3333C53.4924 20 52 18.5076 52 16.6667V8.33333Z"
-                  stroke="#417CFF"
-                  strokeWidth="3"
-                  fill="#417CFF"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_1_2">
-                  <rect width="138" height="40" fill="white"/>
-                </clipPath>
-              </defs>
-            </svg>
+            <img src={logo} alt="HelloCity Logo" className="h-10" />
           </div>
-          <div>
-            
-            
-          </div>
+          
+          <AnimatePresence>
+            {showAnimation && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="absolute left-0 top-0 z-50"
+                style={{ width: '200px', height: '200px' }}
+              >
+                <Lottie
+                  animationData={animationData}
+                  loop={false}
+                  autoplay={true}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Right Side Navigation Group */}
