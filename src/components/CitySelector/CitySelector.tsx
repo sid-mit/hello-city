@@ -23,7 +23,7 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
             onClick={onClose}
           />
 
@@ -34,32 +34,42 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="w-full max-w-[900px]"
+              className="w-full max-w-[420px]"
             >
-              <div className="glass rounded-2xl pt-[80px] px-8 pb-[80px] shadow-large border border-border/50 relative">
+              <div className="bg-background rounded-2xl py-8 px-8 shadow-xl border border-border/50 relative">
                 {/* Close Button */}
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={onClose}
-                  className="absolute right-6 top-6 h-6 w-6"
+                  className="absolute right-4 top-4 h-8 w-8"
                 >
                   <X className="w-5 h-5" />
                 </Button>
 
                 {/* Header */}
-                <div className="flex items-center justify-center mb-[40px]">
-                  <h2 className="text-[40px] font-bold font-architects text-center">Where do you plan to travel?</h2>
+                <div className="flex items-center justify-center mb-6">
+                  <h2 className="text-lg font-semibold text-foreground text-center font-gilroy">
+                    Where do you plan to travel?
+                  </h2>
                 </div>
 
                 {/* City Pills */}
-                <div className="flex flex-wrap justify-center gap-[10px] mb-6">
+                <div className="flex flex-wrap justify-center gap-2 mb-4">
                   {cities.map((city) => (
                     <motion.button
                       key={city.id}
-                      onClick={() => onCitySelect(city)}
-                      className="h-[43px] px-[30px] rounded-lg border border-border bg-background hover:bg-accent hover:border-primary/50 transition-all font-medium font-karla"
-                      whileTap={{ scale: 0.95 }}
+                      onClick={() => city.available && onCitySelect(city)}
+                      disabled={!city.available}
+                      className={`
+                        h-[38px] px-5 rounded-full font-medium font-gilroy text-sm
+                        transition-all
+                        ${city.available 
+                          ? 'bg-primary/10 text-primary hover:bg-primary/20 cursor-pointer' 
+                          : 'bg-muted text-muted-foreground cursor-not-allowed'
+                        }
+                      `}
+                      whileTap={city.available ? { scale: 0.95 } : {}}
                     >
                       {city.name}
                     </motion.button>
@@ -67,8 +77,8 @@ export const CitySelector = ({ cities, onCitySelect, isVisible, onClose }: CityS
                 </div>
 
                 {/* More Options Text */}
-                <p className="text-center text-sm text-muted-foreground font-karla">
-                  More options adding...
+                <p className="text-center text-xs text-muted-foreground font-gilroy">
+                  More destinations coming soon
                 </p>
               </div>
             </motion.div>

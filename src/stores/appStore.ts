@@ -14,6 +14,7 @@ export interface City {
     lng: number;
   };
   emoji: string;
+  available: boolean;
 }
 
 export interface Location {

@@ -8,6 +8,7 @@ export const cities: City[] = [
     language: 'Korean',
     coordinates: { lat: 37.5665, lng: 126.9780 },
     emoji: '🇰🇷',
+    available: true,
   },
   {
     id: 'beijing',
@@ -16,6 +17,7 @@ export const cities: City[] = [
     language: 'Mandarin',
     coordinates: { lat: 39.9042, lng: 116.4074 },
     emoji: '🇨🇳',
+    available: true,
   },
   {
     id: 'new-delhi',
@@ -24,6 +26,7 @@ export const cities: City[] = [
     language: 'Hindi',
     coordinates: { lat: 28.6139, lng: 77.2090 },
     emoji: '🇮🇳',
+    available: true,
   },
   {
     id: 'paris',
@@ -32,6 +35,7 @@ export const cities: City[] = [
     language: 'French',
     coordinates: { lat: 48.8566, lng: 2.3522 },
     emoji: '🇫🇷',
+    available: false,
   },
   {
     id: 'mexico-city',
@@ -40,6 +44,7 @@ export const cities: City[] = [
     language: 'Spanish',
     coordinates: { lat: 19.4326, lng: -99.1332 },
     emoji: '🇲🇽',
+    available: false,
   },
 ];
 
