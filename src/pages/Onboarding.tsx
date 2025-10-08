@@ -135,14 +135,14 @@ export default function Onboarding() {
           className="w-full max-w-2xl flex flex-col items-center justify-center text-center relative z-10"
         >
           <h1 
-            className="text-[#404040] text-4xl md:text-5xl lg:text-6xl font-bold mb-6 px-4"
-            style={{ fontFamily: 'Gilroy', fontWeight: 700, letterSpacing: '0.8px' }}
+            className="mb-6 px-4"
+            style={{ color: '#404040', fontSize: '40px', fontFamily: 'Gilroy', fontWeight: 700, letterSpacing: '0.8px' }}
           >
             {slides[currentSlide].title}
           </h1>
           <p 
-            className="text-[#404040] text-lg md:text-xl leading-relaxed mb-12 max-w-xl px-4"
-            style={{ fontFamily: 'Gilroy', fontWeight: 500 }}
+            className="mb-12 max-w-xl px-4"
+            style={{ color: '#404040', fontSize: '16px', fontFamily: 'Gilroy', fontWeight: 500 }}
           >
             {slides[currentSlide].description}
           </p>
@@ -151,16 +151,16 @@ export default function Onboarding() {
             {!isFirstSlide && (
               <button
                 onClick={handleBack}
-                className="px-8 py-3 border-2 border-[#2A64EC] text-[#2A64EC] font-semibold rounded-full transition-all hover:bg-[#2A64EC]/5"
-                style={{ fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
+                className="px-8 py-3 border-2 border-[#2A64EC] rounded-full transition-all hover:bg-[#2A64EC]/5"
+                style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
               >
                 Back
               </button>
             )}
             <button 
               onClick={handleNext} 
-              className="px-12 py-3 bg-[#BDD1FF] text-[#2A64EC] font-semibold rounded-full transition-all hover:bg-[#BDD1FF]/80"
-              style={{ fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
+              className="px-12 py-3 bg-[#BDD1FF] rounded-full transition-all hover:bg-[#BDD1FF]/80"
+              style={{ color: '#2A64EC', fontFamily: 'Outfit', fontWeight: 600, fontSize: '18px' }}
             >
               {isFirstSlide ? 'Continue →' : isLastSlide ? 'Get Started →' : 'Next'}
             </button>
