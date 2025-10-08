@@ -11,7 +11,7 @@ const Index = () => {
     <div 
       className="w-full h-screen overflow-hidden relative"
       style={{
-        background: 'linear-gradient(180deg, hsla(0, 0%, 100%, 1) 0%, hsla(220, 100%, 98%, 1) 60%)'
+        background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.60) 0%, rgba(244.93, 248.29, 255, 0.60) 100%), white'
       }}
     >
       {/* Unified Header */}

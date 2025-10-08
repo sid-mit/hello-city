@@ -15,11 +15,11 @@ export const UnifiedHeader = () => {
     setActiveTab
   } = useAppStore();
   const navigate = useNavigate();
-  return <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/50">
-      <div className="container mx-auto pl-4 pr-10 h-16 flex items-center">
+  return <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#D2E0FF]">
+      <div className="container mx-auto px-10 py-4 flex items-center">
         {/* Branding */}
         <div className="flex items-center gap-2">
-          <img src={logo} alt="HelloCity Logo" className="w-8 h-8" />
+          <img src={logo} alt="HelloCity Logo" className="w-[138px] h-10" />
           <div>
             
             
@@ -32,9 +32,9 @@ export const UnifiedHeader = () => {
       }}>
           {/* Navigation Toggle */}
           <div className="relative rounded-full p-1 flex gap-1" style={{
-          width: '200px',
+          width: '183px',
           height: '34px',
-          backgroundColor: '#F5F7FA'
+          backgroundColor: '#D2E0FF'
         }}>
             <motion.div layoutId="activeHeaderToggle" className="absolute top-1 bottom-1 bg-white rounded-full shadow-sm" style={{
             width: 'calc(50% - 4px)'
@@ -49,8 +49,8 @@ export const UnifiedHeader = () => {
             {tabs.map(tab => {
             const isActive = activeTab === tab.id;
             return <button key={tab.id} onClick={() => setActiveTab(tab.id)} className="relative flex-1 flex items-center justify-center transition-colors duration-200 z-10">
-                  <span className="text-sm font-medium transition-colors duration-200 font-karla" style={{
-                color: isActive ? '#2A64EC' : '#6B7280'
+                  <span className="text-base font-semibold transition-colors duration-200 font-gilroy" style={{
+                color: '#417CFF'
               }}>
                     {tab.label}
                   </span>
@@ -59,15 +59,19 @@ export const UnifiedHeader = () => {
           </div>
 
           {/* Right Navigation Links */}
-          <nav className="hidden md:flex items-center font-karla" style={{
+          <nav className="hidden md:flex items-center font-gilroy" style={{
           gap: '50px'
         }}>
-            <button onClick={() => navigate('/about')} className="text-sm font-medium transition-colors hover:opacity-80" style={{
-            color: '#6B7280'
+            <button onClick={() => navigate('/about')} className="text-base font-semibold transition-colors hover:opacity-80" style={{
+            color: '#404040'
           }}>
               About Us
             </button>
-            
+            <button className="text-base font-semibold transition-colors hover:opacity-80" style={{
+            color: '#404040'
+          }}>
+              Login
+            </button>
           </nav>
         </div>
       </div>

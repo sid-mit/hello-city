@@ -15,6 +15,7 @@ export default {
     extend: {
       fontFamily: {
         gilroy: ['Gilroy', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        outfit: ['Outfit', 'sans-serif'],
         architects: ['Architects Daughter', 'cursive'],
         sans: ['Gilroy', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
