@@ -5,9 +5,9 @@ import { MapPin } from 'lucide-react';
 
 const Slide6 = () => {
   const team = [
-    { name: 'Jiwon', city: 'Seoul', flag: '🇰🇷', image: '/team/jiwon.jpg' },
-    { name: 'Yuze', city: 'Beijing', flag: '🇨🇳', image: '/team/yuze.jpg' },
-    { name: 'Aninya', city: 'Delhi', flag: '🇮🇳', image: '/team/aninya.jpg' },
+    { name: 'Jiwon', city: 'Seoul', flag: '/flags/south-korea.png', image: '/team/jiwon.jpg' },
+    { name: 'Yuze', city: 'Beijing', flag: '/flags/china.png', image: '/team/yuze.jpg' },
+    { name: 'Aninya', city: 'Delhi', flag: '/flags/india.png', image: '/team/aninya.jpg' },
   ];
 
   return (
@@ -66,7 +66,7 @@ const Slide6 = () => {
                 </div>
                 <h3 className="text-2xl font-bold mb-2 text-foreground">{member.name}</h3>
                 <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                  <span className="text-2xl">{member.flag}</span>
+                  <img src={member.flag} alt={`${member.city} flag`} className="w-8 h-8 object-contain" />
                   <span>{member.city}</span>
                 </div>
               </motion.div>
