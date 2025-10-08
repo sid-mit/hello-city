@@ -292,7 +292,26 @@ export const ConversationPracticeModal = ({
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
         <div className="sticky top-0 z-10 bg-background border-b px-6 py-4">
-          <div className="relative flex justify-center items-center mb-3">
+          <div className="relative flex justify-between items-center mb-3">
+            {/* Left side - Back button or empty space */}
+            <div className="w-8">
+              {practiceMode !== 'selection' && (
+                <button
+                  onClick={() => {
+                    if (practiceMode === 'single-phrase') {
+                      setSelectedPhraseIndex(null);
+                    }
+                    setPracticeMode('selection');
+                  }}
+                  className="text-foreground hover:text-muted-foreground transition-colors"
+                  aria-label="Go back"
+                >
+                  <ArrowLeft className="h-6 w-6" />
+                </button>
+              )}
+            </div>
+
+            {/* Center - Title and Icon */}
             <div className="flex items-center justify-center gap-3">
               {situation.categoryIconImage ? (
                 <img
@@ -303,7 +322,14 @@ export const ConversationPracticeModal = ({
               ) : null}
               <h2 className="text-xl font-bold text-primary">{situation.title}</h2>
             </div>
-            <div className="absolute right-0 top-0 flex items-center gap-2">
+
+            {/* Right side - Counter, Gender selector, Close button */}
+            <div className="flex items-center gap-3">
+              {practiceMode === 'single-phrase' && selectedPhraseIndex !== null && (
+                <span className="text-sm font-medium text-muted-foreground">
+                  {selectedPhraseIndex + 1}/{genderedPhrases.length}
+                </span>
+              )}
               {practiceMode !== 'selection' && (
                 <GenderSelector
                   langCode={
@@ -431,17 +457,6 @@ export const ConversationPracticeModal = ({
             />
           ) : !isComplete ? (
             <>
-              {/* Back Button */}
-              <div className="flex items-center px-2 pb-4">
-                <button
-                  onClick={() => setPracticeMode('selection')}
-                  className="text-foreground hover:text-muted-foreground transition-colors"
-                  aria-label="Go back"
-                >
-                  <ArrowLeft className="h-6 w-6" />
-                </button>
-              </div>
-
               {/* Collapsible Past Steps */}
               <CollapsiblePastSteps
                 results={stepResults}

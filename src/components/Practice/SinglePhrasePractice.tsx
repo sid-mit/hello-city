@@ -128,21 +128,7 @@ export const SinglePhrasePractice = ({
   }[cityId] || "en-US") as LanguageCode;
 
   return (
-    <div className="space-y-6 py-4">
-      {/* Header */}
-      <div className="flex items-center justify-between px-2 pb-4">
-        <button
-          onClick={onBack}
-          className="text-foreground hover:text-muted-foreground transition-colors"
-          aria-label="Go back"
-        >
-          <ArrowLeft className="h-6 w-6" />
-        </button>
-        <span className="text-sm font-medium text-muted-foreground">
-          {phraseIndex + 1}/{totalPhrases}
-        </span>
-      </div>
-
+    <div className="space-y-8 py-6">
       <AnimatePresence mode="wait">
         {step === "record" && (
           <motion.div
@@ -150,9 +136,9 @@ export const SinglePhrasePractice = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="space-y-6"
+            className="space-y-8"
           >
-            <div className="text-center py-4 space-y-1">
+            <div className="text-center py-8 space-y-3">
               <p className="text-4xl font-bold text-foreground">
                 {phrase.romanization}
               </p>
