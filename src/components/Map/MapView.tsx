@@ -154,34 +154,86 @@ export const MapView = () => {
     } else if (cityData && !isCityDataLoading) {
       // Show category markers from database
       const bounds = new mapboxgl.LngLatBounds();
+      const placedPositions: Array<{ x: number; y: number; width: number; height: number }> = [];
+      
+      // Helper function to check overlap
+      const hasOverlap = (pos1: any, pos2: any, threshold = 0.1): boolean => {
+        const dx = Math.abs(pos1.x - pos2.x);
+        const dy = Math.abs(pos1.y - pos2.y);
+        const minDist = (pos1.width + pos2.width) / 2;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        return distance < minDist * (1 - threshold);
+      };
+      
+      // Helper function to find non-overlapping position
+      const findNonOverlappingPosition = (
+        originalLngLat: [number, number],
+        attempt = 0
+      ): [number, number] => {
+        if (attempt > 20) return originalLngLat; // Give up after 20 attempts
+        
+        const testPoint = map.current!.project(originalLngLat);
+        const iconSize = 80; // w-20 = 80px
+        
+        const testPos = {
+          x: testPoint.x,
+          y: testPoint.y,
+          width: iconSize,
+          height: iconSize,
+        };
+        
+        // Check if overlaps with any placed position
+        const overlaps = placedPositions.some(placed => hasOverlap(testPos, placed));
+        
+        if (!overlaps) {
+          placedPositions.push(testPos);
+          return originalLngLat;
+        }
+        
+        // Try spiral pattern: move in expanding circle
+        const spiralRadius = 0.005 * (Math.floor(attempt / 8) + 1);
+        const spiralAngle = (attempt % 8) * (Math.PI / 4);
+        
+        const newLng = originalLngLat[0] + spiralRadius * Math.cos(spiralAngle);
+        const newLat = originalLngLat[1] + spiralRadius * Math.sin(spiralAngle);
+        
+        return findNonOverlappingPosition([newLng, newLat], attempt + 1);
+      };
       
       cityData.categories.forEach((category) => {
         const el = document.createElement('div');
         el.className = 'cursor-pointer transform transition-all hover:scale-110';
+        el.style.zIndex = '1000'; // Ensure icons are above top bar
         
         // Use custom icon image if available, otherwise use emoji
+        // Increased size by 30%: w-16->w-20 (64px->80px), text-5xl->text-6xl
         const iconContent = category.iconImage 
-          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-16 h-16 object-contain drop-shadow-lg" />`
-          : `<span class="text-5xl drop-shadow-lg">${category.emoji}</span>`;
+          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-20 h-20 object-contain drop-shadow-2xl" />`
+          : `<span class="text-6xl drop-shadow-2xl">${category.emoji}</span>`;
         
         el.innerHTML = iconContent;
         el.onclick = () => handleCategoryClick(category.id);
 
-        const lngLat: [number, number] = [category.mapPosition[1], category.mapPosition[0]];
+        // Original position from data
+        const originalLngLat: [number, number] = [category.mapPosition[1], category.mapPosition[0]];
+        
+        // Find non-overlapping position
+        const finalLngLat = findNonOverlappingPosition(originalLngLat);
+        
         const marker = new mapboxgl.Marker(el)
-          .setLngLat(lngLat)
+          .setLngLat(finalLngLat)
           .addTo(map.current!);
 
         markersRef.current.push(marker);
-        bounds.extend(lngLat);
+        bounds.extend(finalLngLat);
       });
 
-      // Fit map to show all markers with padding
+      // Fit map to show all markers with increased padding for larger icons
       if (!bounds.isEmpty()) {
         const topBarHeight = topBarRef.current?.offsetHeight || 0;
-        const topPadding = Math.max(100, topBarHeight + 24);
+        const topPadding = topBarHeight + 100; // Increased from topBarHeight + 24
         map.current.fitBounds(bounds, {
-          padding: { top: topPadding, bottom: 100, left: 100, right: 100 },
+          padding: { top: topPadding, bottom: 120, left: 120, right: 120 }, // Increased padding
           maxZoom: 13,
           duration: 1500,
         });

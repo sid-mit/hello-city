@@ -13,30 +13,56 @@ function seededRandom(seed: string, index: number): number {
   return x - Math.floor(x);
 }
 
-// Generate 10 random marker positions (Google Maps style)
+// Generate 10 random marker positions with grid-based scatter for better distribution
 function generateRandomPositions(cityId: string, baseLat: number, baseLng: number): [number, number][] {
   const positions: [number, number][] = [];
   
+  // Use a 4x3 grid (12 cells, we'll use 10)
+  const gridRows = 3;
+  const gridCols = 4;
+  const cells: Array<[number, number]> = [];
+  
+  // Create grid cells
+  for (let row = 0; row < gridRows; row++) {
+    for (let col = 0; col < gridCols; col++) {
+      cells.push([row, col]);
+    }
+  }
+  
+  // Shuffle cells using seeded random
+  const shuffledCells = cells
+    .map((cell, idx) => ({ cell, sort: seededRandom(cityId, idx + 200) }))
+    .sort((a, b) => a.sort - b.sort)
+    .slice(0, 10)
+    .map(item => item.cell);
+  
+  // Place markers in shuffled grid cells with random offset
   for (let i = 0; i < 10; i++) {
-    // Random radius between 0.02 and 0.08 (~2km to 8km)
-    const minRadius = 0.02;
-    const maxRadius = 0.08;
-    const radius = minRadius + seededRandom(cityId, i * 2) * (maxRadius - minRadius);
+    const [row, col] = shuffledCells[i];
     
-    // Random angle (0 to 2π)
-    const angle = seededRandom(cityId, i * 2 + 1) * 2 * Math.PI;
+    // Wider radius range for better spread (0.03 to 0.12 = ~3km to 12km)
+    const minRadius = 0.03;
+    const maxRadius = 0.12;
+    const baseRadius = minRadius + (maxRadius - minRadius) * 0.5;
     
-    // Calculate position with random variations
-    const offsetLat = radius * Math.cos(angle);
-    const offsetLng = radius * Math.sin(angle);
+    // Calculate grid-based position
+    const angleStep = (2 * Math.PI) / 12; // Divide circle into 12 sectors
+    const gridAngle = (row * gridCols + col) * angleStep;
     
-    // Add micro-variations for natural look
-    const microVariationLat = (seededRandom(cityId, i * 3) - 0.5) * 0.01;
-    const microVariationLng = (seededRandom(cityId, i * 3 + 1) - 0.5) * 0.01;
+    // Add randomness to radius and angle within the sector
+    const radiusVariation = (seededRandom(cityId, i * 4) - 0.5) * 0.06;
+    const angleVariation = (seededRandom(cityId, i * 4 + 1) - 0.5) * angleStep * 0.8;
+    
+    const finalRadius = baseRadius + radiusVariation;
+    const finalAngle = gridAngle + angleVariation;
+    
+    // Calculate position
+    const offsetLat = finalRadius * Math.cos(finalAngle);
+    const offsetLng = finalRadius * Math.sin(finalAngle);
     
     positions.push([
-      baseLat + offsetLat + microVariationLat,
-      baseLng + offsetLng + microVariationLng
+      baseLat + offsetLat,
+      baseLng + offsetLng
     ]);
   }
   
