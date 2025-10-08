@@ -142,9 +142,9 @@ const Discover = () => {
                   >
                     <button 
                       onClick={() => toggleFavorite(situation)}
-                      className="absolute top-4 right-4 text-primary hover:text-primary/80 transition-colors"
+                      className="absolute top-4 right-4 transition-colors hover:scale-110"
                     >
-                      <Heart className={`w-5 h-5 ${isFavorited ? 'fill-current' : ''}`} />
+                      <Heart className={`w-5 h-5 ${isFavorited ? 'fill-red-500 text-red-500' : 'text-foreground hover:text-primary'}`} />
                     </button>
                     
                     <div className="mb-2">
