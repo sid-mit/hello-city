@@ -8,7 +8,12 @@ const Index = () => {
   const { activeTab } = useAppStore();
 
   return (
-    <div className="w-full h-screen overflow-hidden relative">
+    <div 
+      className="w-full h-screen overflow-hidden relative"
+      style={{
+        background: 'linear-gradient(180deg, hsla(0, 0%, 100%, 1) 0%, hsla(220, 100%, 98%, 1) 60%)'
+      }}
+    >
       {/* Unified Header */}
       <UnifiedHeader />
       

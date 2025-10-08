@@ -178,14 +178,15 @@ export const MapView = () => {
         >
           <div className="mx-auto w-full max-w-md px-4 flex flex-col items-center gap-4 text-center pointer-events-auto">
             {/* Instructional Text */}
-            <p className="text-sm text-foreground/80 font-karla">
+            <p className="text-sm font-karla" style={{ color: '#404040' }}>
               Click on any city marker to start learning essential phrases
             </p>
             
             {/* Choose City Button */}
             <Button
               onClick={() => setShowCitySelector(true)}
-              className="px-8 py-6 text-base font-karla"
+              className="px-8 py-6 text-base font-karla text-white rounded-full hover:opacity-90 transition-all"
+              style={{ backgroundColor: '#2A64EC' }}
               size="lg"
             >
               Choose City
