@@ -177,7 +177,7 @@ export const MapView = () => {
         if (attempt > 50) return originalLngLat; // More attempts to find good positions
         
         const testPoint = map.current!.project(originalLngLat);
-        const iconSize = 104; // w-26 = 104px
+        const iconSize = 72; // w-18 = 72px (reduced from 104px)
         const topBarHeight = topBarRef.current?.offsetHeight || 80;
         
         const testPos = {
@@ -217,10 +217,10 @@ export const MapView = () => {
         el.className = 'cursor-pointer transform transition-all hover:scale-110';
         
         // Use custom icon image if available, otherwise use emoji
-        // Increased size by 30% again: w-20->w-26 (80px->104px), text-6xl->text-7xl
+        // Reduced icon size to w-18 h-18 (72px) for better proportion
         const iconContent = category.iconImage 
-          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-26 h-26 object-contain drop-shadow-2xl" />`
-          : `<span class="text-7xl drop-shadow-2xl">${category.emoji}</span>`;
+          ? `<img src="${category.iconImage}" alt="${category.title}" class="w-18 h-18 object-contain drop-shadow-2xl" />`
+          : `<span class="text-6xl drop-shadow-2xl">${category.emoji}</span>`;
         
         el.innerHTML = iconContent;
         el.onclick = () => handleCategoryClick(category.id);
