@@ -371,7 +371,7 @@ export const ConversationPracticeModal = ({
                         setSelectedPhraseIndex(index);
                         setPracticeMode('single-phrase');
                       }}
-                      className="w-full text-left p-5 sm:p-6 rounded-2xl border-2 border-border hover:border-primary/50 bg-card transition-all hover:shadow-md active:scale-[0.98]"
+                      className="w-full text-left p-6 sm:p-7 rounded-3xl border border-border hover:border-primary/50 bg-card transition-all shadow-sm hover:shadow-md active:scale-[0.98]"
                     >
                       <div className="space-y-2">
                         <p className="text-base sm:text-lg font-semibold text-foreground leading-relaxed">
