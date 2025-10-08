@@ -4,6 +4,45 @@ import { getCategoryMetadata, getSituationMetadata } from '@/utils/categoryMappi
 import { getGenderedVariant } from '@/utils/genderVariantHelper';
 import { type GenderVariant } from '@/stores/appStore';
 
+// Simple seeded random number generator for consistent marker positions
+function seededRandom(seed: string, index: number): number {
+  const hash = seed.split('').reduce((acc, char, i) => {
+    return acc + char.charCodeAt(0) * (i + 1);
+  }, 0);
+  const x = Math.sin(hash + index) * 10000;
+  return x - Math.floor(x);
+}
+
+// Generate 10 random marker positions (Google Maps style)
+function generateRandomPositions(cityId: string, baseLat: number, baseLng: number): [number, number][] {
+  const positions: [number, number][] = [];
+  
+  for (let i = 0; i < 10; i++) {
+    // Random radius between 0.015 and 0.045 (~1.5km to 4.5km)
+    const minRadius = 0.015;
+    const maxRadius = 0.045;
+    const radius = minRadius + seededRandom(cityId, i * 2) * (maxRadius - minRadius);
+    
+    // Random angle (0 to 2π)
+    const angle = seededRandom(cityId, i * 2 + 1) * 2 * Math.PI;
+    
+    // Calculate position with random variations
+    const offsetLat = radius * Math.cos(angle);
+    const offsetLng = radius * Math.sin(angle);
+    
+    // Add micro-variations for natural look
+    const microVariationLat = (seededRandom(cityId, i * 3) - 0.5) * 0.005;
+    const microVariationLng = (seededRandom(cityId, i * 3 + 1) - 0.5) * 0.005;
+    
+    positions.push([
+      baseLat + offsetLat + microVariationLat,
+      baseLng + offsetLng + microVariationLng
+    ]);
+  }
+  
+  return positions;
+}
+
 interface DynamicCityDataParams {
   cityId: string;
   genderPreference: GenderVariant;
@@ -93,8 +132,33 @@ export function useDynamicCityData({ cityId, genderPreference }: DynamicCityData
       const baseLat = cityCoordinates[cityId]?.[0] || 0;
       const baseLng = cityCoordinates[cityId]?.[1] || 0;
 
-      // Transform into CityDataStructure
-      const categories = Array.from(categoryMap.entries()).map(([spotType, situationMap], index) => {
+      // Generate 10 random positions (Google Maps style)
+      const randomPositions = generateRandomPositions(cityId, baseLat, baseLng);
+
+      // Get all categories from the map
+      const allCategories = Array.from(categoryMap.entries());
+
+      // Always generate exactly 10 markers
+      let categoriesToUse: typeof allCategories;
+      if (allCategories.length < 10) {
+        // Repeat categories to reach 10
+        categoriesToUse = [];
+        for (let i = 0; i < 10; i++) {
+          categoriesToUse.push(allCategories[i % allCategories.length]);
+        }
+      } else if (allCategories.length > 10) {
+        // Randomly select 10 using seeded random
+        categoriesToUse = allCategories
+          .map((cat, idx) => ({ cat, sort: seededRandom(cityId, idx + 100) }))
+          .sort((a, b) => a.sort - b.sort)
+          .slice(0, 10)
+          .map(item => item.cat);
+      } else {
+        categoriesToUse = allCategories;
+      }
+
+      // Transform into CityDataStructure with random positions
+      const categories = categoriesToUse.map(([spotType, situationMap], index) => {
         const categoryMeta = getCategoryMetadata(spotType);
 
         const situations = Array.from(situationMap.entries()).map(([subScenario, phraseList]) => {
@@ -109,19 +173,13 @@ export function useDynamicCityData({ cityId, genderPreference }: DynamicCityData
           };
         });
 
-        // Generate positions in a circle around the city center
-        const radius = 0.03; // ~3km radius
-        const angle = (index / Array.from(categoryMap.entries()).length) * 2 * Math.PI;
-        const offsetLat = radius * Math.cos(angle);
-        const offsetLng = radius * Math.sin(angle);
-
         return {
           id: categoryMeta.id,
           emoji: categoryMeta.emoji,
           title: categoryMeta.title,
           color: categoryMeta.color,
           description: categoryMeta.description,
-          mapPosition: [baseLat + offsetLat, baseLng + offsetLng] as [number, number],
+          mapPosition: randomPositions[index], // Use random position
           situations,
         };
       });
