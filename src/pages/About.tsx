@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Headphones, Target, Mic, Globe, Navigation, Trophy, Brain } from 'lucide-react';
+import { MapPin, Headphones, Target, Mic, Globe, Navigation, Trophy, Brain, Linkedin } from 'lucide-react';
 import { UnifiedHeader } from '@/components/Header/UnifiedHeader';
 
 const About = () => {
@@ -33,19 +33,28 @@ const About = () => {
 
   const team = [
     {
-      name: 'New Delhi',
+      name: 'Aninya',
+      city: 'New Delhi',
       flag: '🇮🇳',
-      greeting: 'नमस्ते'
+      greeting: 'नमस्ते',
+      linkedin: 'https://www.linkedin.com/in/aninya/',
+      image: '/team/aninya.jpg'
     },
     {
-      name: 'Seoul',
+      name: 'Jiwon',
+      city: 'Seoul',
       flag: '🇰🇷',
-      greeting: '안녕하세요'
+      greeting: '안녕하세요',
+      linkedin: 'https://www.linkedin.com/in/jiwonpyo/',
+      image: '/team/jiwon.jpg'
     },
     {
-      name: 'Beijing',
+      name: 'Yuze',
+      city: 'Beijing',
       flag: '🇨🇳',
-      greeting: '你好'
+      greeting: '你好',
+      linkedin: 'https://www.linkedin.com/in/yuze-li-8a4659275/',
+      image: '/team/yuze.jpg'
     }
   ];
 
@@ -215,13 +224,29 @@ const About = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <div className="bg-white rounded-2xl p-6 h-full" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                    <div className="text-center">
-                      <div className="text-4xl mb-2">{member.flag}</div>
-                      <div className="text-xl mb-1 font-karla">
-                        {member.greeting}
+                  <div className="bg-white rounded-2xl p-8 h-full hover:shadow-lg hover:-translate-y-1 transition-all" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                    <div className="flex flex-col items-center gap-4">
+                      <img 
+                        src={member.image} 
+                        alt={member.name}
+                        className="w-32 h-32 rounded-full object-cover border-4 border-primary/10"
+                      />
+                      <div className="text-3xl font-bold text-primary font-karla">{member.greeting}</div>
+                      <div className="text-center">
+                        <h3 className="text-xl font-bold text-foreground font-karla">{member.name}</h3>
+                        <p className="text-sm text-muted-foreground flex items-center justify-center gap-1 mt-1 font-karla">
+                          <span>{member.flag}</span> {member.city}
+                        </p>
                       </div>
-                      <h3 className="text-xl font-semibold text-foreground font-karla">{member.name}</h3>
+                      <a
+                        href={member.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+                      >
+                        <Linkedin size={20} />
+                        <span className="text-sm font-medium font-karla">Connect on LinkedIn</span>
+                      </a>
                     </div>
                   </div>
                 </motion.div>
