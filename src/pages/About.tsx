@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Target, Mic, Globe, Navigation, Trophy, Linkedin } from 'lucide-react';
 import { UnifiedHeader } from '@/components/Header/UnifiedHeader';
+import logo from '@/assets/logo.svg';
 
 const About = () => {
   const navigate = useNavigate();
@@ -80,12 +81,12 @@ const About = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="pt-24 pb-16 px-6 text-center"
+        className="pt-40 pb-16 px-6 text-center"
       >
         <div className="max-w-3xl mx-auto flex flex-col items-center gap-6">
-          <h1 className="text-5xl font-bold tracking-wide">
-            <span className="text-foreground">Hello from </span>
-            <span className="text-primary">HelloCity</span>
+          <h1 className="text-5xl font-bold tracking-wide flex items-center gap-3 flex-wrap justify-center">
+            <span className="text-foreground">Hello from</span>
+            <img src={logo} alt="HelloCity" className="h-14 inline-block" />
           </h1>
           <p className="text-xl font-medium text-foreground">
             A small word can open the world.
