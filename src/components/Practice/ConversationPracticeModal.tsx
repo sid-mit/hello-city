@@ -250,17 +250,6 @@ export const ConversationPracticeModal = ({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
         <div className="sticky top-0 z-10 bg-background border-b px-6 py-4">
           <div className="relative flex justify-center items-center mb-3">
-            <div className="flex flex-col items-center gap-2">
-              {situation.categoryIconImage ? (
-                <img 
-                  src={situation.categoryIconImage} 
-                  alt={situation.title} 
-                  className="w-14 h-14 object-contain" 
-                />
-              ) : (
-                <span className="text-4xl">{situation.emoji}</span>
-              )}
-            </div>
             <div className="flex items-center justify-center gap-3">
               {situation.categoryIconImage ? (
                 <img
